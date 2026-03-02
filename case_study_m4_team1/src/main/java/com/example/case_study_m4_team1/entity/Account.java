@@ -1,0 +1,39 @@
+package com.example.case_study_m4_team1.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "account")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Account {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(unique = true, nullable = false)
+    private String phone;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    private Users user;
+
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    private Teacher teacher;
+}
