@@ -2,6 +2,7 @@ package com.example.case_study_m4_team1.entity;
 
 import com.example.case_study_m4_team1.enums.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,10 +12,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PaymentRegister {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 

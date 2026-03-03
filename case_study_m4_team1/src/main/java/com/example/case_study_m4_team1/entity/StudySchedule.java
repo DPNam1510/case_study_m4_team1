@@ -2,25 +2,29 @@ package com.example.case_study_m4_team1.entity;
 
 import com.example.case_study_m4_team1.enums.ClassStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "study_schedule")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class StudySchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
     private String className;
 
     private Double price;
 
-    private Integer minStudents;
-    private Integer maxStudents;
+    private int minStudents;
+    private int maxStudents;
 
     @Enumerated(EnumType.STRING)
     private ClassStatus statusClass;
