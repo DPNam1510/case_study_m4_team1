@@ -41,6 +41,6 @@ public class StudySchedule {
     @JoinColumn(name = "shift_id")
     private Shift shift;
 
-    @OneToMany(mappedBy = "schedule")
+    @OneToMany(mappedBy = "studySchedule")
     private List<ClassRegister> registers;
 }

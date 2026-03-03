@@ -38,6 +38,6 @@ public class FieldBook {
     private BookingStatus status;
 
     @OneToOne(mappedBy = "fieldBook")
-    private PaymentFieldBook payment;
+    private PaymentFieldBook paymentFieldBook;
 
 }
