@@ -30,11 +30,11 @@ public class ClassRegister {
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")
-    private StudySchedule schedule;
+    private StudySchedule studySchedule;
 
     @OneToOne(mappedBy = "classRegister")
-    private TeacherReview review;
+    private TeacherReview teacherReview;
 
     @OneToOne(mappedBy = "classRegister")
-    private PaymentRegister payment;
+    private PaymentRegister paymentRegister;
 }

@@ -72,7 +72,7 @@ id bigint primary key auto_increment,
 user_id bigint not null,
 schedule_id int not null,
 foreign key (user_id) references users(id),
-foreign key (schedule_id) references study_schedule(id),
+foreign key (schedule_id) references study_schedule(id) on delete cascade,
 date_register datetime,
 status_register enum('PENDING','APPROVED','CANCELED') not null default 'PENDING',
 unique(user_id,schedule_id)
