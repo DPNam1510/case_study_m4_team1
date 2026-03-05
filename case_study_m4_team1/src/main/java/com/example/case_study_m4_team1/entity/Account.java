@@ -30,7 +30,7 @@ public class Account {
     private String phone;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)

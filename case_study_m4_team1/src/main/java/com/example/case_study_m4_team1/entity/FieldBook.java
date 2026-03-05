@@ -10,8 +10,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "field_book", uniqueConstraints = @UniqueConstraint(
-        columnNames = {"field_id", "shift_id", "date_book"}))
+@Table(name = "field_book")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,21 +20,22 @@ public class FieldBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "field_id")
+    @JoinColumn(name = "field_id", nullable = false)
     private Fields field;
 
     @ManyToOne
-    @JoinColumn(name = "shift_id")
+    @JoinColumn(name = "shift_id", nullable = false)
     private Shift shift;
-
-    private LocalDate dateBook;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
+
+    @Column(name = "date_book", nullable = false)
+    private LocalDate dateBook;
 
     @OneToOne(mappedBy = "fieldBook")
     private PaymentFieldBook payment;

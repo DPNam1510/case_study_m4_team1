@@ -19,15 +19,6 @@ public class StudySchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String className;
-
-    private Double price;
-
-    private int minStudents;
-    private int maxStudents;
-
-    @Enumerated(EnumType.STRING)
-    private ClassStatus statusClass;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
@@ -40,6 +31,14 @@ public class StudySchedule {
     @ManyToOne
     @JoinColumn(name = "shift_id")
     private Shift shift;
+
+    private String className;
+    private Double price;
+    private Integer minStudents = 5;
+    private Integer maxStudents = 10;
+
+    @Enumerated(EnumType.STRING)
+    private ClassStatus statusClass = ClassStatus.NOT_OPEN;
 
     @OneToMany(mappedBy = "schedule")
     private List<ClassRegister> registers;

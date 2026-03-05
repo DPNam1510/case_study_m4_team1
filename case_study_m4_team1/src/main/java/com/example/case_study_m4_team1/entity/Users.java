@@ -21,7 +21,7 @@ public class Users {
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "account_id", unique = true)
+    @JoinColumn(name = "account_id", unique = true,  nullable = false)
     private Account account;
 
     @OneToMany(mappedBy = "user")
