@@ -6,10 +6,11 @@ import com.example.case_study_m4_team1.exception.FieldException;
 import com.example.case_study_m4_team1.exception.NotFoundException;
 import com.example.case_study_m4_team1.repository.admin.field.IFieldsRepositoryAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @Transactional
@@ -17,9 +18,20 @@ public class FieldsServiceAdmin implements IFieldsServiceAdmin {
     @Autowired
     private IFieldsRepositoryAdmin fieldsRepositoryAdmin;
 
+
     @Override
-    public List<Fields> findAll() {
-        return fieldsRepositoryAdmin.findAll();
+    public Page<Fields> findByNameContaining(String name, Pageable pageable) {
+        return fieldsRepositoryAdmin.findByNameContaining(name,pageable);
+    }
+
+    @Override
+    public Page<Fields> search(String name, double price, Pageable pageable) {
+        return fieldsRepositoryAdmin.search("%"+name+"%",price,pageable);
+    }
+
+    @Override
+    public Fields findById(int id) {
+        return fieldsRepositoryAdmin.findById(id).orElse(null);
     }
 
     @Override
