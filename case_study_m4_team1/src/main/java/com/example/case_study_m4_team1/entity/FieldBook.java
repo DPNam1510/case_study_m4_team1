@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "field_book", uniqueConstraints = @UniqueConstraint(
@@ -32,6 +33,7 @@ public class FieldBook {
     @JoinColumn(name = "shift_id")
     private Shift shift;
 
+    @Column(name = "date_book")
     private LocalDate dateBook;
 
     @Enumerated(EnumType.STRING)

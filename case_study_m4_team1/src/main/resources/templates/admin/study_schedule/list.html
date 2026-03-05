@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Study Schedule Manager</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<h1>Study Schedule Manager</h1>
+<a href="/admin">Dashboard Admin</a>
+<table>
+    <tr>
+        <th>Class name</th>
+        <th>Teacher name</th>
+        <th>Field</th>
+        <th>Shift start time</th>
+        <th>Shift end time</th>
+        <th>Price</th>
+        <th>Status</th>
+    </tr>
+    <tr th:each="std:${studyScheduleList}">
+        <td th:text="${std.className}"></td>
+        <td th:text="${std.teacher.name}"></td>
+        <td th:text="${std.field.name}"></td>
+        <td th:text="${std.shift.getStartTime()}"></td>
+        <td th:text="${std.shift.getEndTime()}"></td>
+        <td th:text="${std.price}"></td>
+        <td th:text="${std.statusClass}"></td>
+    </tr>
+</table>
+</body>
+</html>

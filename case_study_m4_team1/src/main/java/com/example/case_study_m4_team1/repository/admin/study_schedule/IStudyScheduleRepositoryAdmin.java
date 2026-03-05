@@ -7,6 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IStudyScheduleRepositoryAdmin extends JpaRepository<StudySchedule,Integer> {
-    List<StudySchedule> findByClassNameContaining(String keyword);
-    List<StudySchedule> findByStatusClass(ClassStatus classStatus);
 }
