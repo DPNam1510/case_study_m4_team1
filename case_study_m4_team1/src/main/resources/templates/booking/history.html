@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>History booking</title>
+</head>
+<body>
+<h2>Lịch sử đặt sân</h2>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Field</th>
+        <th>Date</th>
+        <th>Shift</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    <tr th:each="b : ${history.content}">
+        <td th:text="${b.id}"></td>
+        <td th:text="${b.fieldName}"></td>
+        <td th:text="${b.dateBook}"></td>
+        <td th:text="${b.shiftTime}"></td>
+        <td th:text="${b.status}"></td>
+
+        <td>
+            <a th:href="@{/booking/detail/{id}(id=${b.id})}">Detail</a>
+            <a th:href="@{/booking/update/{id}(id=${b.id})}">Edit</a>
+            <a th:href="@{/booking/delete/{id}(id=${b.id},userId=${userId})}">Cancel</a>
+        </td>
+    </tr>
+
+</table>
+</body>
+</html>

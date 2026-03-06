@@ -1,4 +1,4 @@
-package com.example.case_study_m4_team1.service;
+package com.example.case_study_m4_team1.service.booking;
 
 import com.example.case_study_m4_team1.dto.BookingRequestDto;
 import com.example.case_study_m4_team1.dto.BookingResponseDto;
@@ -7,9 +7,8 @@ import com.example.case_study_m4_team1.entity.Fields;
 import com.example.case_study_m4_team1.entity.Shift;
 import com.example.case_study_m4_team1.entity.Users;
 import com.example.case_study_m4_team1.enums.BookingStatus;
-import com.example.case_study_m4_team1.enums.ClassStatus;
 import com.example.case_study_m4_team1.enums.RegisterStatus;
-import com.example.case_study_m4_team1.repository.*;
+import com.example.case_study_m4_team1.repository.booking.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -123,7 +122,7 @@ public class FieldBookService implements IFieldBookService {
     }
 
     @Override
-    public void cancelBooking(Long id, Long userId) {
+    public void deleteBooking(Long id, Long userId) {
         FieldBook fieldBook = fieldBookRepo.findCancelableBooking(id,userId,
                 BookingStatus.APPROVED).orElseThrow(
                         () -> new RuntimeException("Booking not cancelled!"));

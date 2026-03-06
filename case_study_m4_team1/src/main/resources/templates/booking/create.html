@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Booking</title>
+</head>
+<body>
+<h2>Badminton Field booking</h2>
+
+<form th:action="@{/booking/create}" method="post">
+
+    <input type="hidden" name="userId" th:value="${userId}">
+
+    <div>
+        <label>Field</label>
+        <select name="fieldId" class="form-control">
+            <option value="">-- Field Choose --</option>
+            <option th:each="f : ${fields}"
+                    th:value="${f.id}"
+                    th:text="${f.name}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label>Shift</label>
+        <select name="shiftId" class="form-control">
+            <option value="">-- Shift Choose --</option>
+            <option th:each="s : ${shifts}"
+                    th:value="${s.id}"
+                    th:text="${s.startTime + ' - ' + s.endTime}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label>Date</label>
+        <input type="date" name="dateBook" required>
+    </div>
+
+    <button type="submit">Booking</button>
+
+</form>
+
+</body>
+</html>
+</body>
+</html>

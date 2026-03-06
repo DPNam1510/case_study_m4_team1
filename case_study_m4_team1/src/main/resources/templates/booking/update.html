@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Booking</title>
+</head>
+<body>
+<h2>Update Booking</h2>
+
+<form th:action="@{/booking/update/{id}(id=${bookingId})}" method="post">
+
+    <input type="hidden" name="userId" th:value="${userId}">
+
+    <div>
+        <label>Sân</label>
+        <input type="number" name="fieldId" th:value="${booking.fieldId}">
+    </div>
+
+    <div>
+        <label>Ca</label>
+        <input type="number" name="shiftId" th:value="${booking.shiftId}">
+    </div>
+
+    <div>
+        <label>Ngày</label>
+        <input type="date" name="dateBook" th:value="${booking.dateBook}">
+    </div>
+
+    <button type="submit">Update</button>
+
+</form>
+</body>
+</html>

@@ -26,14 +26,14 @@ public class FieldBook {
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "field_id")
+    @JoinColumn(name = "field_id", nullable = false)
     private Fields field;
 
     @ManyToOne
-    @JoinColumn(name = "shift_id")
+    @JoinColumn(name = "shift_id", nullable = false)
     private Shift shift;
 
-    @Column(name = "date_book")
+    @Column(name = "date_book", nullable = false)
     private LocalDate dateBook;
 
     @Enumerated(EnumType.STRING)

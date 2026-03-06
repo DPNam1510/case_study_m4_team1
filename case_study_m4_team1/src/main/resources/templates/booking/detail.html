@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Detail</title>
+</head>
+<body>
+<h2>Detail</h2>
+
+<p>Sân: <span th:text="${booking.fieldName}"></span></p>
+<p>Ngày: <span th:text="${booking.dateBook}"></span></p>
+<p>Ca: <span th:text="${booking.shiftTime}"></span></p>
+<p>Trạng thái: <span th:text="${booking.status}"></span></p>
+
+<a th:href="@{/booking/history(userId=${userId})}">Quay lại</a>
+</body>
+</html>

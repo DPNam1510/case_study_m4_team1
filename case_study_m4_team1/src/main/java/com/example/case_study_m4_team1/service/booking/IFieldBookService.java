@@ -1,8 +1,7 @@
-package com.example.case_study_m4_team1.service;
+package com.example.case_study_m4_team1.service.booking;
 
 import com.example.case_study_m4_team1.dto.BookingRequestDto;
 import com.example.case_study_m4_team1.dto.BookingResponseDto;
-import com.example.case_study_m4_team1.entity.FieldBook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,7 +10,7 @@ public interface IFieldBookService {
 
     BookingResponseDto updateBooking(Long id, Long userId, BookingRequestDto request);
 
-    void cancelBooking(Long id, Long userId);
+    void deleteBooking(Long id, Long userId);
 
     BookingResponseDto detailBooking(Long id);
 
