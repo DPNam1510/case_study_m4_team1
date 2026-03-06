@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách học viên</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<th:block th:insert="layout/layout::my-navbar"/>
+
+<div class="container mt-4">
+    <h2>Danh sách học viên</h2>
+
+    <div th:if="${#lists.isEmpty(students)}" class="alert alert-info">
+        Lớp chưa có học viên nào.
+    </div>
+
+    <table th:unless="${#lists.isEmpty(students)}" class="table table-striped">
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên học viên</th>
+            <th>Ngày đăng ký</th>
+            <th>Đánh giá</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student, iterStat : ${students}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${student.user.name}"></td>
+            <td th:text="${#temporals.format(student.dateRegister, 'dd/MM/yyyy')}"></td>
+            <td>
+                        <span th:if="${student.teacherReview != null}" class="badge bg-success">
+                            Đã đánh giá: <span th:text="${student.teacherReview.scores}"></span>
+                        </span>
+                <span th:unless="${student.teacherReview != null}" class="badge bg-warning">
+                            Chưa đánh giá
+                        </span>
+            </td>
+            <td>
+                <a th:if="${student.teacherReview == null}"
+                   th:href="@{/teacher/class/{scheduleId}/student/{id}/review(scheduleId=${scheduleId}, id=${student.id})}"
+                   class="btn btn-sm btn-primary">Đánh giá</a>
+                <span th:if="${student.teacherReview != null}" class="text-muted">Đã đánh giá</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/teacher/classes" class="btn btn-secondary">Quay lại</a>
+</div>
+</body>
+</html>
