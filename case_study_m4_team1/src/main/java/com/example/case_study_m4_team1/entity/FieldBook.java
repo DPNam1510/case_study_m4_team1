@@ -41,4 +41,5 @@ public class FieldBook {
 
     @OneToOne(mappedBy = "fieldBook")
     private PaymentFieldBook paymentFieldBook;
+
 }
