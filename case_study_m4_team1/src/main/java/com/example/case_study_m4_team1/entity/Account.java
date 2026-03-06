@@ -34,7 +34,7 @@ public class Account {
     private Role role;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
-    private Users user;
+    private Users users;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     private Teacher teacher;

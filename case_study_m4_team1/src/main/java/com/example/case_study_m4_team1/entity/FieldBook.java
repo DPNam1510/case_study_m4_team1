@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
-@Table(name = "field_book")
+@Table(name = "field_book", uniqueConstraints = @UniqueConstraint(
+        columnNames = {"field_id", "shift_id", "date_book"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,20 +26,20 @@ public class FieldBook {
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "field_id", nullable = false)
+    @JoinColumn(name = "field_id")
     private Fields field;
 
     @ManyToOne
-    @JoinColumn(name = "shift_id", nullable = false)
+    @JoinColumn(name = "shift_id")
     private Shift shift;
+
+    @Column(name = "date_book")
+    private LocalDate dateBook;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
-    @Column(name = "date_book", nullable = false)
-    private LocalDate dateBook;
-
     @OneToOne(mappedBy = "fieldBook")
-    private PaymentFieldBook payment;
+    private PaymentFieldBook paymentFieldBook;
 
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shift Manager</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<h1>Shift</h1>
+<a href="/admin">Dashboard Admin</a>
+<table>
+    <tr>
+        <th>Shift start time</th>
+        <th>Shift end time</th>
+    </tr>
+    <tr th:each="s:${shiftList}">
+        <td th:text="${s.getStartTime()}"></td>
+        <td th:text="${s.getEndTime()}"></td>
+    </tr>
+</table>
+</body>
+</html>
