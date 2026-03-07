@@ -9,11 +9,15 @@ import com.example.case_study_m4_team1.entity.Teacher;
 import java.util.List;
 
 public interface ITeacherService {
-    Teacher findByUsername(String username);
+    Teacher findById(int id);
+
     List<StudySchedule> getTeacherSchedules(int teacherId);
+
     List<ClassRegister> getStudentsInClass(int scheduleId);
-    boolean isTeacherOfClass(String username, int scheduleId);
+
     ClassRegister findClassRegisterById(long id);
-    void saveReview(TeacherReviewDTO reviewDTO, String username);
-    void saveNotice(TeacherNoticeDTO noticeDTO, String username);
+
+    void saveReview(TeacherReviewDTO reviewDTO);
+
+    void saveNotice(TeacherNoticeDTO noticeDTO);
 }
