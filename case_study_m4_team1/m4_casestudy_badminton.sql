@@ -98,7 +98,7 @@ reason varchar(255)
 );
 create table pay(
 id int primary key auto_increment,
-pay_type varchar(20) not null unique
+pay_type varchar(200) not null unique
 );
 create table payment_register(
 id bigint primary key auto_increment,
@@ -179,12 +179,12 @@ insert into teacher(name,email,phone,account_id) values
 
 -- FIELDS (6 sân)
 insert into fields(name,price,status) values
-('Sân A',200000,'AVAILABLE'),
-('Sân B',200000,'AVAILABLE'),
-('Sân C',200000,'AVAILABLE'),
-('Sân D',200000,'AVAILABLE'),
-('Sân E',200000,'AVAILABLE'),
-('Sân F',200000,'NOT_AVAILABLE');
+('Field A',200000,'AVAILABLE'),
+('Field B',200000,'AVAILABLE'),
+('Field C',200000,'AVAILABLE'),
+('Field D',200000,'AVAILABLE'),
+('Field E',200000,'AVAILABLE'),
+('Field F',200000,'NOT_AVAILABLE');
 
 -- SHIFT (9 ca, mỗi ca 2 tiếng)
 insert into shift(start_time,end_time) values
@@ -200,8 +200,8 @@ insert into shift(start_time,end_time) values
 
 -- STUDY_SCHEDULE (2 lớp cố định)
 insert into study_schedule(teacher_id,field_id,shift_id,class_name,price,min_students,max_students,status_class) values
-(1,1,7,'Lớp 2-4-6',1000000,5,10,'OPEN'),
-(2,2,7,'Lớp 3-5-7',2000000,5,10,'NOT_OPEN');
+(1,1,7,'Class 2-4-6',1000000,5,10,'OPEN'),
+(2,2,7,'Class 3-5-7',2000000,5,10,'NOT_OPEN');
 
 insert into class_register(user_id, schedule_id, date_register, status_register) values
 -- Lớp 2-4-6 (shift_id = 7, field_id = 1, 5 học viên → lớp mở)
@@ -248,7 +248,7 @@ insert into field_book(user_id,field_id,shift_id,date_book,status) values
 -- PAY
 insert into pay(pay_type) values
 ('CASH'),
-('BANKING');
+('BANKING: Techcombank, Id number: 090050053390');
 
 -- PAYMENT (ban đầu tất cả UNPAID)
 insert into payment_register(pay_id,register_id,status) values
@@ -282,3 +282,21 @@ insert into payment_field_book(pay_id,field_book_id,status) values
 (2,12,'UNPAID'),
 (1,13,'UNPAID'),
 (2,14,'UNPAID');
+
+select * from field_book
+where status like 'PENDING';
+
+select sc.class_name as class, u.name as user,f.name as field,t.name as teacher,
+cr.date_register as date, sc.price as price,p.pay_type as pay,
+pr.status as status
+from payment_register pr
+join pay p on pr.pay_id = p.id
+join class_register cr on pr.register_id = cr.id
+join users u on cr.user_id = u.id
+join study_schedule sc on cr.schedule_id = sc.id
+join teacher t on sc.teacher_id = t.id
+join fields f on sc.field_id = f.id
+join shift s on sc.shift_id = s.id
+where sc.status_class = 'OPEN'
+
+

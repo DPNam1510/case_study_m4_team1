@@ -4,6 +4,64 @@
     <meta charset="UTF-8">
     <title>Fields Information</title>
     <th:block th:insert="layout/layout::library"/>
+    <style>
+        /* Background tổng thể */
+        body {
+            background: linear-gradient(135deg, #e0f7fa, #ffe0b2);
+            min-height: 100vh;
+        }
+
+        .fields-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .field-card {
+            width: 300px;
+            min-height: 180px;
+            border-radius: 15px;
+            color: #fff;
+            padding: 25px 20px;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .field-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+        }
+
+        /* 6 màu sân pha đẹp */
+        .field-1 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .field-2 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .field-3 { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .field-4 { background: linear-gradient(135deg, #f83600, #f9d423); }
+        .field-5 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+        .field-6 { background: linear-gradient(135deg, #fbd3e9, #bb377d); }
+
+        .field-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 992px) {
+            .field-card { width: 250px; }
+        }
+
+        @media (max-width: 576px) {
+            .fields-grid { flex-direction: column; align-items: center; }
+            .field-card { width: 80%; }
+        }
+    </style>
 </head>
 <body>
 <div class="container py-4">
@@ -11,9 +69,13 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
 
-            <h3 class="mb-4 fw-bold">Fields Manager</h3>
-            <a class="btn btn-success btn-sm" href="/admin">Dashboard Amin</a>
-            <form class="row g-2 mb-3" action="/admin/fields">
+            <h3 class="mb-4 fw-bold text-center">Fields Manager</h3>
+            <div class="text-center mb-3">
+                <a class="btn btn-success btn-sm" href="/admin">Dashboard Admin</a>
+            </div>
+
+            <!-- Form tìm kiếm -->
+            <form class="row g-2 mb-3 justify-content-center" action="/admin/fields">
                 <div class="col-md-4">
                     <input class="form-control" name="searchName"
                            th:value="${searchName}" placeholder="Field name..."/>
@@ -30,39 +92,34 @@
                 </div>
             </form>
 
-            <table class="table table-hover table-bordered align-middle">
-                <thead class="table-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="f:${fieldsPage}">
-                    <td th:text="${f.name}" class="fw-semibold"></td>
-                    <td>
-                        <a class="btn btn-sm btn-outline-info"
+            <!-- Grid hiển thị các sân -->
+            <div class="fields-grid">
+                <div class="field-card"
+                     th:each="f, iterStat : ${fieldsPage}"
+                     th:classappend="|field-${(iterStat.index % 6) + 1}|">
+                    <div th:text="${f.name}" style="font-size:1.4rem;">Field Name</div>
+                    <div class="field-buttons">
+                        <a class="btn btn-sm btn-outline-light"
                            th:href="@{/admin/fields/{id}/detail(id=${f.id})}">
                             View Detail
                         </a>
                         <button type="button"
-                                class="btn btn-sm btn-success"
+                                class="btn btn-sm btn-light text-dark"
                                 data-bs-toggle="modal"
                                 data-bs-target="#updateModal"
                                 th:attr="data-id=${f.id},data-status=${f.status}">
                             Update
                         </button>
+                    </div>
+                </div>
+            </div>
 
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <div th:if="${fieldsPage.isEmpty()}" class="alert alert-warning">
+            <div th:if="${fieldsPage.isEmpty()}" class="alert alert-warning mt-3 text-center">
                 No data available
             </div>
 
-            <div class="d-flex justify-content-between align-items-center">
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center align-items-center mt-4 gap-3">
                 <a class="btn btn-sm btn-primary"
                    th:if="${fieldsPage.hasPrevious()}"
                    th:href="@{/admin/fields(page=${fieldsPage.number -1},searchName=${searchName})}">
@@ -84,10 +141,11 @@
         </div>
     </div>
 </div>
+
+<!-- Modal update -->
 <div class="modal fade" id="updateModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-
             <form th:action="@{/admin/fields/update}" method="post">
                 <div class="modal-header">
                     <h5 class="modal-title">Update Field Status</h5>
@@ -95,15 +153,12 @@
                 </div>
 
                 <div class="modal-body">
-
                     <input type="hidden" name="id" id="fieldId"/>
-
                     <select class="form-select" name="status" id="fieldStatus" required>
                         <option value="">---Select status---</option>
                         <option value="AVAILABLE">AVAILABLE</option>
                         <option value="NOT_AVAILABLE">NOT_AVAILABLE</option>
                     </select>
-
                 </div>
 
                 <div class="modal-footer">
@@ -115,35 +170,30 @@
                     </button>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
+
+<!-- Modal success -->
 <div class="modal fade" id="successModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-
             <div class="modal-header bg-success text-white">
                 <h5 class="modal-title">Success</h5>
-                <button type="button" class="btn-close"
-                        data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
             <div class="modal-body">
                 <p th:text="${mess}"></p>
             </div>
             <div class="modal-footer">
-                <button type="button"
-                        class="btn btn-success"
-                        data-bs-dismiss="modal">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">
                     OK
                 </button>
             </div>
-
         </div>
     </div>
 </div>
-</body>
+
 <script th:if="${mess}">
     window.addEventListener('DOMContentLoaded', function () {
         var successModal = new bootstrap.Modal(
@@ -152,12 +202,12 @@
         successModal.show();
     });
 </script>
+
 <script>
     const updateModal = document.getElementById('updateModal');
 
     updateModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
-
         const id = button.getAttribute('data-id');
         const status = button.getAttribute('data-status');
 
@@ -165,4 +215,5 @@
         document.getElementById('fieldStatus').value = status;
     });
 </script>
+</body>
 </html>

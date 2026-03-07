@@ -1,8 +1,6 @@
 package com.example.case_study_m4_team1.controller.admin;
 
-import com.example.case_study_m4_team1.entity.FieldBook;
 import com.example.case_study_m4_team1.entity.Fields;
-import com.example.case_study_m4_team1.enums.FieldStatus;
 import com.example.case_study_m4_team1.service.admin.field.IFieldsServiceAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,7 +50,7 @@ public class AdminFieldsController {
     public String updateFieldStatus(@ModelAttribute Fields field,
                                     RedirectAttributes redirectAttributes) {
         fieldsServiceAdmin.setFieldsMaintenance(field.getId(), field.getStatus());
-        redirectAttributes.addFlashAttribute("mess","Cập nhật thành công !!");
+        redirectAttributes.addFlashAttribute("mess","Update success !!");
         return "redirect:/admin/fields";
     }
 }

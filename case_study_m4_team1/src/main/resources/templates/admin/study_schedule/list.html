@@ -4,29 +4,217 @@
     <meta charset="UTF-8">
     <title>Study Schedule Manager</title>
     <th:block th:insert="layout/layout::library"/>
+    <style>
+        html, body { height: 100%; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            background-image: url('/images/bairo-italy-december-guys-play-padel-indoor-court-bairo-italy-december-guys-play-padel-indoor-court-padel-racquet-205789713.webp'); /* thay ảnh */
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 40px;
+        }
+
+        .container { position: relative; z-index: 1; padding-bottom: 60px; }
+
+        .card {
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08); /* giảm mờ */
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px;
+        }
+
+        .card-body h2 { font-weight: 700; color: #fff; margin-bottom: 30px; }
+
+        table { width: 100%; color: #fff; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: center; }
+        th { border-bottom: 2px solid rgba(255,255,255,0.3); }
+        tr { border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        /* Cải thiện nút update */
+        .btn-update {
+            background: linear-gradient(90deg, #0d6efd, #6610f2);
+            color: #fff;
+            border-radius: 12px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-update:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn-back {
+            font-weight: 600;
+            margin-top: 20px;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 12px;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .btn-back:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+    </style>
 </head>
 <body>
-<h1>Study Schedule Manager</h1>
-<a href="/admin">Dashboard Admin</a>
-<table>
-    <tr>
-        <th>Class name</th>
-        <th>Teacher name</th>
-        <th>Field</th>
-        <th>Shift start time</th>
-        <th>Shift end time</th>
-        <th>Price</th>
-        <th>Status</th>
-    </tr>
-    <tr th:each="std:${studyScheduleList}">
-        <td th:text="${std.className}"></td>
-        <td th:text="${std.teacher.name}"></td>
-        <td th:text="${std.field.name}"></td>
-        <td th:text="${std.shift.getStartTime()}"></td>
-        <td th:text="${std.shift.getEndTime()}"></td>
-        <td th:text="${std.price}"></td>
-        <td th:text="${std.statusClass}"></td>
-    </tr>
-</table>
+<div class="container">
+    <div class="card shadow-sm border-0 mx-auto" style="max-width: 1200px;">
+        <div class="card-body text-center">
+            <h2 class="fw-bold mb-4">Study Schedule Manager</h2>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Class name</th>
+                    <th>Teacher name</th>
+                    <th>Field</th>
+                    <th>Shift start</th>
+                    <th>Shift end</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="std:${studyScheduleList}">
+                    <td th:text="${std.className}"></td>
+                    <td>
+                        <span th:text="${std.teacher.name}"></span>
+                        <button type="button"
+                                class="btn-update"
+                                data-bs-toggle="modal"
+                                data-bs-target="#updateModal"
+                                th:attr="data-id=${std.id},data-teacher=${std.teacher.id}">
+                            Update
+                        </button>
+                    </td>
+                    <td th:text="${std.field.name}"></td>
+                    <td th:text="${std.shift.getStartTime()}"></td>
+                    <td th:text="${std.shift.getEndTime()}"></td>
+                    <td>
+                        <span th:text="${std.price}"></span>
+                        <button th:if="${std.statusClass.name() == 'NOT_OPEN'}"
+                                class="btn-update"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#updatePriceModal"
+                                th:attr="data-id=${std.id},data-price=${std.price}">
+                            Update
+                        </button>
+                    </td>
+                    <td th:text="${std.statusClass}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <a href="/admin" class="btn-back w-50">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+<!-- Modal Update Teacher -->
+<div class="modal fade" id="updateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/admin/study_schedules/update_teacher}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Teacher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="scheduleId"/>
+                    <select name="teacherId" class="form-select" id="teacherId">
+                        <option th:each="t : ${teacherList}" th:value="${t.id}" th:text="${t.name}"></option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Update Price -->
+<div class="modal fade" id="updatePriceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/admin/study_schedules/update_price}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Price</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="scheduleIdOfPrice"/>
+                    <input name="price" id="priceId" class="form-control"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Success</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p th:text="${mess}"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:if="${mess}">
+    window.addEventListener('DOMContentLoaded', function () {
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+    });
+</script>
+
+<script>
+    // Show Update Teacher Modal
+    const updateModal = document.getElementById('updateModal');
+    updateModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const teacher = button.getAttribute('data-teacher');
+        document.getElementById('scheduleId').value = id;
+        document.getElementById('teacherId').value = teacher;
+    });
+
+    // Show Update Price Modal
+    const updatePriceModal = document.getElementById('updatePriceModal');
+    updatePriceModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const priceId = button.getAttribute('data-price');
+        document.getElementById('scheduleIdOfPrice').value = id;
+        document.getElementById('priceId').value = priceId;
+    });
+</script>
+
 </body>
 </html>

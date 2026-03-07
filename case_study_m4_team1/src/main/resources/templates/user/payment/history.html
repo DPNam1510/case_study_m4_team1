@@ -1,0 +1,98 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Lịch sử thanh toán</title>-->
+<!--    <th:block th:insert="~{layout/layout::library}"/>-->
+<!--</head>-->
+<!--<body>-->
+<!--<a href="/user">Trang chủ</a>-->
+<!--<table>-->
+<!--    <tr>-->
+<!--        <th>Sân</th>-->
+<!--        <th>Ngày đặt sân</th>-->
+<!--        <th>Đơn giá</th>-->
+<!--        <th>Thanh toán</th>-->
+<!--        <th>Trạng thái</th>-->
+<!--    </tr>-->
+<!--    <tr th:each="pm:${paymentFieldBookDtoS}">-->
+<!--        <td hidden="hidden" th:text="${pm.id}"></td>-->
+<!--        <td th:text="${pm.field}"></td>-->
+<!--        <td th:text="${pm.date}"></td>-->
+<!--        <td th:text="${pm.price}"></td>-->
+<!--        <td th:text="${pm.type}"></td>-->
+<!--        <td>-->
+<!--            <span th:if="${pm.status == 'PAID'}" class="badge bg-success">PAID</span>-->
+<!--            <span th:if="${pm.status == 'UNPAID'}" class="badge bg-warning">UNPAID</span>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--</table>-->
+<!--&lt;!&ndash;<div class="modal fade" id="updateStatus" tabindex="-1">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="modal-dialog">&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="modal-content">&ndash;&gt;-->
+<!--&lt;!&ndash;            <form th:action="@{/admin/payments/set_paid}" method="post">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="modal-header">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <h5 class="modal-title">Cập nhật trạng thái</h5>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="modal-body">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <input type="hidden" name="id" id="paymentId"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <h3>Xác nhận khách hàng đã thanh toán ?</h3>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="modal-footer">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <button type="submit" class="btn btn-success">Confirm</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </form>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="modal fade" id="successModal" tabindex="-1">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="modal-dialog modal-dialog-centered">&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="modal-content">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="modal-header bg-success text-white">&ndash;&gt;-->
+<!--&lt;!&ndash;                <h5 class="modal-title">Thành công</h5>&ndash;&gt;-->
+<!--&lt;!&ndash;                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="modal-body">&ndash;&gt;-->
+<!--&lt;!&ndash;                <p th:text="${mess}"></p>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="modal-footer">&ndash;&gt;-->
+<!--&lt;!&ndash;                <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<script th:if="${mess}">&ndash;&gt;-->
+<!--&lt;!&ndash;    window.addEventListener('DOMContentLoaded', function () {&ndash;&gt;-->
+<!--&lt;!&ndash;        var successModal = new bootstrap.Modal(document.getElementById('successModal'));&ndash;&gt;-->
+<!--&lt;!&ndash;        successModal.show();&ndash;&gt;-->
+<!--&lt;!&ndash;    });&ndash;&gt;-->
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="pagination-wrapper">&ndash;&gt;-->
+<!--&lt;!&ndash;    <a class="btn btn-primary btn-sm" th:if="${paymentFieldBookDtoS.hasPrevious()}"&ndash;&gt;-->
+<!--&lt;!&ndash;       th:href="@{/user/payments(page=${paymentFieldBookDtoS.number -1},&ndash;&gt;-->
+<!--&lt;!&ndash;       searchUser=${searchUser},&ndash;&gt;-->
+<!--&lt;!&ndash;       searchField=${searchField},&ndash;&gt;-->
+<!--&lt;!&ndash;       status=${status})}">Previous</a>&ndash;&gt;-->
+<!--&lt;!&ndash;    <span class="btn btn-light btn-sm disabled">&ndash;&gt;-->
+<!--&lt;!&ndash;            Page <span th:text="${paymentFieldBookDtoS.number +1}"></span> / <span&ndash;&gt;-->
+<!--&lt;!&ndash;            th:text="${paymentFieldBookDtoS.totalPages}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;        </span>&ndash;&gt;-->
+<!--&lt;!&ndash;    <a class="btn btn-dark btn-sm" th:if="${paymentFieldBookDtoS.hasNext()}"&ndash;&gt;-->
+<!--&lt;!&ndash;       th:href="@{/user/payments(page=${paymentFieldBookDtoS.number +1},&ndash;&gt;-->
+<!--&lt;!&ndash;       searchUser=${searchUser},&ndash;&gt;-->
+<!--&lt;!&ndash;       searchField=${searchField},&ndash;&gt;-->
+<!--&lt;!&ndash;       status=${status})}">Next</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--</body>-->
+<!--&lt;!&ndash;<script>&ndash;&gt;-->
+<!--&lt;!&ndash;    const updateStatus = document.getElementById('updateStatus');&ndash;&gt;-->
+<!--&lt;!&ndash;    updateStatus.addEventListener('show.bs.modal', function (event) {&ndash;&gt;-->
+<!--&lt;!&ndash;        const button = event.relatedTarget;&ndash;&gt;-->
+<!--&lt;!&ndash;        const id = button.getAttribute('data-id');&ndash;&gt;-->
+<!--&lt;!&ndash;        document.getElementById('paymentId').value = id;&ndash;&gt;-->
+<!--&lt;!&ndash;    });&ndash;&gt;-->
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
+<!--</html>-->

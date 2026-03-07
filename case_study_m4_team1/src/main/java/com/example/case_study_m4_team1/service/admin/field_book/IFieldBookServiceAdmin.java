@@ -10,12 +10,20 @@ import java.time.LocalDate;
 
 
 public interface IFieldBookServiceAdmin {
-    Page<FieldBook> search(@Param("searchUser") String user,
+    Page<FieldBook> searchApprove(@Param("searchUser") String user,
                               @Param("searchField") String field,
                               @Param("searchDate") LocalDate date,
+                           BookingStatus status,
                               Pageable pageable);
 
     Page<FieldBook> searchPending(
+            @Param("searchUser") String user,
+            @Param("searchField") String field,
+            @Param("searchDate") LocalDate date,
+            BookingStatus status,
+            Pageable pageable);
+
+    Page<FieldBook> searchCanceled(
             @Param("searchUser") String user,
             @Param("searchField") String field,
             @Param("searchDate") LocalDate date,
