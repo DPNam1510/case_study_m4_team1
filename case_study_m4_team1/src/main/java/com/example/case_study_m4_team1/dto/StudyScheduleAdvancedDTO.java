@@ -22,7 +22,4 @@ public class StudyScheduleAdvancedDTO {
     private int registeredStudents;
     private int minStudents;
     private int maxStudents;
-
-
-
 }

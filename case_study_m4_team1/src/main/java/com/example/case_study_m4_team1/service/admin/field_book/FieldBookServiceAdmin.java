@@ -23,14 +23,20 @@ public class FieldBookServiceAdmin implements IFieldBookServiceAdmin {
 
 
     @Override
-    public Page<FieldBook> search(String user, String field, LocalDate date, Pageable pageable) {
-        return fieldBookRepositoryAdmin.search("%"+user+"%", "%"+field+"%", date, pageable);
+    public Page<FieldBook> searchApprove(String user, String field, LocalDate date,BookingStatus status, Pageable pageable) {
+        return fieldBookRepositoryAdmin.searchApprove("%"+user+"%", "%"+field+"%", date,status, pageable);
     }
+
 
 
     @Override
     public Page<FieldBook> searchPending(String user, String field, LocalDate date, BookingStatus status, Pageable pageable) {
         return fieldBookRepositoryAdmin.searchPending("%"+user+"%", "%"+field+"%", date,status, pageable);
+    }
+
+    @Override
+    public Page<FieldBook> searchCanceled(String user, String field, LocalDate date, BookingStatus status, Pageable pageable) {
+        return fieldBookRepositoryAdmin.searchCanceled("%"+user+"%", "%"+field+"%", date,status, pageable);
     }
 
 

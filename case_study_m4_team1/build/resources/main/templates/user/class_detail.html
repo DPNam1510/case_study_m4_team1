@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết lớp học</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<th:block th:insert="layout/layout::my-navbar"/>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3 th:text="${schedule.className}">Lớp học</h3>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tr>
+                    <th style="width: 200px;">Giảng viên:</th>
+                    <td th:text="${schedule.teacher.name}"></td>
+                </tr>
+                <tr>
+                    <th>Sân:</th>
+                    <td th:text="${schedule.field.name}"></td>
+                </tr>
+                <tr>
+                    <th>Ca học:</th>
+                    <td th:text="${schedule.shift.startTime} + ' - ' + ${schedule.shift.endTime}"></td>
+                </tr>
+                <tr>
+                    <th>Lịch học:</th>
+                    <td th:text="${schedule.className}"></td>
+                </tr>
+                <tr>
+                    <th>Học phí:</th>
+                    <td th:text="${#numbers.formatDecimal(schedule.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                </tr>
+                <tr>
+                    <th>Số lượng đã đăng ký:</th>
+                    <td>
+                        <span th:text="${registeredCount}"></span>/<span th:text="${schedule.maxStudents}"></span>
+                        <span th:if="${registeredCount >= schedule.minStudents}" class="badge bg-success">Đủ mở lớp</span>
+                        <span th:if="${registeredCount < schedule.minStudents}" class="badge bg-warning">Cần thêm <span th:text="${schedule.minStudents - registeredCount}"></span> học viên</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Còn chỗ:</th>
+                    <td>
+                        <span th:text="${availableSlots}"></span> chỗ
+                    </td>
+                </tr>
+            </table>
+
+            <div class="mt-3">
+                <form th:action="@{/user/study/register}" method="post"
+                      th:if="${availableSlots > 0 and schedule.statusClass != 'FULL'}">
+                    <input type="hidden" name="scheduleId" th:value="${schedule.id}">
+                    <button type="submit" class="btn btn-success btn-lg">Đăng ký học</button>
+                </form>
+
+                <div th:if="${availableSlots <= 0 or schedule.statusClass == 'FULL'}"
+                     class="alert alert-warning">
+                    Lớp học đã đầy, không thể đăng ký thêm.
+                </div>
+
+                <a href="/user/study/classes" class="btn btn-secondary mt-2">Quay lại danh sách</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

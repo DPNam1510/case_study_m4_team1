@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Field Book List</title>
+    <th:block th:insert="layout/layout::library"/>
+
+    <style>
+
+        body {
+            background: linear-gradient(135deg, #eef2f7, #f9fbfd);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .page-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .table thead {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-update {
+            border: none;
+            background: #ffc107;
+            color: black;
+            padding: 6px 14px;
+            border-radius: 6px;
+        }
+
+        .btn-update:hover {
+            background: #ffb300;
+        }
+
+        .pagination-wrapper {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+<body class="container mt-4">
+<div class="mb-4 d-flex justify-content-between align-items-center">
+
+    <h3 class="page-title">
+        <i class="bi bi-credit-card"></i>
+        Payment Field Book Management
+    </h3>
+
+    <div>
+        <a class="btn btn-outline-dark btn-sm" href="/admin">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+
+        <a class="btn btn-dark btn-sm" href="/admin/payments/payment_register">
+            <i class="bi bi-list"></i> Payment Register List
+        </a>
+    </div>
+
+</div>
+
+
+<div class="search-box mb-4">
+
+    <form class="row g-3" action="/admin/payments">
+
+        <div class="col-md-4">
+            <input class="form-control"
+                   name="searchUser"
+                   th:value="${searchUser}"
+                   placeholder="🔎 Enter user name..."/>
+        </div>
+
+        <div class="col-md-4">
+            <input class="form-control"
+                   name="searchField"
+                   th:value="${searchField}"
+                   placeholder="🔎 Enter field name..."/>
+        </div>
+
+        <div class="col-md-4">
+
+            <button class="btn btn-primary">
+                <i class="bi bi-search"></i>
+                Search
+            </button>
+
+            <a class="btn btn-light" href="/admin/payments">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                Reset
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<div th:if="${paymentFieldBookDtoS.isEmpty()}" class="alert alert-warning text-center">
+    <i class="bi bi-exclamation-triangle"></i>
+    NO DATA
+</div>
+
+
+<div class="card p-3">
+
+    <table class="table table-hover text-center align-middle">
+
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Field</th>
+            <th>Date Book</th>
+            <th>Price</th>
+            <th>Pay Type</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr th:each="pm:${paymentFieldBookDtoS}">
+
+            <td th:text="${pm.user}"></td>
+
+            <td th:text="${pm.field}"></td>
+
+            <td th:text="${pm.date}"></td>
+
+            <td>
+            <span class="text-success fw-bold"
+                  th:text="${pm.price}">
+            </span>
+            </td>
+
+            <td th:text="${pm.type}"></td>
+
+            <td>
+
+            <span th:if="${pm.status == 'PAID'}"
+                  class="badge bg-success">
+                <i class="bi bi-check-circle"></i>
+                PAID
+            </span>
+
+                <span th:if="${pm.status == 'UNPAID'}"
+                      class="badge bg-warning text-dark">
+                <i class="bi bi-clock-history"></i>
+                UNPAID
+            </span>
+
+            </td>
+
+            <td>
+
+                <button th:if="${pm.status == 'UNPAID'}"
+                        class="btn btn-sm btn-primary"
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#updateStatus"
+                        th:attr="data-id=${pm.id}">
+
+                    <i class="bi bi-pencil-square"></i>
+                    Update
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- MODAL -->
+<div class="modal fade" id="updateStatus" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form th:action="@{/admin/payments/set_paid}" method="post">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-credit-card"></i>
+                        Confirm Payment
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" name="id" id="paymentId"/>
+
+                    <h5 class="text-center">
+                        Confirm payment of USER ?
+                    </h5>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check"></i>
+                        Confirm
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="successModal" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-check-circle"></i>
+                    Success
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+
+                <p th:text="${mess}"></p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-success"
+                        data-bs-dismiss="modal">
+                    OK
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script th:if="${mess}">
+    window.addEventListener('DOMContentLoaded', function () {
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+    });
+</script>
+
+
+<div class="pagination-wrapper">
+
+    <a class="btn btn-primary btn-sm"
+       th:if="${paymentFieldBookDtoS.hasPrevious()}"
+       th:href="@{/admin/payments(page=${paymentFieldBookDtoS.number -1},
+       searchUser=${searchUser},
+       searchField=${searchField},
+       status=${status})}">
+
+        <i class="bi bi-arrow-left"></i>
+        Previous
+    </a>
+
+
+    <span class="btn btn-light btn-sm disabled">
+
+Page
+<span th:text="${paymentFieldBookDtoS.number +1}"></span>
+/
+<span th:text="${paymentFieldBookDtoS.totalPages}"></span>
+
+</span>
+
+
+    <a class="btn btn-dark btn-sm"
+       th:if="${paymentFieldBookDtoS.hasNext()}"
+       th:href="@{/admin/payments(page=${paymentFieldBookDtoS.number +1},
+       searchUser=${searchUser},
+       searchField=${searchField},
+       status=${status})}">
+
+        Next
+        <i class="bi bi-arrow-right"></i>
+
+    </a>
+
+</div>
+
+</body>
+
+<script>
+
+    const updateStatus = document.getElementById('updateStatus');
+
+    updateStatus.addEventListener('show.bs.modal', function (event) {
+
+        const button = event.relatedTarget;
+
+        const id = button.getAttribute('data-id');
+
+        document.getElementById('paymentId').value = id;
+
+    });
+
+</script>
+
+</html>

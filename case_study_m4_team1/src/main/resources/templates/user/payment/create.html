@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<form th:action="@{/user/payments/create}" method="post">
+    <input type="hidden" name="fieldBookId" th:value="${booking.id}" />
+    <select name="payId">
+        <option th:each="p:${payList}" th:value="${p.id}" th:text="${p.name}"></option>
+    </select>
+    <button type="submit">Thanh toán</button>
+</form>
+</body>
+</html>

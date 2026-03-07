@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CANCELED LIST</title>
+    <th:block th:insert="layout/layout::library"/>
+    <style>
+        body {
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #37474f;
+        }
+
+        .action-buttons a {
+            margin-right: 10px;
+        }
+
+        form input {
+            margin-right: 10px;
+        }
+
+        .booking-card {
+            background-color: #ffffffcc;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .booking-card div {
+            flex: 1 1 120px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .booking-card i {
+            font-size: 1.2em;
+            color: #00796b;
+        }
+
+        .badge-status {
+            font-size: 0.9em;
+            padding: 0.4em 0.7em;
+        }
+
+        .pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+            gap: 10px;
+        }
+
+        .form-inline-search {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-inline-search input {
+            flex: 1 1 150px;
+        }
+
+        .form-inline-search button,
+        .form-inline-search a {
+            flex: 0 0 120px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>CANCELED LIST</h1>
+
+    <div class="action-buttons mb-3">
+        <a class="btn btn-sm btn-success" href="/admin">Dashboard admin</a>
+        <a class="btn btn-sm btn-primary" href="/admin/field_books">APPROVED list</a>
+        <a class="btn btn-sm btn-danger" href="/admin/field_books/pending">PENDING list</a>
+    </div>
+
+    <form class="form-inline-search" action="/admin/field_books/canceled">
+        <input class="form-control" name="searchUser" th:value="${searchUser}" placeholder="Enter user name..."/>
+        <input class="form-control" name="searchField" th:value="${searchField}" placeholder="Enter field name..."/>
+        <input class="form-control" name="searchDate" th:value="${searchDate}" placeholder="Enter date..."/>
+        <button class="btn btn-primary">Search</button>
+        <a class="btn btn-light" href="/admin/field_books/canceled">Back</a>
+    </form>
+
+    <div th:if="${fieldBookPage.isEmpty()}" class="alert alert-warning text-center">
+        NO DATA
+    </div>
+
+    <div th:each="fb : ${fieldBookPage}" class="booking-card">
+        <div><i class="bi bi-person-circle"></i><span th:text="${fb.user.name}"></span></div>
+        <div><i class="bi bi-geo-alt-fill"></i><span th:text="${fb.field.name}"></span></div>
+        <div><i class="bi bi-clock-fill"></i><span
+                th:text="${fb.shift.getStartTime()} + ' - ' + ${fb.shift.getEndTime()}"></span></div>
+        <div><i class="bi bi-calendar-date"></i><span th:text="${fb.dateBook}"></span></div>
+        <div>
+            <span class="badge bg-warning text-dark"
+                  th:text="${fb.status}"></span>
+        </div>
+    </div>
+
+    <div class="pagination-wrapper">
+        <a class="btn btn-primary btn-sm" th:if="${fieldBookPage.hasPrevious()}"
+           th:href="@{/admin/field_books(page=${fieldBookPage.number -1},searchDate=${searchDate})}">Previous</a>
+        <span class="btn btn-light btn-sm disabled">
+            Page <span th:text="${fieldBookPage.number +1}"></span> / <span
+                th:text="${fieldBookPage.totalPages}"></span>
+        </span>
+        <a class="btn btn-dark btn-sm" th:if="${fieldBookPage.hasNext()}"
+           th:href="@{/admin/field_books(page=${fieldBookPage.number +1},searchDate=${searchDate})}">Next</a>
+    </div>
+
+</div>
+</body>
+</html>

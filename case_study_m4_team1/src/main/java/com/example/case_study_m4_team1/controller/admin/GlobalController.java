@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalController {
     @ExceptionHandler(BookingException.class)
     public String handleOutOfStock(Model model) {
-        model.addAttribute("error", "Lỗi booking");
+        model.addAttribute("error", "Fails booking");
         return "error";
     }
 
     @ExceptionHandler(FieldException.class)
     public String handleInvalidTransfer(Model model) {
-        model.addAttribute("error", "Sân đã được book");
+        model.addAttribute("error", "Field was booked");
         return "error";
     }
 
     @ExceptionHandler(NotFoundException.class)
     public String handleNotFound(Model model) {
-        model.addAttribute("error", "Hệ thống đang bảo trì hoặc không tìm thấy dữ liệu");
+        model.addAttribute("error", "Not found data or maintenance");
         return "error";
     }
 }

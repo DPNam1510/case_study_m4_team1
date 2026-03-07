@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<div class="container mt-4">
+    <div class="alert alert-danger">
+        <h2 th:text="${error}">Thông báo lỗi</h2>
+        <a href="/admin" class="btn btn-primary mt-2">Quay lại trang chủ</a>
+    </div>
+</div>
+</body>
+</html>
