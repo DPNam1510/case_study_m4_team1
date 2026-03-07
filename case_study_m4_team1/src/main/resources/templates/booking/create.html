@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Booking</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+    <style>
+        body{
+            background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs_IPGqiOoD-AznMepvljneytpLinSSS-2XA&s");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .overlay{
+            background-color: rgba(0,0,0,0.55);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .booking-card{
+            border-radius: 15px;
+        }
+        .card-header{
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="overlay">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg booking-card">
+                    <div class="card-header bg-success text-white">
+                        🏸 Badminton Field Booking
+                    </div>
+                    <div class="card-body">
+
+                        <div th:if="${error}" class="alert alert-danger text-center">
+                            <span th:text="${error}"></span>
+                        </div>
+
+                        <div th:if="${success}" class="alert alert-success text-center">
+                            <span th:text="${success}"></span>
+                        </div>
+
+                        <form th:action="@{/booking/create}" method="post">
+                            <input type="hidden" name="userId" th:value="${userId}">
+                            <div class="mb-3">
+                                <label class="form-label">Choose Field</label>
+                                <select name="fieldId" class="form-control" required>
+                                    <option value="">-- Field Choose --</option>
+                                    <option th:each="f : ${fields}"
+                                            th:value="${f.id}"
+                                            th:text="${f.name}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Choose Shift</label>
+                                <select name="shiftId" class="form-control" required>
+                                    <option value="">-- Shift Choose --</option>
+                                    <option th:each="s : ${shifts}"
+                                            th:value="${s.id}"
+                                            th:text="${s.startTime + ' - ' + s.endTime}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Booking Date</label>
+                                <input type="date"
+                                       name="dateBook"
+                                       class="form-control"
+                                       th:attr="min=${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"
+                                       required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    🏸 Booking Now
+                                </button>
+                                <a th:href="@{/booking/history(userId=${userId})}"
+                                   class="btn btn-secondary btn-lg">
+                                    Return
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    setTimeout(function() {
+        let alerts = document.querySelectorAll(".alert");
+        alerts.forEach(function(alert){
+            alert.style.display = "none";
+        });
+    }, 3000);
+</script>
+</body>
+</html>

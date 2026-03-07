@@ -23,11 +23,11 @@ public class StudySchedule {
 
     private Double price;
 
-    private int minStudents;
-    private int maxStudents;
+    private int minStudents = 5;
+    private int maxStudents = 10;
 
     @Enumerated(EnumType.STRING)
-    private ClassStatus statusClass;
+    private ClassStatus statusClass = ClassStatus.NOT_OPEN;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")

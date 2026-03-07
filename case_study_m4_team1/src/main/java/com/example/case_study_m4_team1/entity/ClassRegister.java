@@ -19,10 +19,6 @@ public class ClassRegister {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private LocalDateTime dateRegister;
-
-    @Enumerated(EnumType.STRING)
-    private RegisterStatus statusRegister;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -31,6 +27,11 @@ public class ClassRegister {
     @ManyToOne
     @JoinColumn(name = "schedule_id")
     private StudySchedule studySchedule;
+
+    private LocalDateTime dateRegister;
+
+    @Enumerated(EnumType.STRING)
+    private RegisterStatus statusRegister = RegisterStatus.PENDING;
 
     @OneToOne(mappedBy = "classRegister")
     private TeacherReview teacherReview;

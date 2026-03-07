@@ -22,24 +22,24 @@ public class FieldBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "field_id")
+    @JoinColumn(name = "field_id", nullable = false)
     private Fields field;
 
     @ManyToOne
-    @JoinColumn(name = "shift_id")
+    @JoinColumn(name = "shift_id", nullable = false)
     private Shift shift;
 
-    @Column(name = "date_book")
+    @Column(name = "date_book", nullable = false)
     private LocalDate dateBook;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
-    @OneToOne(mappedBy = "fieldBook")
-    private PaymentFieldBook paymentFieldBook;
+//    @OneToOne(mappedBy = "fieldBook")
+//    private PaymentFieldBook paymentFieldBook;
 
 }

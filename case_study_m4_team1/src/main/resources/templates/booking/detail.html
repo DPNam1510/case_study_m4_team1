@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Detail</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+    <style>
+        body{
+            background-image: url("https://images.unsplash.com/photo-1599058917765-a780eda07a3e");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .overlay{
+            background-color: rgba(0,0,0,0.55);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .detail-card{
+            border-radius: 15px;
+        }
+        .card-header{
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="overlay">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg detail-card">
+                    <div class="card-header bg-primary text-white">
+                        🏸 Booking Detail
+                    </div>
+                    <div class="card-body">
+                        <p class="fs-5">
+                            <strong>Badminton Field:</strong>
+                            <span th:text="${booking.fieldName}"></span>
+                        </p>
+                        <p class="fs-5">
+                            <strong>Booking Date:</strong>
+                            <span th:text="${booking.dateBook}"></span>
+                        </p>
+                        <p class="fs-5">
+                            <strong>Shift Time:</strong>
+                            <span th:text="${booking.shiftTime}"></span>
+                        </p>
+                        <p class="fs-5">
+                            <strong>Status:</strong>
+                            <span class="badge bg-success"
+                                  th:text="${booking.status}">
+                        </span>
+                        </p>
+                        <div class="mt-4 text-center">
+                            <a th:href="@{/booking/history(userId=${booking.userId})}"
+                               class="btn btn-secondary">
+                                ⬅ Back
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
