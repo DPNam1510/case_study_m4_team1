@@ -71,13 +71,13 @@
             </div>
         </div>
     </div>
-<!--    <div class="pagination-wrapper">-->
-<!--        <a class="btn btn-primary btn-sm" th:if="${history.hasPrevious()}" th:href="@{/booking/history(page=${history.number -1})}">Previous</a>-->
-<!--        <span class="btn btn-light btn-sm disabled">-->
-<!--            Page <span th:text="${history.number +1}"></span> / <span th:text="${history.totalPages}"></span>-->
-<!--        </span>-->
-<!--        <a class="btn btn-dark btn-sm" th:if="${history.hasNext()}" th:href="@{/booking/history(page=${history.number +1})}">Next</a>-->
-<!--    </div>-->
+    <div class="pagination-wrapper">
+        <a class="btn btn-primary btn-sm" th:if="${history.hasPrevious()}" th:href="@{/booking/history(userId=${userId},page=${history.number -1})}">Previous</a>
+        <span class="btn btn-light btn-sm disabled">
+            Page <span th:text="${history.number +1}"></span> / <span th:text="${history.totalPages}"></span>
+        </span>
+        <a class="btn btn-dark btn-sm" th:if="${history.hasNext()}" th:href="@{/booking/history(userId=${userId},page=${history.number +1})}">Next</a>
+    </div>
 </div>
 </body>
 </html>
