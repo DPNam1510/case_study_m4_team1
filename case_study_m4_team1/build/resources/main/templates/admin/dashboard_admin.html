@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+            <h2 class="fw-bold mb-4">Admin Dashboard</h2>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <a href="/admin/fields" class="btn btn-outline-primary w-100 py-3">
+                        Fields Manager
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="/admin/field_books" class="btn btn-outline-success w-100 py-3">
+                        Field Book Manager
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="/admin/shifts" class="btn btn-outline-warning w-100 py-3">
+                        Shift Manager
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="/admin/study_schedules" class="btn btn-outline-dark w-100 py-3">
+                        Study Schedule
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="/home" class="btn btn-outline-secondary w-100 py-3">
+                        Back Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

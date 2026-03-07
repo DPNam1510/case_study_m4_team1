@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Giảng viên Dashboard</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<th:block th:insert="layout/layout::my-navbar"/>
+
+<div class="container mt-4">
+    <h2>Xin chào, <span th:text="${teacher.name}"></span>!</h2>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Lớp học của tôi</div>
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý lớp học</h5>
+                    <p class="card-text">Xem danh sách lớp và học viên</p>
+                    <a href="/teacher/classes" class="btn btn-light">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

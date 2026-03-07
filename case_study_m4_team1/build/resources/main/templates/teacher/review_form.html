@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Đánh giá học viên</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<th:block th:insert="layout/layout::my-navbar"/>
+
+<div class="container mt-4">
+    <h2>Đánh giá học viên: <span th:text="${classRegister.user.name}"></span></h2>
+
+    <form th:action="@{/teacher/class/student/review}" method="post" class="mt-3">
+        <input type="hidden" name="classRegisterId" th:value="${classRegister.id}">
+
+        <div class="mb-3">
+            <label for="scores" class="form-label">Điểm số (0-10)</label>
+            <input type="number" class="form-control" id="scores" name="scores"
+                   min="0" max="10" step="0.5" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="review" class="form-label">Nhận xét</label>
+            <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu đánh giá</button>
+        <a href="/teacher/classes" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+</body>
+</html>
