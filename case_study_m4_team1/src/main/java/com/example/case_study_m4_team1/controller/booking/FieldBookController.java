@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/booking")
@@ -24,8 +25,13 @@ public class FieldBookController {
     @Autowired
     private IFieldsService fieldsService;
 
+    @GetMapping("")
+    public String bookingHome(@RequestParam(defaultValue = "1") Long userId){
+        return "redirect:/booking/history?userId="+userId;
+    }
     @GetMapping("/create")
-    public String showCreateForm(Model model) {
+    public String showCreateForm(@RequestParam Long userId ,Model model) {
+        model.addAttribute("userId", userId);
         model.addAttribute("booking", new BookingRequestDto());
         model.addAttribute("fields",fieldsService.getAllFields());
         model.addAttribute("shifts",shiftService.getAllShifts());
@@ -33,8 +39,14 @@ public class FieldBookController {
     }
     @PostMapping("/create")
     public String createBooking(@RequestParam Long userId,
-                                @ModelAttribute BookingRequestDto request) {
-        fieldBookService.createBooking(userId, request);
+                                @ModelAttribute BookingRequestDto request,
+                                RedirectAttributes redirectAttributes) {
+        try {
+            fieldBookService.createBooking(userId, request);
+            redirectAttributes.addFlashAttribute("Success", "Booking has been created!");
+        }catch (IllegalArgumentException e){
+            redirectAttributes.addFlashAttribute("Error",e.getMessage());
+        }
         return "redirect:/booking/history?userId=" + userId;
     }
 
@@ -46,7 +58,9 @@ public class FieldBookController {
     }
 
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
+    public String showUpdateForm(@PathVariable Long id,
+                                 @RequestParam Long userId,
+                                 Model model) {
         BookingResponseDto booking = fieldBookService.detailBooking(id);
         BookingRequestDto request = new BookingRequestDto();
         request.setFieldId(booking.getFieldId());
@@ -54,6 +68,9 @@ public class FieldBookController {
         request.setDateBook(booking.getDateBook());
         model.addAttribute("booking", request);
         model.addAttribute("bookingId",id);
+        model.addAttribute("userId",userId);
+        model.addAttribute("fields",fieldsService.getAllFields());
+        model.addAttribute("shifts",shiftService.getAllShifts());
         return "booking/update";
     }
     @PostMapping("/update/{id}")

@@ -1,33 +1,85 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Update Booking</title>
-</head>
-<body>
-<h2>Update Booking</h2>
+ <!DOCTYPE html>
+ <html xmlns:th="http://www.thymeleaf.org" lang="en">
+ <head>
+        <meta charset="UTF-8">
+        <title>Update Booking</title>
+     <th:block th:insert="~{layout/layout::library}"/>
+        <style>
+            body{
+                background-image: url("https://images.unsplash.com/photo-1599058917765-a780eda07a3e");
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+            .overlay{
+                background-color: rgba(0,0,0,0.55);
+                min-height: 100vh;
+                padding-top: 80px;
+            }
+            .booking-card{
+                border-radius: 15px;
+            }
+            .card-header{
+                font-size: 22px;
+                font-weight: bold;
+                text-align: center;
+            }
+        </style>
+ </head>
+ <body>
+    <div class="overlay">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-lg booking-card">
+                        <div class="card-header bg-warning text-dark">
+                            🏸 Update Booking
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/booking/update/{id}(id=${bookingId})}" method="post">
+                                <input type="hidden" name="userId" th:value="${userId}">
+                                <div class="mb-3">
+                                    <label class="form-label">Badminton Field</label>
+                                    <select name="fieldId" class="form-control">
+                                        <option th:each="f : ${fields}"
+                                                th:value="${f.id}"
+                                                th:text="${f.name}"
+                                                th:selected="${f.id == booking.fieldId}">
+                                        </option>
 
-<form th:action="@{/booking/update/{id}(id=${bookingId})}" method="post">
-
-    <input type="hidden" name="userId" th:value="${userId}">
-
-    <div>
-        <label>Sân</label>
-        <input type="number" name="fieldId" th:value="${booking.fieldId}">
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Playing Shift</label>
+                                    <select name="shiftId" class="form-control">
+                                        <option th:each="s : ${shifts}"
+                                                th:value="${s.id}"
+                                                th:text="${s.startTime + ' - ' + s.endTime}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Booking Date</label>
+                                    <input type="date"
+                                           name="dateBook"
+                                           class="form-control"
+                                           th:value="${booking.dateBook}">
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-warning">
+                                        ✏ Update Booking
+                                    </button>
+                                    <a th:href="@{/booking/history(userId=${userId})}"
+                                       class="btn btn-secondary">
+                                        ⬅ Back
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <label>Ca</label>
-        <input type="number" name="shiftId" th:value="${booking.shiftId}">
-    </div>
-
-    <div>
-        <label>Ngày</label>
-        <input type="date" name="dateBook" th:value="${booking.dateBook}">
-    </div>
-
-    <button type="submit">Update</button>
-
-</form>
-</body>
-</html>
+ </body>
+ </html>

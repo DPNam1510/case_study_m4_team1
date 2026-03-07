@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class BookingResponseDto {
     private Long id;
+    private Long userId;
     private int fieldId;
     private int shiftId;
     private String fieldName;

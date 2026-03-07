@@ -39,7 +39,7 @@ public class FieldBook {
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
-    @OneToOne(mappedBy = "fieldBook")
-    private PaymentFieldBook paymentFieldBook;
+//    @OneToOne(mappedBy = "fieldBook")
+//    private PaymentFieldBook paymentFieldBook;
 
 }

@@ -16,5 +16,6 @@ public class BookingRequestDto {
     @NotNull
     private int shiftId;
     @NotNull
+    @FutureOrPresent(message = "Date must be today or future")
     private LocalDate dateBook;
 }

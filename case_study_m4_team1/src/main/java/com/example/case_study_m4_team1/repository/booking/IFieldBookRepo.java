@@ -7,11 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface IFieldBookRepo extends JpaRepository<FieldBook,Long> {
     // kiểm tra trùng lịch sân
     boolean existsByField_IdAndShift_IdAndDateBookAndStatusIn(
@@ -46,7 +48,8 @@ public interface IFieldBookRepo extends JpaRepository<FieldBook,Long> {
        JOIN FETCH fb.shift
        WHERE fb.id = :id
        """)
-    Optional<FieldBook> findDetailById(@Param("id") Long id);
+    Optional<FieldBook> findDetailById(
+            @Param("id") Long id);
 
     // Hủy sân trước 1 tiếng
     @Query("""
@@ -54,12 +57,12 @@ public interface IFieldBookRepo extends JpaRepository<FieldBook,Long> {
        JOIN FETCH fb.shift
        WHERE fb.id = :id
        AND fb.user.id = :userId
-       AND fb.status = :status
+       AND fb.status IN :status
        """)
     Optional<FieldBook> findCancelableBooking(
             @Param("id") Long id,
             @Param("userId") Long userId,
-            @Param("status") BookingStatus status
+            @Param("status") List<BookingStatus> statuses
     );
 
     // xem lịch sử đạt sân, phân trang

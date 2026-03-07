@@ -8,6 +8,7 @@ import com.example.case_study_m4_team1.entity.Shift;
 import com.example.case_study_m4_team1.entity.Users;
 import com.example.case_study_m4_team1.enums.BookingStatus;
 import com.example.case_study_m4_team1.enums.RegisterStatus;
+import com.example.case_study_m4_team1.exception.BookingException;
 import com.example.case_study_m4_team1.repository.booking.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +38,9 @@ public class FieldBookService implements IFieldBookService {
     private BookingResponseDto convertToDto(FieldBook booking) {
         BookingResponseDto dto = new BookingResponseDto();
         dto.setId(booking.getId());
+        dto.setUserId(booking.getUser().getId());
+        dto.setFieldId(booking.getField().getId());
+        dto.setShiftId(booking.getShift().getId());
         dto.setFieldName(booking.getField().getName());
         dto.setDateBook(booking.getDateBook());
         dto.setShiftTime(booking.getShift().getStartTime() + " - " +
@@ -46,8 +51,16 @@ public class FieldBookService implements IFieldBookService {
 
     @Override
     public BookingResponseDto createBooking(Long userId, BookingRequestDto request) {
-        if (request.getDateBook().isBefore(LocalDate.now())) {
-            throw new RuntimeException("Not booking past day!");
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+        if (request.getDateBook().isBefore(today)) {
+            throw new BookingException("Not booking past day!");
+        }
+        if (request.getDateBook().isEqual(today)) {
+            Shift shift = shiftRepo.findById(request.getShiftId()).orElseThrow();
+            if (shift.getStartTime().isBefore(now)) {
+                throw new BookingException("Not booking past shift!");
+            }
         }
         List<BookingStatus> statuses = List.of(BookingStatus.PENDING, BookingStatus.APPROVED);
 
@@ -57,7 +70,7 @@ public class FieldBookService implements IFieldBookService {
                 request.getDateBook(),
                 statuses);
         if (isFieldBooked) {
-            throw new RuntimeException("The field is booked!");
+            throw new BookingException("The field is booked!");
         }
 
         boolean isUserBooked = fieldBookRepo.existsByUser_IdAndShift_IdAndDateBookAndStatusIn(
@@ -66,23 +79,23 @@ public class FieldBookService implements IFieldBookService {
                 request.getDateBook(),
                 statuses);
         if (isUserBooked) {
-            throw new RuntimeException("The shift is booked!");
+            throw new BookingException("The shift is booked!");
         }
 
-        boolean isStudyConflict = classRegisterRepo.existsByUser_IdAndSchedule_Shift_IdAndStatusRegister (
+        boolean isStudyConflict = classRegisterRepo.existsByUser_IdAndStudySchedule_Shift_IdAndStatusRegister (
                 userId,
                 request.getShiftId(),
                 RegisterStatus.APPROVED);
         if (isStudyConflict) {
-            throw new RuntimeException("Study conflict!");
+            throw new BookingException("Study conflict!");
         }
 
         Users users = usersRepo.findById(userId).orElseThrow(
-                () -> new RuntimeException("User not found!"));
+                () -> new BookingException("User not found!"));
         Fields fields = fieldsRepo.findById(request.getFieldId()).orElseThrow(
-                () -> new RuntimeException("Field not found!"));
+                () -> new BookingException("Field not found!"));
         Shift shift = shiftRepo.findById(request.getShiftId()).orElseThrow(
-                () -> new RuntimeException("Shift not found!"));
+                () -> new BookingException("Shift not found!"));
 
         FieldBook fieldBook = new FieldBook();
         fieldBook.setUser(users);
@@ -97,14 +110,17 @@ public class FieldBookService implements IFieldBookService {
     }
 
     @Override
-    public BookingResponseDto updateBooking(Long userId, Long id, BookingRequestDto request) {
+    public BookingResponseDto updateBooking(Long id,Long userId, BookingRequestDto request) {
+        if (request.getDateBook().isBefore(LocalDate.now())) {
+            throw new BookingException("Not booking past day!");
+        }
         FieldBook fieldBook = fieldBookRepo.findById(id).orElseThrow(
-                ()->new RuntimeException("Booking not found!"));
+                ()->new BookingException("Booking not found!"));
         if (!Objects.equals(fieldBook.getUser().getId(), userId)) {
-            throw new RuntimeException("Not edit booking!");
+            throw new BookingException("Not edit booking!");
         }
         if (fieldBook.getStatus() == BookingStatus.APPROVED) {
-            throw new RuntimeException("Admin approve booking, not edit!");
+            throw new BookingException("Admin approve booking, not edit!");
         }
         List<BookingStatus> statuses = List.of(BookingStatus.PENDING, BookingStatus.APPROVED);
         if(fieldBookRepo.existsByField_IdAndShift_IdAndDateBookAndStatusInAndIdNot(
@@ -113,32 +129,34 @@ public class FieldBookService implements IFieldBookService {
                 request.getDateBook(),
                 statuses,
                 id)){
-            throw new RuntimeException("The field is booked!");
+            throw new BookingException("The field is booked!");
         }
         fieldBook.setField(fieldsRepo.findById(request.getFieldId()).orElseThrow());
         fieldBook.setShift(shiftRepo.findById(request.getShiftId()).orElseThrow());
         fieldBook.setDateBook(request.getDateBook());
+        fieldBookRepo.save(fieldBook);
         return convertToDto(fieldBook);
     }
 
     @Override
     public void deleteBooking(Long id, Long userId) {
         FieldBook fieldBook = fieldBookRepo.findCancelableBooking(id,userId,
-                BookingStatus.APPROVED).orElseThrow(
-                        () -> new RuntimeException("Booking not cancelled!"));
+                List.of(BookingStatus.PENDING, BookingStatus.APPROVED)).orElseThrow(
+                        () -> new BookingException("Booking not cancelled!"));
         LocalDateTime bookingTime = LocalDateTime.of(fieldBook.getDateBook(),
                                                      fieldBook.getShift().getStartTime());
         if (LocalDateTime.now().isAfter(bookingTime.minusHours(1))) {
-            throw new RuntimeException("Over time cancel!");
+            throw new BookingException("Over time cancel!");
         }
         fieldBook.setStatus(BookingStatus.CANCELED);
+        fieldBookRepo.save(fieldBook);
     }
 
     @Override
     @Transactional(readOnly = true)
     public BookingResponseDto detailBooking(Long id){
         FieldBook fieldBook = fieldBookRepo.findDetailById(id).orElseThrow(
-                () -> new RuntimeException("Booking not found!"));
+                () -> new BookingException("Booking not found!"));
         return convertToDto(fieldBook);
     }
 

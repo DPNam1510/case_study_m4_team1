@@ -1,36 +1,75 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"> lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>History booking</title>
+    <title>Booking History</title>
+    <th:block th:insert="layout/layout::library"/>
+    <style>
+        body{
+            background-image: url("https://images.unsplash.com/photo-1599058917765-a780eda07a3e");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .overlay{
+            background-color: rgba(0,0,0,0.55);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .history-card{
+            border-radius: 15px;
+        }
+    </style>
 </head>
 <body>
-<h2>Lịch sử đặt sân</h2>
-
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Field</th>
-        <th>Date</th>
-        <th>Shift</th>
-        <th>Status</th>
-        <th>Action</th>
-    </tr>
-
-    <tr th:each="b : ${history.content}">
-        <td th:text="${b.id}"></td>
-        <td th:text="${b.fieldName}"></td>
-        <td th:text="${b.dateBook}"></td>
-        <td th:text="${b.shiftTime}"></td>
-        <td th:text="${b.status}"></td>
-
-        <td>
-            <a th:href="@{/booking/detail/{id}(id=${b.id})}">Detail</a>
-            <a th:href="@{/booking/update/{id}(id=${b.id})}">Edit</a>
-            <a th:href="@{/booking/delete/{id}(id=${b.id},userId=${userId})}">Cancel</a>
-        </td>
-    </tr>
-
-</table>
+<div class="overlay">
+    <div class="container">
+        <div class="card shadow-lg history-card">
+            <div class="card-header bg-success text-white d-flex justify-content-between">
+                <h4 class="mb-0">🏸 Booking History</h4>
+                <a th:href="@{/booking/create(userId=${userId})}" class="btn btn-light">
+                    Create Booking
+                </a>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover text-center">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Field</th>
+                        <th>Date</th>
+                        <th>Shift</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="b : ${history.content}">
+                        <td th:text="${b.id}"></td>
+                        <td th:text="${b.fieldName}"></td>
+                        <td th:text="${b.dateBook}"></td>
+                        <td th:text="${b.shiftTime}"></td>
+                        <td>
+<span class="badge bg-success"
+      th:text="${b.status}"> </span>
+                        </td>
+                        <td>
+                            <a class="btn btn-info btn-sm"
+                               th:href="@{/booking/detail/{id}(id=${b.id})}">
+                                Detail </a>
+                            <a class="btn btn-warning btn-sm"
+                               th:href="@{/booking/update/{id}(id=${b.id},userId=${userId})}">
+                                Edit </a>
+                            <a class="btn btn-danger btn-sm"
+                               th:href="@{/booking/delete/{id}(id=${b.id},userId=${userId})}">
+                                Cancel </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
