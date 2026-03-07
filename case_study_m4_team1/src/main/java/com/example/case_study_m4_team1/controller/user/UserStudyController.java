@@ -6,13 +6,13 @@ import com.example.case_study_m4_team1.entity.StudySchedule;
 import com.example.case_study_m4_team1.entity.TeacherNotice;
 import com.example.case_study_m4_team1.entity.TeacherReview;
 import com.example.case_study_m4_team1.service.user.IUserStudyService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -21,6 +21,9 @@ public class UserStudyController {
 
     @Autowired
     private IUserStudyService userStudyService;
+
+    private static final String USER_ID_SESSION_KEY = "userId";
+    private static final String USERNAME_SESSION_KEY = "username";
 
     @GetMapping("/classes")
     public String viewAvailableClasses(Model model) {
@@ -42,12 +45,21 @@ public class UserStudyController {
 
     @PostMapping("/register")
     public String registerClass(@RequestParam int scheduleId,
-                                Principal principal,
+                                HttpSession session,
                                 RedirectAttributes redirectAttributes) {
         try {
-            Long registerId = userStudyService.registerClass(principal.getName(), scheduleId);
+            // Lấy username từ session
+            String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
+
+            if (username == null) {
+                redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để đăng ký lớp");
+                return "redirect:/login";
+            }
+
+            Long registerId = userStudyService.registerClass(username, scheduleId);
             redirectAttributes.addFlashAttribute("success", "Đăng ký lớp thành công! Vui lòng chọn hình thức thanh toán.");
             return "redirect:/user/study/payment/" + registerId;
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Đăng ký thất bại: " + e.getMessage());
             return "redirect:/user/study/classes";
@@ -55,34 +67,60 @@ public class UserStudyController {
     }
 
     @GetMapping("/my-schedule")
-    public String viewMySchedule(Principal principal, Model model) {
-        List<ClassRegister> myClasses = userStudyService.getUserClasses(principal.getName());
+    public String viewMySchedule(HttpSession session, Model model) {
+        String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
+
+        if (username == null) {
+            return "redirect:/login";
+        }
+
+        List<ClassRegister> myClasses = userStudyService.getUserClasses(username);
         model.addAttribute("myClasses", myClasses);
         return "user/my_schedule";
     }
 
     @GetMapping("/notices")
-    public String viewNotices(Principal principal, Model model) {
-        List<TeacherNotice> notices = userStudyService.getUserNotices(principal.getName());
+    public String viewNotices(HttpSession session, Model model) {
+        String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
+
+        if (username == null) {
+            return "redirect:/login";
+        }
+
+        List<TeacherNotice> notices = userStudyService.getUserNotices(username);
         model.addAttribute("notices", notices);
         return "user/notice_list";
     }
 
     @GetMapping("/reviews")
-    public String viewMyReviews(Principal principal, Model model) {
-        List<TeacherReview> reviews = userStudyService.getUserReviews(principal.getName());
+    public String viewMyReviews(HttpSession session, Model model) {
+        String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
+
+        if (username == null) {
+            return "redirect:/login";
+        }
+
+        List<TeacherReview> reviews = userStudyService.getUserReviews(username);
         model.addAttribute("reviews", reviews);
         return "user/review_list";
     }
 
     @GetMapping("/payment/{registerId}")
     public String showPaymentForm(@PathVariable long registerId,
-                                  Principal principal,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes,
                                   Model model) {
+        String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
+
+        if (username == null) {
+            return "redirect:/login";
+        }
+
         ClassRegister register = userStudyService.findClassRegisterById(registerId);
 
-        // Kiểm tra quyền
-        if (!userStudyService.isOwner(principal.getName(), registerId)) {
+        // Kiểm tra quyền sở hữu
+        if (!userStudyService.isOwner(username, registerId)) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập");
             return "redirect:/user/study/my-schedule";
         }
 
@@ -93,12 +131,19 @@ public class UserStudyController {
 
     @PostMapping("/payment/process")
     public String processPayment(@ModelAttribute PaymentRequestDTO paymentRequest,
-                                 Principal principal,
+                                 HttpSession session,
                                  RedirectAttributes redirectAttributes) {
         try {
-            userStudyService.processPayment(paymentRequest, principal.getName());
+            String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
+
+            if (username == null) {
+                return "redirect:/login";
+            }
+
+            userStudyService.processPayment(paymentRequest, username);
             redirectAttributes.addFlashAttribute("success", "Thanh toán thành công!");
             return "redirect:/user/study/my-schedule";
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Thanh toán thất bại: " + e.getMessage());
             return "redirect:/user/study/payment/" + paymentRequest.getRegisterId();
