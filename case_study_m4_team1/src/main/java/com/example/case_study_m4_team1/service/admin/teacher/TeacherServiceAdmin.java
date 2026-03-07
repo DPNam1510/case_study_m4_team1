@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TeacherService implements ITeacherService{
+public class TeacherServiceAdmin implements ITeacherServiceAdmin {
 
     @Autowired
     private ITeacherRepo teacherRepo;

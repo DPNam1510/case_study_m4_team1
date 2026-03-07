@@ -4,6 +4,6 @@ import com.example.case_study_m4_team1.entity.Teacher;
 
 import java.util.List;
 
-public interface ITeacherService {
+public interface ITeacherServiceAdmin {
     List<Teacher> getList();
 }

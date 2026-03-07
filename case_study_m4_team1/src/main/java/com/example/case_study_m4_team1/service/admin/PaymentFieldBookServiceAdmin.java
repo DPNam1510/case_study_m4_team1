@@ -1,4 +1,4 @@
-package com.example.case_study_m4_team1.service;
+package com.example.case_study_m4_team1.service.admin;
 
 import com.example.case_study_m4_team1.dto.PaymentFieldBookDto;
 import com.example.case_study_m4_team1.entity.FieldBook;
@@ -8,8 +8,8 @@ import com.example.case_study_m4_team1.enums.BookingStatus;
 import com.example.case_study_m4_team1.enums.PaymentStatus;
 import com.example.case_study_m4_team1.exception.BookingException;
 import com.example.case_study_m4_team1.exception.NotFoundException;
-import com.example.case_study_m4_team1.repository.IPayRepository;
-import com.example.case_study_m4_team1.repository.IPaymentFieldBookRepository;
+import com.example.case_study_m4_team1.repository.admin.IPayRepositoryAdmin;
+import com.example.case_study_m4_team1.repository.admin.IPaymentFieldBookRepositoryAdmin;
 import com.example.case_study_m4_team1.repository.admin.field_book.IFieldBookRepositoryAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,15 +22,15 @@ import java.util.List;
 
 @Service
 @Transactional
-public class PaymentFieldBookService implements IPaymentFieldBookService{
+public class PaymentFieldBookServiceAdmin implements IPaymentFieldBookServiceAdmin {
 
     @Autowired
-    private IPaymentFieldBookRepository paymentFieldBookRepository;
+    private IPaymentFieldBookRepositoryAdmin paymentFieldBookRepository;
     @Autowired
     private IFieldBookRepositoryAdmin fieldBookRepositoryAdmin;
 
     @Autowired
-    private IPayRepository payRepo;
+    private IPayRepositoryAdmin payRepo;
 
     @Override
     public Page<PaymentFieldBookDto> searchPayment (String user, String field, PaymentStatus status, Pageable pageable) {

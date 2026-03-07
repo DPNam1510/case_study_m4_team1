@@ -1,4 +1,4 @@
-package com.example.case_study_m4_team1.repository;
+package com.example.case_study_m4_team1.repository.admin;
 
 import com.example.case_study_m4_team1.dto.PaymentRegisterDto;
 import com.example.case_study_m4_team1.entity.PaymentRegister;
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface IPaymentRegisterRepository extends JpaRepository<PaymentRegister,Long> {
+public interface IPaymentRegisterRepositoryAdmin extends JpaRepository<PaymentRegister,Long> {
     @Query(value = "select pr.id as id, sc.class_name as className, u.name as user,f.name as field,t.name as teacher,\n" +
             "cr.date_register as date, sc.price as price,p.pay_type as type,\n" +
             "pr.status as status\n" +

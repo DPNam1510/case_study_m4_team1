@@ -4,14 +4,85 @@
     <meta charset="UTF-8">
     <title>Dashboard Admin</title>
     <th:block th:insert="layout/layout::library"/>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Nền toàn màn hình */
+        body {
+            background-image: url('/images/badminton-player-silhouette-jumping-beautiful-sky-sunset-109716231.webp'); /* đổi đường dẫn ảnh ở đây */
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Overlay mờ nền phía sau card */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            padding-top: 60px;
+        }
+
+        /* Card trong suốt nhưng vẫn nổi bật */
+        .card {
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15); /* trong suốt, có thể chỉnh opacity */
+            backdrop-filter: blur(15px); /* hiệu ứng mờ nền phía sau */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.2); /* viền nhẹ để card rõ ràng */
+        }
+
+        .card-body h2 {
+            font-weight: 700;
+            color: #fff; /* chữ nổi bật trên nền */
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Màu nút nổi trên nền tối */
+        .btn-outline-primary { color: #0d6efd; border-color: #0d6efd; }
+        .btn-outline-success { color: #198754; border-color: #198754; }
+        .btn-outline-warning { color: #ffc107; border-color: #ffc107; }
+        .btn-outline-dark { color: #fff; border-color: #fff; }
+        .btn-outline-secondary { color: #6c757d; border-color: #6c757d; }
+
+        .btn-outline-primary:hover { background-color: #0d6efd; color: #fff; }
+        .btn-outline-success:hover { background-color: #198754; color: #fff; }
+        .btn-outline-warning:hover { background-color: #ffc107; color: #212529; }
+        .btn-outline-dark:hover { background-color: #212529; color: #fff; }
+        .btn-outline-secondary:hover { background-color: #6c757d; color: #fff; }
+    </style>
 </head>
 <body>
 <div class="container py-4">
-    <div class="card shadow-sm border-0">
+    <div class="card shadow-sm border-0 mx-auto" style="max-width: 900px;">
         <div class="card-body text-center">
             <h2 class="fw-bold mb-4">Admin Dashboard</h2>
 
-            <div class="row g-3">
+            <div class="row g-4">
                 <div class="col-md-4">
                     <a href="/admin/fields" class="btn btn-outline-primary w-100 py-3">
                         Fields Manager
@@ -30,6 +101,11 @@
                 <div class="col-md-6">
                     <a href="/admin/study_schedules" class="btn btn-outline-dark w-100 py-3">
                         Study Schedule
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="/admin/payments" class="btn btn-outline-dark w-100 py-3">
+                        Payment Manager
                     </a>
                 </div>
                 <div class="col-md-6">

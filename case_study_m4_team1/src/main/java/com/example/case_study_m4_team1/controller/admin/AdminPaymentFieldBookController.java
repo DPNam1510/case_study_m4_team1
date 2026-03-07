@@ -3,8 +3,8 @@ package com.example.case_study_m4_team1.controller.admin;
 import com.example.case_study_m4_team1.dto.PaymentFieldBookDto;
 import com.example.case_study_m4_team1.dto.PaymentRegisterDto;
 import com.example.case_study_m4_team1.enums.PaymentStatus;
-import com.example.case_study_m4_team1.service.IPaymentFieldBookService;
-import com.example.case_study_m4_team1.service.IPaymentRegisterService;
+import com.example.case_study_m4_team1.service.admin.IPaymentFieldBookServiceAdmin;
+import com.example.case_study_m4_team1.service.admin.IPaymentRegisterServiceAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,9 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("admin/payments")
 public class AdminPaymentFieldBookController {
     @Autowired
-    private IPaymentFieldBookService paymentFieldBookService;
+    private IPaymentFieldBookServiceAdmin paymentFieldBookService;
     @Autowired
-    IPaymentRegisterService paymentRegisterService;
+    IPaymentRegisterServiceAdmin paymentRegisterService;
 
     @GetMapping
     public String show(Model model,

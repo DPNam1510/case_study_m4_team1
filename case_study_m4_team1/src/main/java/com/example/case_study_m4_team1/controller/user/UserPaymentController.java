@@ -1,25 +1,18 @@
 package com.example.case_study_m4_team1.controller.user;
 
-import com.example.case_study_m4_team1.dto.PaymentFieldBookDto;
-import com.example.case_study_m4_team1.enums.PaymentStatus;
-import com.example.case_study_m4_team1.service.IPayService;
-import com.example.case_study_m4_team1.service.IPaymentFieldBookService;
+import com.example.case_study_m4_team1.service.admin.IPayServiceAdmin;
+import com.example.case_study_m4_team1.service.admin.IPaymentFieldBookServiceAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequestMapping("user/payments")
 public class UserPaymentController {
     @Autowired
-    private IPaymentFieldBookService paymentFieldBookService;
+    private IPaymentFieldBookServiceAdmin paymentFieldBookService;
     @Autowired
-    private IPayService payService;
+    private IPayServiceAdmin payService;
 
 //    @GetMapping
 //    public String showPaymentHistory(Model model, Principal principal){

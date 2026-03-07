@@ -1,4 +1,4 @@
-package com.example.case_study_m4_team1.repository;
+package com.example.case_study_m4_team1.repository.admin;
 
 import com.example.case_study_m4_team1.dto.PaymentFieldBookDto;
 import com.example.case_study_m4_team1.entity.PaymentFieldBook;
@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface IPaymentFieldBookRepository extends JpaRepository<PaymentFieldBook,Long> {
+public interface IPaymentFieldBookRepositoryAdmin extends JpaRepository<PaymentFieldBook,Long> {
     @Query(value = """
         SELECT pf.id as id,
                 u.name AS user,

@@ -1,12 +1,9 @@
 package com.example.case_study_m4_team1.controller.admin;
 
 
-import com.example.case_study_m4_team1.dto.StudyScheduleAdvancedDTO;
-import com.example.case_study_m4_team1.entity.StudySchedule;
-import com.example.case_study_m4_team1.entity.Teacher;
 import com.example.case_study_m4_team1.enums.ClassStatus;
 import com.example.case_study_m4_team1.service.admin.study_schedule.IStudyScheduleServiceAdmin;
-import com.example.case_study_m4_team1.service.admin.teacher.ITeacherService;
+import com.example.case_study_m4_team1.service.admin.teacher.ITeacherServiceAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +18,7 @@ public class AdminStudyScheduleController {
     @Autowired
     private IStudyScheduleServiceAdmin studyScheduleServiceAdmin;
     @Autowired
-    private ITeacherService teacherService;
+    private ITeacherServiceAdmin teacherService;
 
     @GetMapping
     public String show(Model model){

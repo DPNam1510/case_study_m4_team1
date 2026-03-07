@@ -1,10 +1,10 @@
-package com.example.case_study_m4_team1.service;
+package com.example.case_study_m4_team1.service.admin;
 
 import com.example.case_study_m4_team1.dto.PaymentRegisterDto;
 import com.example.case_study_m4_team1.entity.PaymentRegister;
 import com.example.case_study_m4_team1.enums.PaymentStatus;
 import com.example.case_study_m4_team1.exception.BookingException;
-import com.example.case_study_m4_team1.repository.IPaymentRegisterRepository;
+import com.example.case_study_m4_team1.repository.admin.IPaymentRegisterRepositoryAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class PaymentRegisterService implements IPaymentRegisterService{
+public class PaymentRegisterServiceAdmin implements IPaymentRegisterServiceAdmin {
 
     @Autowired
-    private IPaymentRegisterRepository paymentRegisterRepository;
+    private IPaymentRegisterRepositoryAdmin paymentRegisterRepository;
 
     @Override
     public Page<PaymentRegisterDto> searchPayment(String className,

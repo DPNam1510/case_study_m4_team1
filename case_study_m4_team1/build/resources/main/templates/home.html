@@ -1,12 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <th:block th:insert="layout/layout::library"/>
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Nền toàn màn hình, phủ hết, không còn khoảng trắng */
+        .bg {
+            background-image: url('/images/father-daughter-playing-badminton-beach-play-sandy-near-water-captured-soft-light-sunset-417849363.webp');
+            background-size: cover; /* phủ toàn màn hình */
+            background-repeat: no-repeat;
+            background-position: center center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay-text {
+            background-color: rgba(0, 0, 0, 0.45);
+            padding: 20px 30px;
+            border-radius: 15px;
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .overlay-text h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .overlay-text a.btn {
+            font-size: 1.1rem;
+            padding: 10px 25px;
+            border-radius: 50px;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to us Badminton game !!!</h1>
-<a href="admin">Go to dashboard admin</a>
+<div class="bg">
+    <div class="overlay-text">
+        <h1>Welcome to us Club 2 Badminton CODEGYM !!!</h1>
+        <a href="admin" class="btn btn-primary w-100">Go to dashboard admin</a>
+    </div>
+</div>
 </body>
 </html>

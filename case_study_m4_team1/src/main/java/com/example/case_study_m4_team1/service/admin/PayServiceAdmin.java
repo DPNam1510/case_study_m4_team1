@@ -1,16 +1,16 @@
-package com.example.case_study_m4_team1.service;
+package com.example.case_study_m4_team1.service.admin;
 
 import com.example.case_study_m4_team1.entity.Pay;
-import com.example.case_study_m4_team1.repository.IPayRepository;
+import com.example.case_study_m4_team1.repository.admin.IPayRepositoryAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class PayService implements IPayService{
+public class PayServiceAdmin implements IPayServiceAdmin {
     @Autowired
-    private IPayRepository payRepository;
+    private IPayRepositoryAdmin payRepository;
 
     @Override
     public List<Pay> getAll() {

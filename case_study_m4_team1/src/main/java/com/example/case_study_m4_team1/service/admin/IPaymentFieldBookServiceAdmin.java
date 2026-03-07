@@ -1,4 +1,4 @@
-package com.example.case_study_m4_team1.service;
+package com.example.case_study_m4_team1.service.admin;
 
 import com.example.case_study_m4_team1.dto.PaymentFieldBookDto;
 import com.example.case_study_m4_team1.enums.PaymentStatus;
@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 
-public interface IPaymentFieldBookService {
+public interface IPaymentFieldBookServiceAdmin {
 
     Page<PaymentFieldBookDto> searchPayment(
             String user,
