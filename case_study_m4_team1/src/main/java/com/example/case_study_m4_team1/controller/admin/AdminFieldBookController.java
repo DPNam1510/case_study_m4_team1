@@ -24,7 +24,7 @@ public class AdminFieldBookController {
     private IFieldBookServiceAdmin fieldBookServiceAdmin;
 
     @GetMapping
-    public String show(Model model,
+    public String showApproved(Model model,
                        @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "searchUser", defaultValue = "") String user,
                        @RequestParam(value = "searchField", defaultValue = "") String field,
@@ -33,7 +33,7 @@ public class AdminFieldBookController {
                            LocalDate date){
         Sort sort = Sort.by("date_book").ascending();
         Pageable pageable = PageRequest.of(page,5,sort);
-        Page<FieldBook> fieldBookPage = fieldBookServiceAdmin.search(user,field,date,pageable);
+        Page<FieldBook> fieldBookPage = fieldBookServiceAdmin.searchApprove(user,field,date,BookingStatus.APPROVED,pageable);
         model.addAttribute("fieldBookPage",fieldBookPage);
         model.addAttribute("searchUser",user);
         model.addAttribute("searchField",field);
@@ -51,12 +51,28 @@ public class AdminFieldBookController {
                                   LocalDate date){
         Pageable pageable = PageRequest.of(page, 5, Sort.by("date_book").ascending());
         Page<FieldBook> fieldBookPage = fieldBookServiceAdmin.searchPending(user,field,date,BookingStatus.PENDING,pageable);
-        System.out.println("abc");
         model.addAttribute("fieldBookPage", fieldBookPage);
         model.addAttribute("searchUser",user);
         model.addAttribute("searchField",field);
         model.addAttribute("searchDate",date);
         return "admin/field_book/pending_list";
+    }
+
+    @GetMapping("/canceled")
+    public String showCanceled(Model model,
+                              @RequestParam(value = "page", defaultValue = "0") int page,
+                              @RequestParam(value = "searchUser", defaultValue = "") String user,
+                              @RequestParam(value = "searchField", defaultValue = "") String field,
+                              @RequestParam(value = "searchDate", required = false)
+                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                  LocalDate date){
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("date_book").ascending());
+        Page<FieldBook> fieldBookPage = fieldBookServiceAdmin.searchCanceled(user,field,date,BookingStatus.CANCELED,pageable);
+        model.addAttribute("fieldBookPage", fieldBookPage);
+        model.addAttribute("searchUser",user);
+        model.addAttribute("searchField",field);
+        model.addAttribute("searchDate",date);
+        return "admin/field_book/canceled_list";
     }
 
     @PostMapping("{id}/approve")

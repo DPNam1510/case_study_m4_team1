@@ -18,7 +18,8 @@ public interface IFieldBookRepositoryAdmin extends JpaRepository<FieldBook,Long>
         from field_book fb
         join users u on fb.user_id = u.id
         join fields f on fb.field_id = f.id
-        where (:searchUser is null or u.name like :searchUser)
+        where fb.status like 'APPROVED'
+        and (:searchUser is null or u.name like :searchUser)
         and (:searchField is null or f.name like :searchField)
         and (:searchDate is null or fb.date_book = :searchDate)
         """,
@@ -27,15 +28,17 @@ public interface IFieldBookRepositoryAdmin extends JpaRepository<FieldBook,Long>
         from field_book fb
         join users u on fb.user_id = u.id
         join fields f on fb.field_id = f.id
-        where (:searchUser is null or u.name like :searchUser)
+        where fb.status like 'APPROVED'
+        and (:searchUser is null or u.name like :searchUser)
         and (:searchField is null or f.name like :searchField)
         and (:searchDate is null or fb.date_book = :searchDate)
         """,
             nativeQuery = true)
-    Page<FieldBook> search(
+    Page<FieldBook> searchApprove(
             @Param("searchUser") String user,
             @Param("searchField") String field,
             @Param("searchDate") LocalDate date,
+            BookingStatus status,
             Pageable pageable);
 
 
@@ -67,6 +70,34 @@ public interface IFieldBookRepositoryAdmin extends JpaRepository<FieldBook,Long>
             BookingStatus status,
             Pageable pageable);
 
+    @Query(value = """
+        select fb.* 
+        from field_book fb
+        join users u on fb.user_id = u.id
+        join fields f on fb.field_id = f.id
+        where fb.status like 'CANCELED'
+        and (:searchUser is null or u.name like :searchUser)
+        and (:searchField is null or f.name like :searchField)
+        and (:searchDate is null or fb.date_book = :searchDate)
+        """,
+            countQuery = """
+        select count(*) 
+        from field_book fb
+        join users u on fb.user_id = u.id
+        join fields f on fb.field_id = f.id
+        where fb.status like 'CANCELED'
+        and (:searchUser is null or u.name like :searchUser)
+        and (:searchField is null or f.name like :searchField)
+        and (:searchDate is null or fb.date_book = :searchDate)
+        """,
+            nativeQuery = true)
+    Page<FieldBook> searchCanceled(
+            @Param("searchUser") String user,
+            @Param("searchField") String field,
+            @Param("searchDate") LocalDate date,
+            BookingStatus status,
+            Pageable pageable);
+
     boolean existsByFieldIdAndDateBookAndShiftIdAndStatusAndIdNot(
             int fieldId,
             LocalDate dateBook,
@@ -74,4 +105,31 @@ public interface IFieldBookRepositoryAdmin extends JpaRepository<FieldBook,Long>
             BookingStatus status,
             long id
     );
+
+    @Query(value = """
+        select fb.*
+        from field_book fb
+        join users u on fb.user_id = u.id
+        join fields f on fb.field_id = f.id
+        where fb.status = :status
+        and (:searchUser is null or u.name like :searchUser)
+        and (:searchField is null or f.name like :searchField)
+        """,
+            countQuery = """
+        select count(*)
+        from field_book fb
+        join users u on fb.user_id = u.id
+        join fields f on fb.field_id = f.id
+        where fb.status = :status
+        and (:searchUser is null or u.name like :searchUser)
+        and (:searchField is null or f.name like :searchField)
+        """,
+            nativeQuery = true)
+    Page<FieldBook> findApprovedBookingForPayment(
+            @Param("searchUser") String user,
+            @Param("searchField") String field,
+            @Param("status") BookingStatus status,
+            Pageable pageable
+    );
+
 }
