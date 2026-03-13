@@ -6,17 +6,22 @@ import com.example.case_study_m4_team1.dto.BookingResponseDto;
 import com.example.case_study_m4_team1.service.booking.IFieldBookService;
 import com.example.case_study_m4_team1.service.booking.IFieldsService;
 import com.example.case_study_m4_team1.service.booking.IShiftService;
+import com.example.case_study_m4_team1.service.user.IUserStudyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/booking")
+@PreAuthorize("hasRole('USER')")
 public class FieldBookController {
     @Autowired
     private IFieldBookService fieldBookService;
@@ -25,10 +30,17 @@ public class FieldBookController {
     @Autowired
     private IFieldsService fieldsService;
 
+    @Autowired
+    private IUserStudyService userStudyService;
+
+
     @GetMapping("")
-    public String bookingHome(@RequestParam(defaultValue = "1") Long userId){
-        return "redirect:/booking/history?userId="+userId;
+    public String bookingHome(Principal principal){
+        String username = principal.getName();
+//        Long userId = userStudyService.getUserClasses(username);
+        return "redirect:/booking/history?userId=";
     }
+
     @GetMapping("/create")
     public String showCreateForm(@RequestParam Long userId ,Model model) {
         model.addAttribute("userId", userId);

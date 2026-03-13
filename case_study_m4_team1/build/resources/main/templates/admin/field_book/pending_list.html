@@ -101,7 +101,7 @@
     <form class="form-inline-search" action="/admin/field_books/pending">
         <input class="form-control" name="searchUser" th:value="${searchUser}" placeholder="Enter user name..."/>
         <input class="form-control" name="searchField" th:value="${searchField}" placeholder="Enter field name..."/>
-        <input class="form-control" name="searchDate" th:value="${searchDate}" placeholder="Enter date..."/>
+        <input class="form-control" type="date" name="searchDate" th:value="${searchDate}" placeholder="Enter date..."/>
         <button class="btn btn-primary">Search</button>
         <a class="btn btn-light" href="/admin/field_books/pending">Back</a>
     </form>
@@ -125,14 +125,14 @@
                     class="btn btn-sm btn-success"
                     data-bs-toggle="modal"
                     data-bs-target="#approveModal"
-                    th:attr="data-id=${fb.id}">
+                    th:attr="data-id=${fb.id},data-user=${fb.user.name}">
                 Approve
             </button>
             <button type="button"
                     class="btn btn-danger btn-sm"
                     data-bs-toggle="modal"
                     data-bs-target="#cancelModal"
-                    th:attr="data-id=${fb.id}">
+                    th:attr="data-id=${fb.id},data-user=${fb.user.name}">
                 Cancel
             </button>
         </div>
@@ -159,7 +159,7 @@
             </div>
 
             <div class="modal-body">
-                Are you sure you want to approve this booking?
+                Are you sure you want to approve this booking of <b id="approveUser" class="text-danger"></b> ?
             </div>
             <div class="modal-footer">
                 <form id="approveForm" method="post">
@@ -183,7 +183,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to cancel this booking?
+                Are you sure you want to cancel this booking of <b id="cancelUser" class="text-danger"></b> ?
             </div>
             <div class="modal-footer">
                 <form id="cancelForm" method="post">
@@ -201,9 +201,11 @@
     approveModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const bookingId = button.getAttribute('data-id');
+        const user = button.getAttribute('data-user');
 
         const form = document.getElementById('approveForm');
         form.action = '/admin/field_books/' + bookingId + '/approve';
+        document.getElementById("approveUser").innerHTML = user;
     });
 
     const cancelModal = document.getElementById('cancelModal');
@@ -211,9 +213,11 @@
     cancelModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const bookingId = button.getAttribute('data-id');
+        const user = button.getAttribute('data-user');
 
         const form = document.getElementById('cancelForm');
         form.action = '/admin/field_books/' + bookingId + '/cancel';
+        document.getElementById("cancelUser").innerHTML = user;
     });
 </script>
 </body>

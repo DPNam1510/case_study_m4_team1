@@ -6,29 +6,33 @@ import com.example.case_study_m4_team1.entity.ClassRegister;
 import com.example.case_study_m4_team1.entity.StudySchedule;
 import com.example.case_study_m4_team1.entity.Teacher;
 import com.example.case_study_m4_team1.service.teacher.ITeacherService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequestMapping("/teacher")
+@PreAuthorize("hasRole('TEACHER')")
 public class TeacherController {
 
     @Autowired
     private ITeacherService teacherService;
 
-    // tạm dùng teacherId cố định vì đã bỏ login
-    private final int teacherId = 1;
+    private Teacher getCurrentTeacher(Principal principal){
+        String username = principal.getName();
+        return teacherService.findByAccountUsername(username);
+    }
 
-    @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    @GetMapping
+    public String dashboard(Principal principal, Model model) {
 
-        Teacher teacher = teacherService.findById(teacherId);
+        Teacher teacher = getCurrentTeacher(principal);
 
         model.addAttribute("teacher", teacher);
 
@@ -36,9 +40,12 @@ public class TeacherController {
     }
 
     @GetMapping("/classes")
-    public String viewMyClasses(Model model) {
+    public String viewMyClasses(Principal principal, Model model) {
 
-        List<StudySchedule> schedules = teacherService.getTeacherSchedules(teacherId);
+        Teacher teacher = getCurrentTeacher(principal);
+
+        List<StudySchedule> schedules =
+                teacherService.getTeacherSchedules(teacher.getId());
 
         model.addAttribute("schedules", schedules);
 
@@ -49,7 +56,8 @@ public class TeacherController {
     public String viewStudentsInClass(@PathVariable int scheduleId,
                                       Model model) {
 
-        List<ClassRegister> students = teacherService.getStudentsInClass(scheduleId);
+        List<ClassRegister> students =
+                teacherService.getStudentsInClass(scheduleId);
 
         model.addAttribute("students", students);
         model.addAttribute("scheduleId", scheduleId);
@@ -62,7 +70,8 @@ public class TeacherController {
                                  @PathVariable long registerId,
                                  Model model) {
 
-        ClassRegister classRegister = teacherService.findClassRegisterById(registerId);
+        ClassRegister classRegister =
+                teacherService.findClassRegisterById(registerId);
 
         model.addAttribute("classRegister", classRegister);
         model.addAttribute("teacherReviewDTO", new TeacherReviewDTO());

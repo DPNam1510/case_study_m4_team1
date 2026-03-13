@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,6 +36,14 @@ public class TeacherService implements ITeacherService {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
     }
+
+    @Override
+    public Teacher findByAccountUsername(String username) {
+        return teacherRepository
+                .findByAccountUsername(username)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+    }
+
 
     @Override
     public List<StudySchedule> getTeacherSchedules(int teacherId) {

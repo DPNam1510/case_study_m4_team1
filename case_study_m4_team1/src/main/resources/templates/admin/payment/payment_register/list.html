@@ -185,7 +185,7 @@
                         type="button"
                         data-bs-toggle="modal"
                         data-bs-target="#updateStatus"
-                        th:attr="data-id=${pr.id}">
+                        th:attr="data-id=${pr.id},data-user=${pr.user}">
 
                     <i class="bi bi-pencil-square"></i>
                     Update
@@ -223,7 +223,7 @@
                     <input type="hidden" name="id" id="paymentId"/>
 
                     <h5 class="text-center">
-                        Confirm payment of USER ?
+                        Confirm payment of <b class="text-danger" id="updateUser"></b> ?
                     </h5>
 
                 </div>
@@ -342,8 +342,10 @@ Page
         const button = event.relatedTarget;
 
         const id = button.getAttribute('data-id');
+        const user = button.getAttribute('data-user');
 
         document.getElementById('paymentId').value = id;
+        document.getElementById('updateUser').innerHTML = user;
 
     });
 
