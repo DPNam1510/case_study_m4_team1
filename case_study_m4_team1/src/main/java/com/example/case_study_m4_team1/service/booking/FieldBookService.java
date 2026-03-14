@@ -7,6 +7,7 @@ import com.example.case_study_m4_team1.entity.Fields;
 import com.example.case_study_m4_team1.entity.Shift;
 import com.example.case_study_m4_team1.entity.Users;
 import com.example.case_study_m4_team1.enums.BookingStatus;
+import com.example.case_study_m4_team1.enums.FieldStatus;
 import com.example.case_study_m4_team1.enums.RegisterStatus;
 import com.example.case_study_m4_team1.exception.BookingException;
 import com.example.case_study_m4_team1.repository.booking.*;
@@ -95,6 +96,9 @@ public class FieldBookService implements IFieldBookService {
                 () -> new BookingException("User not found!"));
         Fields fields = fieldsRepo.findById(request.getFieldId()).orElseThrow(
                 () -> new BookingException("Field not found!"));
+        if(fields.getStatus()== FieldStatus.NOT_AVAILABLE){
+            throw new BookingException("The field is not available!");
+        }
         Shift shift = shiftRepo.findById(request.getShiftId()).orElseThrow(
                 () -> new BookingException("Shift not found!"));
 
@@ -132,8 +136,14 @@ public class FieldBookService implements IFieldBookService {
                 id)){
             throw new BookingException("The field is booked!");
         }
-        fieldBook.setField(fieldsRepo.findById(request.getFieldId()).orElseThrow());
-        fieldBook.setShift(shiftRepo.findById(request.getShiftId()).orElseThrow());
+        Fields field = fieldsRepo.findById(request.getFieldId())
+                .orElseThrow(() -> new BookingException("Field not found!"));
+        if(field.getStatus() == FieldStatus.NOT_AVAILABLE){
+            throw new BookingException("Field is under maintenance!");
+        }
+        fieldBook.setField(field);
+        fieldBook.setShift(shiftRepo.findById(request.getShiftId()).orElseThrow(
+                ()->new BookingException("Shift not found!")));
         fieldBook.setDateBook(request.getDateBook());
         fieldBookRepo.save(fieldBook);
         convertToDto(fieldBook);

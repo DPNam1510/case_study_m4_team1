@@ -1,62 +1,236 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+
     <meta charset="UTF-8">
     <title>Register</title>
+
     <th:block th:insert="~{layout/layout::library}"/>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5;
-            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .register-container { background: #fff; padding: 40px 50px; border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); width: 400px; }
-        h2 { text-align: center; margin-bottom: 30px; color: #333; }
-        label { display: block; margin-bottom: 5px; font-weight: 500; }
-        input[type="text"], input[type="password"], input[type="email"] { width: 100%; padding: 10px 12px;
-            margin-bottom: 20px; border: 1px solid #ccc;
-            border-radius: 6px; font-size: 14px; }
-        button { width: 100%; padding: 10px 0; background: #2196F3; border: none; border-radius: 6px;
-            color: white; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #1976D2; }
-        .login-link { display: block; text-align: center; margin-top: 15px; color: #555; text-decoration: none; }
-        .login-link:hover { text-decoration: underline; }
+
+        body{
+
+            background:linear-gradient(135deg,#22c55e,#06b6d4);
+
+            height:100vh;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-family:'Segoe UI',sans-serif;
+
+        }
+
+        .register-card{
+
+            background:white;
+
+            padding:40px;
+
+            border-radius:16px;
+
+            width:420px;
+
+            box-shadow:0 15px 35px rgba(0,0,0,0.2);
+
+            animation:fadeIn 0.6s ease;
+
+        }
+
+        @keyframes fadeIn{
+
+            from{opacity:0;transform:translateY(20px)}
+
+            to{opacity:1;transform:translateY(0)}
+
+        }
+
+        .register-title{
+
+            text-align:center;
+
+            font-weight:700;
+
+            margin-bottom:25px;
+
+            color:#1e293b;
+
+        }
+
+        .input-group{
+
+            margin-bottom:14px;
+
+        }
+
+        .input-group label{
+
+            font-weight:600;
+
+        }
+
+        .input-group input{
+
+            width:100%;
+
+            padding:10px 12px;
+
+            border-radius:6px;
+
+            border:1px solid #d1d5db;
+
+            transition:0.25s;
+
+        }
+
+        .input-group input:focus{
+
+            outline:none;
+
+            border-color:#22c55e;
+
+            box-shadow:0 0 5px rgba(34,197,94,0.4);
+
+        }
+
+        .register-btn{
+
+            width:100%;
+
+            padding:11px;
+
+            border:none;
+
+            border-radius:7px;
+
+            background:#16a34a;
+
+            color:white;
+
+            font-weight:600;
+
+            transition:0.25s;
+
+            margin-top:10px;
+
+        }
+
+        .register-btn:hover{
+
+            background:#15803d;
+
+            transform:translateY(-2px);
+
+        }
+
+        .login-link{
+
+            display:block;
+
+            text-align:center;
+
+            margin-top:15px;
+
+            color:#475569;
+
+            text-decoration:none;
+
+        }
+
+        .login-link:hover{
+
+            text-decoration:underline;
+
+        }
+
+        .icon{
+
+            text-align:center;
+
+            font-size:40px;
+
+            margin-bottom:10px;
+
+            color:#16a34a;
+
+        }
+
+        small{
+
+            display:block;
+
+            margin-top:-6px;
+
+            margin-bottom:6px;
+
+        }
+
     </style>
+
 </head>
+
 <body>
 
-<!-- Toast fragment nhận success/error từ flash attribute -->
 <th:block th:replace="~{layout/toasts :: toasts(success=${success}, error=${error})}"/>
 
-<div class="register-container">
-    <h2>Register</h2>
+<div class="register-card">
+
+    <div class="icon">
+        <i class="fa-solid fa-user-plus"></i>
+    </div>
+
+    <h3 class="register-title">Create Account</h3>
+
     <form th:action="@{/register}" method="post" th:object="${registerAccountDto}">
-        <div>
-            <label>Full name</label>
-            <input type="text" th:field="*{fullName}" required/>
-            <small class="text-danger" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></small><br>
+
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" th:field="*{fullName}" required>
+            <small class="text-danger" th:errors="*{fullName}"></small>
         </div>
-        <div>
+
+        <div class="input-group">
             <label>Username</label>
-            <input type="text" th:field="*{username}" required/>
-            <small class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small><br>
+            <input type="text" th:field="*{username}" required>
+            <small class="text-danger" th:errors="*{username}"></small>
         </div>
-        <div>
+
+        <div class="input-group">
             <label>Password</label>
-            <input type="password" th:field="*{password}" required/>
-            <small class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small><br>
+            <input type="password" th:field="*{password}" required>
+            <small class="text-danger" th:errors="*{password}"></small>
         </div>
-        <div>
+
+        <div class="input-group">
             <label>Email</label>
-            <input type="email" th:field="*{email}" required/>
-            <small class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small><br>
+            <input type="email" th:field="*{email}" required>
+            <small class="text-danger" th:errors="*{email}"></small>
         </div>
-        <div>
+
+        <div class="input-group">
             <label>Phone</label>
-            <input type="text" th:field="*{phone}" required/>
-            <small class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></small><br>
+            <input type="text" th:field="*{phone}" required>
+            <small class="text-danger" th:errors="*{phone}"></small>
         </div>
-        <button type="submit">Register</button>
+
+        <button class="register-btn">
+            <i class="fa fa-user-plus"></i> Register
+        </button>
+
     </form>
-    <a class="login-link" href="/login">Already have an account? Login</a>
+
+    <a class="login-link" href="/login">
+        Already have an account? Login
+    </a>
+
 </div>
 
 </body>

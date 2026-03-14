@@ -1,40 +1,76 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Create Booking</title>
     <th:block th:insert="~{layout/layout::library}"/>
+
     <style>
+
         body{
-            background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs_IPGqiOoD-AznMepvljneytpLinSSS-2XA&s");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-image:url("https://images.unsplash.com/photo-1599058917765-a780eda07a3e");
+            background-size:cover;
+            background-position:center;
+            background-attachment:fixed;
         }
+
         .overlay{
-            background-color: rgba(0,0,0,0.55);
-            min-height: 100vh;
-            padding-top: 80px;
+            background:rgba(0,0,0,0.55);
+            min-height:100vh;
+            padding-top:80px;
         }
-        .booking-card{
-            border-radius: 15px;
+
+        .card{
+            border:none;
+            border-radius:18px;
+            transition:0.3s;
         }
+
+        .card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 15px 35px rgba(0,0,0,0.25);
+        }
+
         .card-header{
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
+            font-size:22px;
+            font-weight:bold;
+            text-align:center;
         }
+
+        .btn{
+            border-radius:10px;
+            transition:0.25s;
+            font-weight:600;
+        }
+
+        .btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 18px rgba(0,0,0,0.2);
+        }
+
+        .form-control{
+            border-radius:10px;
+        }
+
     </style>
 </head>
+
 <body>
+
 <div class="overlay">
+
     <div class="container">
+
         <div class="row justify-content-center">
+
             <div class="col-md-6">
-                <div class="card shadow-lg booking-card">
+
+                <div class="card shadow-lg">
+
                     <div class="card-header bg-success text-white">
                         🏸 Badminton Field Booking
                     </div>
+
                     <div class="card-body">
 
                         <div th:if="${error}" class="alert alert-danger text-center">
@@ -46,59 +82,55 @@
                         </div>
 
                         <form th:action="@{/booking/create}" method="post">
+
                             <input type="hidden" name="userId" th:value="${userId}">
+
                             <div class="mb-3">
                                 <label class="form-label">Choose Field</label>
                                 <select name="fieldId" class="form-control" required>
-                                    <option value="">-- Field Choose --</option>
-                                    <option th:each="f : ${fields}"
-                                            th:value="${f.id}"
-                                            th:text="${f.name}">
-                                    </option>
+                                    <option value="">-- Choose Field --</option>
+                                    <option th:each="f : ${fields}" th:value="${f.id}" th:text="${f.name}"></option>
                                 </select>
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label">Choose Shift</label>
                                 <select name="shiftId" class="form-control" required>
-                                    <option value="">-- Shift Choose --</option>
-                                    <option th:each="s : ${shifts}"
-                                            th:value="${s.id}"
-                                            th:text="${s.startTime + ' - ' + s.endTime}">
-                                    </option>
+                                    <option value="">-- Choose Shift --</option>
+                                    <option th:each="s : ${shifts}" th:value="${s.id}" th:text="${s.startTime + ' - ' + s.endTime}"></option>
                                 </select>
                             </div>
+
                             <div class="mb-4">
                                 <label class="form-label">Booking Date</label>
-                                <input type="date"
-                                       name="dateBook"
-                                       class="form-control"
-                                       th:attr="min=${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"
-                                       required>
+                                <input type="date" name="dateBook" class="form-control"
+                                       th:attr="min=${#dates.format(#dates.createNow(),'yyyy-MM-dd')}" required>
                             </div>
+
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-success btn-lg">
-                                    🏸 Booking Now
-                                </button>
-                                <a href="/user"
-                                   class="btn btn-secondary btn-lg">
-                                    Return
-                                </a>
+
+                                <button class="btn btn-success btn-lg">🏸 Booking Now</button>
+
+                                <a href="/user" class="btn btn-secondary btn-lg">Return</a>
+
                             </div>
+
                         </form>
+
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
-
 </div>
+
 <script>
-    setTimeout(function() {
-        let alerts = document.querySelectorAll(".alert");
-        alerts.forEach(function(alert){
-            alert.style.display = "none";
-        });
-    }, 3000);
+    setTimeout(()=>{
+        let alerts=document.querySelectorAll(".alert");
+        alerts.forEach(a=>a.style.display="none");
+    },3000);
 </script>
+
 </body>
 </html>
