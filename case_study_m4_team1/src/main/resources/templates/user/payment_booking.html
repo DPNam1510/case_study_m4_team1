@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán đặt sân</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+    <style>
+        body{
+            background-image: url("https://images.unsplash.com/photo-1599058917765-a780eda07a3e");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .overlay{
+            background-color: rgba(0,0,0,0.55);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .payment-card{
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="overlay">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg payment-card">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4>🏸 Thanh toán đặt sân</h4>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${param.error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h5>Thông tin đặt sân:</h5>
+                            <p><strong>Sân:</strong> <span th:text="${booking.fieldName}"></span></p>
+                            <p><strong>Ngày đặt:</strong> <span th:text="${booking.dateBook}"></span></p>
+                            <p><strong>Ca:</strong> <span th:text="${booking.shiftTime}"></span></p>
+                            <p><strong>Giá:</strong> <span class="text-success fw-bold" th:text="${booking.price} + ' VNĐ'">200000</span></p>
+                        </div>
+
+                        <form th:action="@{/booking/payment/process}" method="post">
+                            <input type="hidden" name="bookingId" th:value="${booking.id}">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Chọn hình thức thanh toán</label>
+                                <div th:each="pay : ${payTypes}" class="form-check">
+                                    <input class="form-check-input" type="radio" name="payTypeId"
+                                           th:value="${pay.id}" th:id="'pay' + ${pay.id}" required>
+                                    <label class="form-check-label" th:for="'pay' + ${pay.id}" th:text="${pay.payType}"></label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg">Xác nhận thanh toán</button>
+                                <a th:href="@{/booking/payment/list}" class="btn btn-secondary">Quay lại</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

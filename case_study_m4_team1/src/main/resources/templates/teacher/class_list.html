@@ -2,41 +2,162 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Class list</title>
-    <th:block th:insert="layout/layout::library"/>
+    <title>My Classes | Badminton Center</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .page-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .class-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .class-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .class-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 15px 15px 0 0;
+            margin: -20px -20px 20px -20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .class-info p {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .class-info i {
+            width: 25px;
+            color: #2a5298;
+        }
+        .badge-custom {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .btn-class {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 8px 20px;
+            margin-right: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-class:hover {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            color: white;
+            transform: scale(1.03);
+        }
+        .btn-warning-custom {
+            background: #ffc107;
+            color: #212529;
+        }
+        .btn-warning-custom:hover {
+            background: #e0a800;
+            color: #212529;
+        }
+        footer {
+            background: #212529;
+            color: white;
+            padding: 40px;
+            margin-top: 60px;
+        }
+    </style>
 </head>
 <body>
-<th:block th:insert="layout/layout::my-navbar"/>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/teacher">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            Teacher Panel
+        </a>
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/teacher">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/teacher/classes">My Classes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<div class="container mt-4">
-    <h2>Teacher Class List</h2>
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-book-open me-3"></i>My Classes</h1>
+        <p class="lead">Manage your teaching schedule</p>
+    </div>
+</div>
 
-    <div th:if="${#lists.isEmpty(schedules)}" class="alert alert-info">
-        You don't have any classes yet.
+<div class="container mb-5">
+    <div th:if="${#lists.isEmpty(schedules)}" class="alert alert-info text-center py-4">
+        <i class="fas fa-info-circle fa-2x mb-3"></i>
+        <h4>You don't have any classes yet.</h4>
     </div>
 
-    <div th:unless="${#lists.isEmpty(schedules)}" class="row">
-        <div th:each="schedule : ${schedules}" class="col-md-6 mb-3">
-            <div class="card">
-                <div class="card-header" th:text="${schedule.className}">Class</div>
-                <div class="card-body">
-                    <p><strong>Field:</strong> <span th:text="${schedule.field.name}"></span></p>
-                    <p><strong>Shift:</strong>
-                        <span th:text="${schedule.shift.startTime} + ' - ' + ${schedule.shift.endTime}"></span>
+    <div th:unless="${#lists.isEmpty(schedules)}" class="row g-4">
+        <div th:each="schedule : ${schedules}" class="col-md-6 col-lg-4">
+            <div class="class-card">
+                <div class="class-header" th:text="${schedule.className}">Class Name</div>
+                <div class="class-info">
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Field:</strong> <span th:text="${schedule.field.name}"></span></p>
+                    <p><i class="fas fa-clock"></i> <strong>Shift:</strong> <span th:text="${schedule.shift.startTime} + ' - ' + ${schedule.shift.endTime}"></span></p>
+                    <p><i class="fas fa-users"></i> <strong>Students:</strong> <span th:text="${schedule.minStudents} + '/' + ${schedule.maxStudents}"></span></p>
+                    <p><i class="fas fa-tag"></i> <strong>Status:</strong>
+                        <span th:text="${schedule.statusClass}" class="badge-custom bg-info text-white"></span>
                     </p>
-                    <p><strong>Number of students:</strong> <span th:text="${schedule.minStudents} + '/' + ${schedule.maxStudents}"></span></p>
-                    <p><strong>Status:</strong>
-                        <span th:text="${schedule.statusClass}" class="badge bg-info"></span>
-                    </p>
-
-                    <a th:href="@{/teacher/class/{id}/students(id=${schedule.id})}"
-                       class="btn btn-primary">Students view</a>
-                    <a th:href="@{/teacher/class/{id}/notice(id=${schedule.id})}"
-                       class="btn btn-warning">Off notice</a>
+                </div>
+                <div class="mt-3 d-flex justify-content-between">
+                    <a th:href="@{/teacher/class/{id}/students(id=${schedule.id})}" class="btn-class">
+                        <i class="fas fa-user-graduate"></i> Students
+                    </a>
+                    <a th:href="@{/teacher/class/{id}/notice(id=${schedule.id})}" class="btn-class btn-warning-custom">
+                        <i class="fas fa-exclamation-triangle"></i> Off Notice
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<footer class="text-center">
+    <h5>Badminton Center</h5>
+    <p>Online Court Booking System</p>
+    <p>© 2026 All rights reserved</p>
+</footer>
 </body>
 </html>

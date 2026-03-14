@@ -3,10 +3,16 @@ package com.example.case_study_m4_team1.controller.booking;
 
 import com.example.case_study_m4_team1.dto.BookingRequestDto;
 import com.example.case_study_m4_team1.dto.BookingResponseDto;
+import com.example.case_study_m4_team1.entity.Account;
+import com.example.case_study_m4_team1.enums.BookingStatus;
 import com.example.case_study_m4_team1.exception.BookingException;
+import com.example.case_study_m4_team1.security.SecurityUtils;
+import com.example.case_study_m4_team1.service.admin.IPayServiceAdmin;
+import com.example.case_study_m4_team1.service.admin.IPaymentFieldBookServiceAdmin;
 import com.example.case_study_m4_team1.service.booking.IFieldBookService;
 import com.example.case_study_m4_team1.service.booking.IFieldsService;
 import com.example.case_study_m4_team1.service.booking.IShiftService;
+import com.example.case_study_m4_team1.service.user.IUserPaymentFieldBookService;
 import com.example.case_study_m4_team1.service.user.IUserStudyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +39,14 @@ public class FieldBookController {
 
     @Autowired
     private IUserStudyService userStudyService;
+
+    @Autowired
+    private IPayServiceAdmin payServiceAdmin;
+
+    @Autowired
+    private IPaymentFieldBookServiceAdmin paymentFieldBookServiceAdmin;
+
+    @Autowired private IUserPaymentFieldBookService userPaymentFieldBookService;
 
 
     @GetMapping("")
@@ -112,4 +126,57 @@ public class FieldBookController {
         return "booking/history";
     }
 
+    // Hiển thị danh sách booking có thể thanh toán
+    @GetMapping("/payment/list")
+    public String paymentList(Principal principal, Model model,
+                              @RequestParam(defaultValue = "0") int page) {
+        Long userId = getCurrentUserId(principal);   // cần implement
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<BookingResponseDto> bookings = userPaymentFieldBookService.getApprovedBookingsForPayment(userId, pageable);
+        model.addAttribute("bookings", bookings);
+        return "user/payment_booking_list";
+    }
+
+    // Hiển thị form thanh toán cho một booking
+    @GetMapping("/payment/{bookingId}")
+    public String showPaymentForm(@PathVariable Long bookingId,
+                                  Principal principal,
+                                  Model model) throws Exception {
+        Long userId = getCurrentUserId(principal);
+        BookingResponseDto booking = fieldBookService.detailBooking(bookingId);
+        if (!booking.getUserId().equals(userId)) {
+            throw new Exception("Bạn không có quyền truy cập");
+        }
+        if (booking.getStatus() != BookingStatus.APPROVED) {
+            throw new Exception("Booking chưa được duyệt");
+        }
+        // Kiểm tra chưa thanh toán
+        if (paymentFieldBookServiceAdmin.existsByBookingId(bookingId)) {   // cần thêm method
+            throw new Exception("Booking đã thanh toán");
+        }
+        model.addAttribute("booking", booking);
+        model.addAttribute("payTypes", payServiceAdmin.getAll());   // lấy danh sách Pay
+        return "user/payment_booking";
+    }
+
+    // Xử lý thanh toán
+    @PostMapping("/payment/process")
+    public String processPayment(@RequestParam Long bookingId,
+                                 @RequestParam int payTypeId,
+                                 Principal principal,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            userPaymentFieldBookService.createPayment(bookingId, payTypeId, principal.getName());
+            redirectAttributes.addFlashAttribute("success", "Thanh toán thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+        }
+        return "redirect:/booking/history?userId=" + getCurrentUserId(principal);
+    }
+
+    // Helper lấy userId từ Principal
+    private Long getCurrentUserId(Principal principal) {
+        Account account = SecurityUtils.getCurrentAccount();  // cần SecurityUtils
+        return account.getUsers().getId();
+    }
 }

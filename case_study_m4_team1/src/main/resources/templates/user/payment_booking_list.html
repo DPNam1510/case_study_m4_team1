@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách thanh toán đặt sân</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+    <style>
+        body{
+            background-image: url("https://images.unsplash.com/photo-1599058917765-a780eda07a3e");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .overlay{
+            background-color: rgba(0,0,0,0.55);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .history-card{
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="overlay">
+    <div class="container">
+        <div class="card shadow-lg history-card">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">🏸 Thanh toán đặt sân</h4>
+                <a href="/home" class="btn btn-sm btn-light">Home</a>
+            </div>
+            <div class="card-body">
+                <div th:if="${bookings.isEmpty()}" class="alert alert-info text-center">
+                    Không có đơn đặt sân nào cần thanh toán.
+                </div>
+                <table th:unless="${bookings.isEmpty()}" class="table table-striped table-hover text-center">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Sân</th>
+                        <th>Ngày đặt</th>
+                        <th>Ca</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="b : ${bookings.content}">
+                        <td th:text="${b.id}"></td>
+                        <td th:text="${b.fieldName}"></td>
+                        <td th:text="${b.dateBook}"></td>
+                        <td th:text="${b.shiftTime}"></td>
+                        <td>
+                            <span class="badge bg-success" th:text="${b.status}"></span>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" th:href="@{/booking/payment/{id}(id=${b.id})}">
+                                Thanh toán
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center align-items-center mt-4 gap-3">
+            <a class="btn btn-primary btn-sm" th:if="${bookings.hasPrevious()}"
+               th:href="@{/booking/payment/list(page=${bookings.number - 1})}">
+                Previous
+            </a>
+            <span class="btn btn-light btn-sm disabled">
+                Page <span th:text="${bookings.number + 1}"></span> / <span th:text="${bookings.totalPages}"></span>
+            </span>
+            <a class="btn btn-dark btn-sm" th:if="${bookings.hasNext()}"
+               th:href="@{/booking/payment/list(page=${bookings.number + 1})}">
+                Next
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đánh giá của tôi</title>
+    <th:block th:insert="layout/layout::library"/>
+</head>
+<body>
+<th:block th:insert="layout/layout::my-navbar"/>
+<div class="container mt-4">
+    <h2>Đánh giá của tôi</h2>
+    <div th:if="${#lists.isEmpty(reviews)}" class="alert alert-info">
+        Bạn chưa có đánh giá nào.
+    </div>
+    <div th:unless="${#lists.isEmpty(reviews)}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Lớp học</th>
+                <th>Giảng viên</th>
+                <th>Điểm</th>
+                <th>Nhận xét</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="review : ${reviews}">
+                <td th:text="${review.classRegister.studySchedule.className}"></td>
+                <td th:text="${review.classRegister.studySchedule.teacher.name}"></td>
+                <td th:text="${review.scores}"></td>
+                <td th:text="${review.review}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <a href="/user/study/my-schedule" class="btn btn-secondary">Quay lại</a>
+</div>
+</body>
+</html>

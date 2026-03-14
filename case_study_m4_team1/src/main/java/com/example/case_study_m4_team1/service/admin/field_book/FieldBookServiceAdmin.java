@@ -23,20 +23,32 @@ public class FieldBookServiceAdmin implements IFieldBookServiceAdmin {
 
 
     @Override
-    public Page<FieldBook> searchApprove(String user, String field, LocalDate date,BookingStatus status, Pageable pageable) {
-        return fieldBookRepositoryAdmin.searchApprove("%"+user+"%", "%"+field+"%", date,status, pageable);
+    public Page<FieldBook> searchApprove(String user, String field, LocalDate date, BookingStatus status, Pageable pageable) {
+        return fieldBookRepositoryAdmin.searchApprove("%" + user + "%", "%" + field + "%", date, status.name(), pageable);
     }
 
 
 
     @Override
     public Page<FieldBook> searchPending(String user, String field, LocalDate date, BookingStatus status, Pageable pageable) {
-        return fieldBookRepositoryAdmin.searchPending("%"+user+"%", "%"+field+"%", date,status, pageable);
+        return fieldBookRepositoryAdmin.searchPending(
+                "%" + user + "%",
+                "%" + field + "%",
+                date,
+                status.name(),      // chuyển Enum -> String
+                pageable
+        );
     }
 
     @Override
     public Page<FieldBook> searchCanceled(String user, String field, LocalDate date, BookingStatus status, Pageable pageable) {
-        return fieldBookRepositoryAdmin.searchCanceled("%"+user+"%", "%"+field+"%", date,status, pageable);
+        return fieldBookRepositoryAdmin.searchCanceled(
+                "%" + user + "%",
+                "%" + field + "%",
+                date,
+                status.name(),      // chuyển Enum -> String
+                pageable
+        );
     }
 
 
