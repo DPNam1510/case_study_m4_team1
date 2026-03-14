@@ -8,22 +8,23 @@ import com.example.case_study_m4_team1.entity.TeacherReview;
 import com.example.case_study_m4_team1.service.user.IUserStudyService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequestMapping("/user/study")
+@PreAuthorize("hasRole('USER')")
 public class UserStudyController {
 
     @Autowired
     private IUserStudyService userStudyService;
 
-    private static final String USER_ID_SESSION_KEY = "userId";
-    private static final String USERNAME_SESSION_KEY = "username";
 
     @GetMapping("/classes")
     public String viewAvailableClasses(Model model) {
@@ -45,34 +46,25 @@ public class UserStudyController {
 
     @PostMapping("/register")
     public String registerClass(@RequestParam int scheduleId,
-                                HttpSession session,
+                                Principal principal,
                                 RedirectAttributes redirectAttributes) {
+
+        String username = principal.getName();
+
+        Long registerId = null;
         try {
-            // Lấy username từ session
-            String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
-
-            if (username == null) {
-                redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để đăng ký lớp");
-                return "redirect:/login";
-            }
-
-            Long registerId = userStudyService.registerClass(username, scheduleId);
-            redirectAttributes.addFlashAttribute("success", "Đăng ký lớp thành công! Vui lòng chọn hình thức thanh toán.");
-            return "redirect:/user/study/payment/" + registerId;
-
+            registerId = userStudyService.registerClass(username, scheduleId);
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Đăng ký thất bại: " + e.getMessage());
-            return "redirect:/user/study/classes";
+            throw new RuntimeException(e);
         }
+
+        redirectAttributes.addFlashAttribute("success", "Register class success!");
+        return "redirect:/user/study/payment/" + registerId;
     }
 
     @GetMapping("/my-schedule")
-    public String viewMySchedule(HttpSession session, Model model) {
-        String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
-
-        if (username == null) {
-            return "redirect:/login";
-        }
+    public String viewMySchedule(Principal principal, Model model) {
+        String username = principal.getName();
 
         List<ClassRegister> myClasses = userStudyService.getUserClasses(username);
         model.addAttribute("myClasses", myClasses);
@@ -80,12 +72,8 @@ public class UserStudyController {
     }
 
     @GetMapping("/notices")
-    public String viewNotices(HttpSession session, Model model) {
-        String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
-
-        if (username == null) {
-            return "redirect:/login";
-        }
+    public String viewNotices(Principal principal, Model model) {
+        String username = principal.getName();
 
         List<TeacherNotice> notices = userStudyService.getUserNotices(username);
         model.addAttribute("notices", notices);
@@ -93,12 +81,8 @@ public class UserStudyController {
     }
 
     @GetMapping("/reviews")
-    public String viewMyReviews(HttpSession session, Model model) {
-        String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
-
-        if (username == null) {
-            return "redirect:/login";
-        }
+    public String viewMyReviews(Principal principal, Model model) {
+        String username = principal.getName();
 
         List<TeacherReview> reviews = userStudyService.getUserReviews(username);
         model.addAttribute("reviews", reviews);
@@ -107,20 +91,15 @@ public class UserStudyController {
 
     @GetMapping("/payment/{registerId}")
     public String showPaymentForm(@PathVariable long registerId,
-                                  HttpSession session,
+                                  Principal principal,
                                   RedirectAttributes redirectAttributes,
                                   Model model) {
-        String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
-
-        if (username == null) {
-            return "redirect:/login";
-        }
-
+        String username = principal.getName();
         ClassRegister register = userStudyService.findClassRegisterById(registerId);
 
         // Kiểm tra quyền sở hữu
         if (!userStudyService.isOwner(username, registerId)) {
-            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập");
+            redirectAttributes.addFlashAttribute("error", "You do not have access !!");
             return "redirect:/user/study/my-schedule";
         }
 
@@ -131,21 +110,17 @@ public class UserStudyController {
 
     @PostMapping("/payment/process")
     public String processPayment(@ModelAttribute PaymentRequestDTO paymentRequest,
-                                 HttpSession session,
+                                 Principal principal,
                                  RedirectAttributes redirectAttributes) {
         try {
-            String username = (String) session.getAttribute(USERNAME_SESSION_KEY);
-
-            if (username == null) {
-                return "redirect:/login";
-            }
+            String username = principal.getName();
 
             userStudyService.processPayment(paymentRequest, username);
-            redirectAttributes.addFlashAttribute("success", "Thanh toán thành công!");
+            redirectAttributes.addFlashAttribute("success", "Payment success!");
             return "redirect:/user/study/my-schedule";
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Thanh toán thất bại: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Payment fails: " + e.getMessage());
             return "redirect:/user/study/payment/" + paymentRequest.getRegisterId();
         }
     }

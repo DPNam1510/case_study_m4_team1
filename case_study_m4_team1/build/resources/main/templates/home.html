@@ -46,12 +46,16 @@
     </style>
 </head>
 <body>
-
 <div class="bg">
     <div class="overlay-text">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Logout</button>
+        </form>
         <h1>Welcome to us Club 2 Badminton CODEGYM !!!</h1>
         <a href="admin" class="btn btn-primary w-100">Go to dashboard admin</a>
         <a href="booking" class="btn btn-success w-100">Booking Badminton</a>
+        <a href="user" class="btn btn-dark w-100">User</a>
+        <a href="teacher" class="btn btn-secondary w-100">Teacher</a>
     </div>
 </div>
 </body>

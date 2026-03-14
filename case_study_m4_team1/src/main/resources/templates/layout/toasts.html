@@ -1,0 +1,33 @@
+<!-- layout/toasts.html -->
+<div th:fragment="toasts(success, error)">
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+
+        <!-- SUCCESS -->
+        <div th:if="${success}" class="toast text-bg-success" id="successToast">
+            <div class="toast-body" th:text="${success}"></div>
+        </div>
+
+        <!-- ERROR -->
+        <div th:if="${error}" class="toast text-bg-danger" id="errorToast">
+            <div class="toast-body" th:text="${error}"></div>
+        </div>
+
+    </div>
+
+    <script>
+        window.onload = function(){
+
+            let success = document.getElementById("successToast");
+            let error = document.getElementById("errorToast");
+
+            if(success){
+                new bootstrap.Toast(success).show();
+            }
+
+            if(error){
+                new bootstrap.Toast(error).show();
+            }
+
+        }
+    </script>
+</div>

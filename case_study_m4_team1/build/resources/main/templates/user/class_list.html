@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Danh sách lớp học</title>
+    <title>Class List</title>
     <th:block th:insert="layout/layout::library"/>
 </head>
 <body>
@@ -19,28 +19,22 @@
 </div>
 
 <div class="container mt-4">
-    <h2>Danh sách lớp học cầu lông</h2>
+    <h2>Badminton class list</h2>
 
     <div class="row mt-4">
         <div th:each="class : ${classes}" class="col-md-4 mb-3">
             <div class="card h-100">
-                <div class="card-header" th:text="${class.className}">Lớp học</div>
+                <div class="card-header" th:text="${class.className}">Class</div>
                 <div class="card-body">
-                    <p><strong>Giảng viên:</strong> <span th:text="${class.teacher.name}"></span></p>
-                    <p><strong>Sân:</strong> <span th:text="${class.field.name}"></span></p>
-                    <p><strong>Ca học:</strong>
+                    <p><strong>Coach:</strong> <span th:text="${class.teacher.name}"></span></p>
+                    <p><strong>Field:</strong> <span th:text="${class.field.name}"></span></p>
+                    <p><strong>Shift:</strong>
                         <span th:text="${class.shift.startTime} + ' - ' + ${class.shift.endTime}"></span>
                     </p>
-                    <p><strong>Học phí:</strong> <span th:text="${#numbers.formatDecimal(class.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
-                    <p><strong>Sĩ số:</strong> <span th:text="${class.minStudents} + '/' + ${class.maxStudents}"></span></p>
-                    <p><strong>Trạng thái:</strong>
-                        <span th:if="${class.statusClass == 'OPEN'}" class="badge bg-success">Đang mở</span>
-                        <span th:if="${class.statusClass == 'NOT_OPEN'}" class="badge bg-warning">Chưa mở</span>
-                        <span th:if="${class.statusClass == 'FULL'}" class="badge bg-secondary">Đã đầy</span>
-                    </p>
-
+                    <p><strong>Fee:</strong> <span th:text="${#numbers.formatDecimal(class.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
+                    <p><strong>Number of students:</strong> <span th:text="${class.minStudents} + '/' + ${class.maxStudents}"></span></p>
                     <a th:href="@{/user/study/class/{id}/detail(id=${class.id})}"
-                       class="btn btn-primary">Xem chi tiết</a>
+                       class="btn btn-primary">View</a>
                 </div>
             </div>
         </div>

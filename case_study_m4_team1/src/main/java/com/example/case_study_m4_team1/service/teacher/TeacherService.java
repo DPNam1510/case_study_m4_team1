@@ -10,13 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class TeacherService implements ITeacherService {
-
-    @Autowired
-    private IAccountRepository accountRepository;
 
     @Autowired
     private ITeacherRepository teacherRepository;
@@ -34,12 +32,18 @@ public class TeacherService implements ITeacherService {
     private ITeacherNoticeRepository teacherNoticeRepository;
 
     @Override
-    public Teacher findByUsername(String username) {
-        Account account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-        return teacherRepository.findByAccountId(account.getId())
+    public Teacher findById(int id) {
+        return teacherRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
     }
+
+    @Override
+    public Teacher findByAccountUsername(String username) {
+        return teacherRepository
+                .findByAccountUsername(username)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+    }
+
 
     @Override
     public List<StudySchedule> getTeacherSchedules(int teacherId) {
@@ -53,30 +57,18 @@ public class TeacherService implements ITeacherService {
     }
 
     @Override
-    public boolean isTeacherOfClass(String username, int scheduleId) {
-        Teacher teacher = findByUsername(username);
-        StudySchedule schedule = studyScheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
-        return schedule.getTeacher().getId() == teacher.getId();
-    }
-
-    @Override
     public ClassRegister findClassRegisterById(long id) {
         return classRegisterRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Class register not found"));
     }
 
     @Override
-    public void saveReview(TeacherReviewDTO reviewDTO, String username) {
-        ClassRegister classRegister = classRegisterRepository.findById(reviewDTO.getClassRegisterId())
+    public void saveReview(TeacherReviewDTO reviewDTO) {
+
+        ClassRegister classRegister = classRegisterRepository
+                .findById(reviewDTO.getClassRegisterId())
                 .orElseThrow(() -> new RuntimeException("Class register not found"));
 
-        // Kiểm tra quyền
-        if (!isTeacherOfClass(username, classRegister.getStudySchedule().getId())) {
-            throw new RuntimeException("You are not the teacher of this class");
-        }
-
-        // Kiểm tra đã review chưa
         if (teacherReviewRepository.existsByClassRegisterId(reviewDTO.getClassRegisterId())) {
             throw new RuntimeException("This student has already been reviewed");
         }
@@ -90,23 +82,19 @@ public class TeacherService implements ITeacherService {
     }
 
     @Override
-    public void saveNotice(TeacherNoticeDTO noticeDTO, String username) {
-        StudySchedule schedule = studyScheduleRepository.findById(noticeDTO.getScheduleId())
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+    public void saveNotice(TeacherNoticeDTO noticeDTO) {
 
-        // Kiểm tra quyền
-        if (!isTeacherOfClass(username, noticeDTO.getScheduleId())) {
-            throw new RuntimeException("You are not the teacher of this class");
-        }
-
-        // Lấy tất cả học viên đã đăng ký lớp này
         List<ClassRegister> registers = classRegisterRepository
-                .findByStudyScheduleIdAndStatusRegister(noticeDTO.getScheduleId(), RegisterStatus.APPROVED);
+                .findByStudyScheduleIdAndStatusRegister(
+                        noticeDTO.getScheduleId(),
+                        RegisterStatus.APPROVED);
 
         for (ClassRegister register : registers) {
+
             TeacherNotice notice = new TeacherNotice();
             notice.setClassRegister(register);
             notice.setReason(noticeDTO.getReason());
+
             teacherNoticeRepository.save(notice);
         }
     }

@@ -101,7 +101,7 @@
     <form class="form-inline-search" action="/admin/field_books/canceled">
         <input class="form-control" name="searchUser" th:value="${searchUser}" placeholder="Enter user name..."/>
         <input class="form-control" name="searchField" th:value="${searchField}" placeholder="Enter field name..."/>
-        <input class="form-control" name="searchDate" th:value="${searchDate}" placeholder="Enter date..."/>
+        <input class="form-control" type="date" name="searchDate" th:value="${searchDate}" placeholder="Enter date..."/>
         <button class="btn btn-primary">Search</button>
         <a class="btn btn-light" href="/admin/field_books/canceled">Back</a>
     </form>
