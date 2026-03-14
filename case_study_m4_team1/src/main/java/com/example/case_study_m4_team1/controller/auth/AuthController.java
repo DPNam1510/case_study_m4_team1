@@ -1,8 +1,10 @@
 package com.example.case_study_m4_team1.controller.auth;
 
 import com.example.case_study_m4_team1.entity.Account;
+import com.example.case_study_m4_team1.entity.Users;
 import com.example.case_study_m4_team1.repository.role.IRoleRepository;
 import com.example.case_study_m4_team1.repository.account.IAccountRepository;
+import com.example.case_study_m4_team1.repository.user.IUsersRepository;
 import com.example.case_study_m4_team1.util.ValidateBadminton;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -17,13 +19,17 @@ public class AuthController {
     private final IAccountRepository accountRepository;
     private final IRoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+//    //fix user khi login
+    private final IUsersRepository usersRepository;
 
     public AuthController(IAccountRepository accountRepository,
                           IRoleRepository roleRepository,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder,
+                          IUsersRepository usersRepository) {
         this.accountRepository = accountRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.usersRepository = usersRepository;
     }
 
     // Hiển thị trang login, map param error/logout sang model
@@ -62,6 +68,12 @@ public class AuthController {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
 
         accountRepository.save(account);
+
+        //fix tạo user khi login
+        Users user = new Users();
+        user.setName(account.getUsername());
+        user.setAccount(accountRepository.save(account));
+        usersRepository.save(user);
 
         redirect.addFlashAttribute("success", "Register successful. Please login");
 
