@@ -51,7 +51,7 @@ public class SecurityConfig {
 
                         .loginProcessingUrl("/login")
 
-                        .defaultSuccessUrl("/welcome", true)
+                        .defaultSuccessUrl("/home", true)
 
                         .failureUrl("/login?error")
 
