@@ -38,8 +38,8 @@ public class FieldBookController {
     @GetMapping("")
     public String bookingHome(Principal principal){
         String username = principal.getName();
-//        Long userId = userStudyService.getUserClasses(username);
-        return "redirect:/booking/history?userId=";
+        Long userId = userStudyService.getUserIdByUsername(username);
+        return "redirect:/booking/history?userId=" + userId;
     }
 
     @GetMapping("/create")

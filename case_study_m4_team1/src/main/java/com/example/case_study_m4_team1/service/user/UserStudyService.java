@@ -120,6 +120,11 @@ public class UserStudyService implements IUserStudyService {
     }
 
     @Override
+    public Long getUserIdByUsername(String username) {
+        return usersRepository.findByAccountUsername(username).getId();
+    }
+
+    @Override
     public List<ClassRegister> getUserClasses(String username) {
         Account account = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Account not found"));

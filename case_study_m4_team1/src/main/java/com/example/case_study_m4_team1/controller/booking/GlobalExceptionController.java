@@ -14,10 +14,5 @@ public class GlobalExceptionController {
         model.addAttribute("errorBooking", e.getMessage());
         return "booking/errorBooking";
     }
-//    public String handleBookingException(BookingException e,
-//                                         RedirectAttributes redirectAttributes){
-//        redirectAttributes.addFlashAttribute("errorBooking", e.getMessage());
-//        return "redirect:/booking/history?userId=";
-//    }
 
 }

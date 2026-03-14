@@ -30,7 +30,7 @@
             <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">🏸 Booking History</h4>
                 <div>
-                    <a class="btn btn-light btn-sm" href="/home">Home</a>
+                    <a class="btn btn-light btn-sm" href="/user">User Dashboard</a>
                     <a th:href="@{/booking/create(userId=${userId})}"
                        class="btn btn-warning btn-sm">
                         + Create Booking
@@ -108,13 +108,13 @@
             Next
         </a>
     </div>
-    <div class="pagination-wrapper">
-        <a class="btn btn-primary btn-sm" th:if="${history.hasPrevious()}" th:href="@{/booking/history(userId=${userId},page=${history.number -1})}">Previous</a>
-        <span class="btn btn-light btn-sm disabled">
-            Page <span th:text="${history.number +1}"></span> / <span th:text="${history.totalPages}"></span>
-        </span>
-        <a class="btn btn-dark btn-sm" th:if="${history.hasNext()}" th:href="@{/booking/history(userId=${userId},page=${history.number +1})}">Next</a>
-    </div>
+<!--    <div class="pagination-wrapper">-->
+<!--        <a class="btn btn-primary btn-sm" th:if="${history.hasPrevious()}" th:href="@{/booking/history(userId=${userId},page=${history.number -1})}">Previous</a>-->
+<!--        <span class="btn btn-light btn-sm disabled">-->
+<!--            Page <span th:text="${history.number +1}"></span> / <span th:text="${history.totalPages}"></span>-->
+<!--        </span>-->
+<!--        <a class="btn btn-dark btn-sm" th:if="${history.hasNext()}" th:href="@{/booking/history(userId=${userId},page=${history.number +1})}">Next</a>-->
+<!--    </div>-->
 </div>
 <script>
     setTimeout(function () {

@@ -13,6 +13,7 @@ public interface IUserStudyService {
     StudySchedule findScheduleById(int scheduleId);
     int countRegisteredStudents(int scheduleId);
     Long registerClass(String username, int scheduleId) throws Exception;
+    Long getUserIdByUsername(String username);
     List<ClassRegister> getUserClasses(String username);
     List<TeacherNotice> getUserNotices(String username);
     List<TeacherReview> getUserReviews(String username);
