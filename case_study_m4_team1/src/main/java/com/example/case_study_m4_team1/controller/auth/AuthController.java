@@ -1,5 +1,6 @@
 package com.example.case_study_m4_team1.controller.auth;
 
+import com.example.case_study_m4_team1.dto.RegisterAccountDto;
 import com.example.case_study_m4_team1.entity.Account;
 import com.example.case_study_m4_team1.entity.Users;
 import com.example.case_study_m4_team1.repository.role.IRoleRepository;
@@ -43,39 +44,41 @@ public class AuthController {
     }
 
     @GetMapping("/register")
-    public String registerPage(Model model) {
-        model.addAttribute("account", new Account());
+    public String showRegister(Model model) {
+        model.addAttribute("registerAccountDto", new RegisterAccountDto());
         return "auth/register";
     }
 
     @PostMapping("/register")
-    public String register(Account account,
+    public String register(@ModelAttribute RegisterAccountDto dto,
                            BindingResult bindingResult,
                            RedirectAttributes redirect) {
-
-        new ValidateBadminton().validate(account,bindingResult);
+        new ValidateBadminton().validate(dto,bindingResult);
         if (bindingResult.hasFieldErrors()){
             return "auth/register";
         }
 
-        if(accountRepository.existsByUsername(account.getUsername())){
+        if(accountRepository.existsByUsername(dto.getUsername())){
             redirect.addFlashAttribute("error", "Username already exists");
             return "redirect:/register";
         }
 
+        Account account = new Account();
+        account.setUsername(dto.getUsername());
+        account.setPassword(passwordEncoder.encode(dto.getPassword()));
+        account.setEmail(dto.getEmail());
+        account.setPhone(dto.getPhone());
         account.setRole(roleRepository.findByName("USER"));
 
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        Account savedAccount = accountRepository.save(account);
 
-        accountRepository.save(account);
-
-        //fix tạo user khi login
         Users user = new Users();
-        user.setName(account.getUsername());
-        user.setAccount(accountRepository.save(account));
+        user.setAccount(savedAccount);
+        user.setName(dto.getFullName());
+
         usersRepository.save(user);
 
-        redirect.addFlashAttribute("success", "Register successful. Please login");
+        redirect.addFlashAttribute("success", "Register successful");
 
         return "redirect:/login";
     }
