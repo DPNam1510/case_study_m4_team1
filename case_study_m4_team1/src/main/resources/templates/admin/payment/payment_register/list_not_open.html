@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Payment Register List</title>
+    <title>Payment Register Not Open List</title>
     <th:block th:insert="layout/layout::library"/>
 
     <style>
@@ -71,9 +71,6 @@
 
         <a class="btn btn-dark btn-sm" href="/admin/payments">
             <i class="bi bi-list"></i> Payment Field Book List
-        </a>
-        <a class="btn btn-danger btn-sm" href="/admin/payments/payment_register_not_open">
-            <i class="bi bi-list"></i> Payment Register Not Open Yet List
         </a>
     </div>
 
@@ -298,7 +295,7 @@
 
     <a class="btn btn-primary btn-sm"
        th:if="${paymentRegisterDtoS.hasPrevious()}"
-       th:href="@{/admin/payments/payment_register(page=${paymentRegisterDtoS.number -1},
+       th:href="@{/admin/payments/payment_register_not_open(page=${paymentRegisterDtoS.number -1},
        searchClassName=${searchClassName},
        searchUser=${searchUser},
        searchTeacher=${searchTeacher},
@@ -321,7 +318,7 @@ Page
 
     <a class="btn btn-dark btn-sm"
        th:if="${paymentRegisterDtoS.hasNext()}"
-       th:href="@{/admin/payments/payment_register(page=${paymentRegisterDtoS.number +1},
+       th:href="@{/admin/payments/payment_register_not_open(page=${paymentRegisterDtoS.number +1},
        searchClassName=${searchClassName},
        searchUser=${searchUser},
        searchTeacher=${searchTeacher},

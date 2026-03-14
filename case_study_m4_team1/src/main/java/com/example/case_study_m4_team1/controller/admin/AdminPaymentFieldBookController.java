@@ -57,6 +57,23 @@ public class AdminPaymentFieldBookController {
         return "admin/payment/payment_register/list";
     }
 
+    @GetMapping("/payment_register_not_open")
+    public String showPaymentRegisterNotOpen(Model model,
+                                      @RequestParam(value = "page", defaultValue = "0") int page,
+                                      @RequestParam(value = "searchClassName", defaultValue = "") String className,
+                                      @RequestParam(value = "searchUser", defaultValue = "") String user,
+                                      @RequestParam(value = "searchTeacher", defaultValue = "") String teacher,
+                                      @RequestParam(value = "status", defaultValue = "")PaymentStatus status){
+        Pageable pageable = PageRequest.of(page,5, Sort.by("date").ascending());
+        Page<PaymentRegisterDto> paymentRegisterDtoS = paymentRegisterService.searchPaymentNotOpen(className,user,teacher,status,pageable);
+        model.addAttribute("paymentRegisterDtoS",paymentRegisterDtoS);
+        model.addAttribute("searchClassName",className);
+        model.addAttribute("searchUser",user);
+        model.addAttribute("searchTeacher",teacher);
+        model.addAttribute("status",status);
+        return "admin/payment/payment_register/list_not_open";
+    }
+
     @PostMapping("/set_paid")
     public String setPaidPayment(@RequestParam long id,
                                  RedirectAttributes redirectAttributes){

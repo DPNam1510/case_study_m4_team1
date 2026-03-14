@@ -13,5 +13,11 @@ public interface IPaymentRegisterServiceAdmin {
                                            @Param("statusStr") PaymentStatus statusStr,
                                            Pageable pageable);
 
+    Page<PaymentRegisterDto> searchPaymentNotOpen(@Param("searchClassName") String className,
+                                                  @Param("searchUser") String user,
+                                                  @Param("searchTeacher") String teacher,
+                                                  @Param("statusStr") PaymentStatus statusStr,
+                                                  Pageable pageable);
+
     void adminSetPaid(long id);
 }

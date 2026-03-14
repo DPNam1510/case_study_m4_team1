@@ -33,6 +33,18 @@ public class PaymentRegisterServiceAdmin implements IPaymentRegisterServiceAdmin
     }
 
     @Override
+    public Page<PaymentRegisterDto> searchPaymentNotOpen(String className, String user, String teacher, PaymentStatus statusStr, Pageable pageable) {
+        return paymentRegisterRepository.searchPaymentNotOpen(
+                "%" + className + "%",
+                "%" + user + "%",
+                "%" + teacher + "%",
+                statusStr == null ? null : statusStr.name(),
+                pageable
+        );
+    }
+
+
+    @Override
     public void adminSetPaid(long id) {
         PaymentRegister paymentRegister = paymentRegisterRepository.findById(id).orElse(null);
 
