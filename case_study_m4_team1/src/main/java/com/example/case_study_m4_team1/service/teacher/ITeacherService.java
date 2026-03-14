@@ -7,9 +7,11 @@ import com.example.case_study_m4_team1.entity.StudySchedule;
 import com.example.case_study_m4_team1.entity.Teacher;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ITeacherService {
     Teacher findById(int id);
+    Teacher findByAccountUsername(String username);
 
     List<StudySchedule> getTeacherSchedules(int teacherId);
 

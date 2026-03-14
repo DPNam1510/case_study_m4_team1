@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface ITeacherRepository extends JpaRepository<Teacher, Integer> {
     Optional<Teacher> findByAccountId(Long accountId);
+
+    Optional<Teacher> findByAccountUsername(String username);
 }

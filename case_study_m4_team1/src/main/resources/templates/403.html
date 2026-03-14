@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Access Denied</title>
+  <th:block th:insert="~{layout/layout::library}"/>
+
+  <style>
+    body{
+      background:#f4f6f9;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:Segoe UI;
+    }
+
+    .box{
+      background:white;
+      padding:40px;
+      border-radius:10px;
+      text-align:center;
+      box-shadow:0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .code{
+      font-size:80px;
+      font-weight:bold;
+      color:#dc3545;
+    }
+
+    .msg{
+      font-size:20px;
+      margin:15px 0;
+    }
+
+    .btn-home{
+      margin-top:15px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <div class="code">403</div>
+
+  <div class="msg">
+    You do not have permission to access this page
+  </div>
+
+  <a href="/home" class="btn btn-primary btn-home">
+    Back to Home
+  </a>
+
+</div>
+</body>
+</html>
