@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalController {
-    @ExceptionHandler(BookingException.class)
-    public String handleOutOfStock(Model model) {
-        model.addAttribute("error", "Fails booking");
-        return "error";
-    }
 
     @ExceptionHandler(FieldException.class)
     public String handleInvalidTransfer(Model model) {

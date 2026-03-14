@@ -1,10 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard User</title>
+    <title>Badminton Center</title>
+
+    <th:block th:insert="~{layout/layout::library}"/>
+
+    <style>
+
+        body{
+            background:#f8f9fa;
+            font-family: Arial;
+        }
+
+        .hero{
+            background-image:url('https://images.unsplash.com/photo-1599058917765-a780eda07a3e');
+            height:520px;
+            background-size:cover;
+            background-position:center;
+            position:relative;
+            color:white;
+        }
+
+        .hero-overlay{
+            background:rgba(0,0,0,0.55);
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            flex-direction:column;
+        }
+
+        .hero h1{
+            font-size:55px;
+            font-weight:bold;
+        }
+
+        .section{
+            padding:70px 0;
+        }
+
+        .court-card img{
+            height:200px;
+            object-fit:cover;
+        }
+
+        .court-card:hover{
+            transform:translateY(-5px);
+            transition:0.3s;
+        }
+
+        footer{
+            background:#212529;
+            color:white;
+            padding:40px;
+            margin-top:40px;
+        }
+
+    </style>
+
 </head>
+
 <body>
-<a href="user/study/classes">Go to study schedule</a>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold">
+            <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+            Badminton Center
+        </a>
+
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/home">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/booking/create(userId=${userId})}">
+                        Booking
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/booking/history(userId=${userId})}">
+                        History
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/study/classes">
+                        Study Schedule
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#training">
+                        Training
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">
+                        Contact
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- HERO -->
+
+<div class="hero">
+
+    <div class="hero-overlay">
+
+        <h1>Play Badminton Anytime</h1>
+
+        <p class="lead">Book your court online quickly and easily</p>
+
+        <div class="mt-4">
+
+            <a th:href="@{/booking/create(userId=${userId})}" class="btn btn-warning btn-lg me-3">
+                Book Court
+            </a>
+
+            <a th:href="@{/booking/history(userId=${userId})}" class="btn btn-light btn-lg">
+                View History
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CONTACT -->
+
+<section id="contact" class="section container">
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <h3>Contact Information</h3>
+
+            <p>Address: 123 Nguyen Van Linh, Da Nang</p>
+
+            <p>Phone: 0905 123 456</p>
+
+            <p>Email: badmintoncenter@gmail.com</p>
+
+            <p><b>Opening hours:</b> 5:00 AM - 23:00 PM</p>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <iframe
+                    src="https://www.google.com/maps?q=Da%20Nang&output=embed"
+                    width="100%"
+                    height="300"
+                    style="border:0">
+            </iframe>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer class="text-center">
+
+    <h5>Badminton Center</h5>
+
+    <p>Online Court Booking System</p>
+
+    <p>© 2026 All rights reserved</p>
+
+</footer>
+
+
 </body>
 </html>

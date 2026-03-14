@@ -13,6 +13,7 @@ import com.example.case_study_m4_team1.repository.booking.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +51,7 @@ public class FieldBookService implements IFieldBookService {
     }
 
     @Override
-    public BookingResponseDto createBooking(Long userId, BookingRequestDto request) {
+    public void createBooking(Long userId, BookingRequestDto request) {
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
         if (request.getDateBook().isBefore(today)) {
@@ -106,11 +107,11 @@ public class FieldBookService implements IFieldBookService {
 
         fieldBookRepo.save(fieldBook);
 
-        return convertToDto(fieldBook);
+        convertToDto(fieldBook);
     }
 
     @Override
-    public BookingResponseDto updateBooking(Long id,Long userId, BookingRequestDto request) {
+    public void updateBooking(Long id, Long userId, BookingRequestDto request) {
         if (request.getDateBook().isBefore(LocalDate.now())) {
             throw new BookingException("Not booking past day!");
         }
@@ -135,7 +136,7 @@ public class FieldBookService implements IFieldBookService {
         fieldBook.setShift(shiftRepo.findById(request.getShiftId()).orElseThrow());
         fieldBook.setDateBook(request.getDateBook());
         fieldBookRepo.save(fieldBook);
-        return convertToDto(fieldBook);
+        convertToDto(fieldBook);
     }
 
     @Override
@@ -165,5 +166,11 @@ public class FieldBookService implements IFieldBookService {
     public Page<BookingResponseDto> historyBooking(Long userId, Pageable pageable) {
         return fieldBookRepo.findAllByUser_IdOrderByDateBookDesc(
                 userId,pageable).map(this::convertToDto);
+    }
+
+    @Scheduled(fixedRate = 30000)
+    @Transactional
+    public void autoCancelledBooking(){
+        fieldBookRepo.autoCancelExpired(LocalDate.now(),LocalTime.now());
     }
 }
