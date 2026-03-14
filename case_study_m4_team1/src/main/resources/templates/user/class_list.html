@@ -4,108 +4,253 @@
     <meta charset="UTF-8">
     <title>Class List | Badminton Center</title>
     <th:block th:insert="~{layout/layout::library}"/>
+
     <style>
-        body {
-            background: #f8f9fa;
-            font-family: Arial, sans-serif;
+
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background:#f4f7fb;
         }
-        .page-header {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            padding: 60px 0;
-            text-align: center;
-            margin-bottom: 40px;
+
+        /* NAVBAR */
+
+        .navbar{
+            background:rgba(0,0,0,0.7);
+            backdrop-filter:blur(10px);
         }
-        .page-header h1 {
-            font-size: 42px;
-            font-weight: bold;
+
+        .navbar-brand{
+            font-size:22px;
+            letter-spacing:1px;
         }
-        .class-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+
+        /* HERO */
+
+        .hero{
+
+            background-image:url('https://images.unsplash.com/photo-1599058917765-a780eda07a3e');
+
+            height:540px;
+
+            background-size:cover;
+            background-position:center;
+
+            position:relative;
+
         }
-        .class-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+
+        .hero-overlay{
+
+            background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7));
+
+            height:100%;
+
+            display:flex;
+
+            flex-direction:column;
+
+            align-items:center;
+
+            justify-content:center;
+
+            text-align:center;
+
+            color:white;
+
         }
-        .card-header-custom {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 20px;
-            font-size: 22px;
-            font-weight: 600;
-            text-align: center;
+
+        .hero h1{
+
+            font-size:60px;
+
+            font-weight:700;
+
+            margin-bottom:20px;
+
+            animation:fadeDown 1.2s;
+
         }
-        .card-body-custom {
-            padding: 25px;
-            flex: 1;
+
+        .hero p{
+
+            font-size:20px;
+
+            opacity:.9;
+
+            margin-bottom:30px;
+
         }
-        .card-body-custom p {
-            margin-bottom: 12px;
-            font-size: 16px;
+
+        /* BUTTON EFFECT */
+
+        .btn{
+
+            border-radius:30px;
+
+            padding:10px 26px;
+
+            font-weight:600;
+
+            transition:all .3s;
+
         }
-        .card-body-custom i {
-            width: 25px;
-            color: #2a5298;
+
+        .btn-warning:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,193,7,.6);
+
         }
-        .btn-view {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 8px 25px;
-            font-weight: 500;
-            transition: 0.3s;
-            text-decoration: none;
-            display: inline-block;
+
+        .btn-light:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,255,255,.5);
+
         }
-        .btn-view:hover {
-            background: linear-gradient(135deg, #2a5298, #1e3c72);
-            color: white;
-            transform: scale(1.05);
+
+        /* SECTION */
+
+        .section{
+
+            padding:80px 0;
+
         }
-        .alert-custom {
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
+
+        /* CONTACT */
+
+        #contact{
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:0 8px 25px rgba(0,0,0,.1);
+
+            padding:40px;
+
         }
-        footer {
-            background: #212529;
-            color: white;
-            padding: 40px;
-            margin-top: 60px;
+
+        /* FOOTER */
+
+        footer{
+
+            background:#1a1a1a;
+
+            color:white;
+
+            padding:50px;
+
+            margin-top:60px;
+
         }
+
+        /* ANIMATION */
+
+        @keyframes fadeDown{
+
+            from{
+
+                opacity:0;
+
+                transform:translateY(-40px);
+
+            }
+
+            to{
+
+                opacity:1;
+
+                transform:translateY(0);
+
+            }
+
+        }
+
     </style>
+
 </head>
+
 <body>
 
-<!-- NAVBAR (giống mẫu) -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow">
+
     <div class="container">
+
         <a class="navbar-brand fw-bold">
+
             <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+
             Badminton Center
+
         </a>
+
         <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+
             <span class="navbar-toggler-icon"></span>
+
         </button>
+
         <div class="collapse navbar-collapse" id="menu">
+
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="/home">Home</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/booking/create(userId=${userId})}">Booking</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/booking/history(userId=${userId})}">History</a></li>
-                <li class="nav-item"><a class="nav-link" href="/user/study/classes">Study Schedule</a></li>
-                <li class="nav-item"><a class="nav-link" href="#training">Training</a></li>
-                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link active" href="/home">Home</a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/create(userId=${userId})}">
+
+                        Booking
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/history(userId=${userId})}">
+
+                        History
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="/user/study/classes">
+
+                        Study Schedule
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#contact">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
             </ul>
+
         </div>
+
     </div>
+
 </nav>
 
 <!-- Page Header -->
