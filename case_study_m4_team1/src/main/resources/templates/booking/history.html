@@ -1,52 +1,90 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Booking History</title>
     <th:block th:insert="~{layout/layout::library}"/>
+
     <style>
-        body {
-            background-image: url("https://images.unsplash.com/photo-1599058917765-a780eda07a3e");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+
+        body{
+            background-image:url("https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=1920&q=80");
+            background-size:cover;
+            background-position:center;
+            background-attachment:fixed;
         }
 
-        .overlay {
-            background-color: rgba(0, 0, 0, 0.6);
-            min-height: 100vh;
-            padding-top: 80px;
+        .overlay{
+            background:rgba(0,0,0,0.55);
+            min-height:100vh;
+            padding-top:80px;
         }
 
-        .history-card {
-            border-radius: 15px;
+        .card{
+            border-radius:18px;
+            transition:0.3s;
         }
+
+        .card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 15px 35px rgba(0,0,0,0.25);
+        }
+
+        .btn{
+            border-radius:10px;
+            transition:0.25s;
+        }
+
+        .btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 18px rgba(0,0,0,0.2);
+        }
+
+        .table{
+            background:white;
+        }
+
+        .pagination-wrapper{
+            text-align:center;
+            margin-top:20px;
+        }
+
     </style>
+
 </head>
+
 <body>
+
 <div class="overlay">
+
     <div class="container">
-        <div class="card shadow-lg history-card">
-            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">🏸 Booking History</h4>
+
+        <div class="card shadow-lg">
+
+            <div class="card-header bg-success text-white d-flex justify-content-between">
+
+                <h4>🏸 Booking History</h4>
+
                 <div>
-                    <a class="btn btn-light btn-sm" href="/user">User Dashboard</a>
-                    <a th:href="@{/booking/create(userId=${userId})}"
-                       class="btn btn-warning btn-sm">
-                        + Create Booking
-                    </a>
+
+                    <a class="btn btn-light btn-sm" href="/user">Dashboard</a>
+
+                    <a th:href="@{/booking/create(userId=${userId})}" class="btn btn-warning btn-sm">+ Create</a>
+
                 </div>
+
             </div>
+
             <div class="card-body">
-                <div th:if="${message}" class="alert alert-success alert-dismissible fade show">
+
+                <div th:if="${message}" class="alert alert-success">
                     <span th:text="${message}"></span>
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
                 </div>
+
                 <table class="table table-striped table-hover text-center">
+
                     <thead class="table-dark">
+
                     <tr>
                         <th>ID</th>
                         <th>Field</th>
@@ -55,74 +93,84 @@
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
+
                     </thead>
+
                     <tbody>
-                    <tr th:each="b, stat : ${history.content}">
-                        <td th:text="${stat.index + 1 + history.number * history.size}"></td>
+
+                    <tr th:each="b,stat:${history.content}">
+
+                        <td th:text="${stat.index+1+history.number*history.size}"></td>
+
                         <td th:text="${b.fieldName}"></td>
+
                         <td th:text="${b.dateBook}"></td>
+
                         <td th:text="${b.shiftTime}"></td>
+
                         <td>
+
                             <span class="badge bg-warning" th:if="${b.status.name()=='PENDING'}">Pending</span>
+
                             <span class="badge bg-success" th:if="${b.status.name()=='APPROVED'}">Approved</span>
+
                             <span class="badge bg-danger" th:if="${b.status.name()=='CANCELED'}">Cancelled</span>
+
                         </td>
+
                         <td>
-                            <a class="btn btn-info btn-sm"
-                               th:href="@{/booking/detail/{id}(id=${b.id})}">
-                                Detail
-                            </a>
-                            <a class="btn btn-warning btn-sm"
-                               th:if="${b.status.name()=='PENDING'}"
+
+                            <a class="btn btn-info btn-sm" th:href="@{/booking/detail/{id}(id=${b.id})}">Detail</a>
+
+                            <a class="btn btn-warning btn-sm" th:if="${b.status.name()=='PENDING'}"
                                th:href="@{/booking/update/{id}(id=${b.id},userId=${userId})}">
                                 Edit
                             </a>
+
                             <form th:if="${b.status.name()=='PENDING'}"
-                                  th:action="@{/booking/delete/{id}(id=${b.id})}"
-                                  method="post"
+                                  th:action="@{/booking/delete/{id}(id=${b.id})}" method="post"
                                   style="display:inline">
-                                <input type="hidden"
-                                       name="userId"
-                                       th:value="${userId}">
+
+                                <input type="hidden" name="userId" th:value="${userId}">
+
                                 <button class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Are you sure cancel this booking?')">Cancel
-                                </button>
+                                        onclick="return confirm('Cancel booking?')">Cancel</button>
+
                             </form>
+
                         </td>
+
                     </tr>
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </div>
+
+        <div class="pagination-wrapper">
+
+            <a class="btn btn-primary btn-sm"
+               th:if="${history.hasPrevious()}"
+               th:href="@{/booking/history(userId=${userId},page=${history.number-1})}">
+                Previous
+            </a>
+
+            <span class="btn btn-light btn-sm disabled">
+Page <span th:text="${history.number+1}"></span>/<span th:text="${history.totalPages}"></span>
+</span>
+
+            <a class="btn btn-dark btn-sm"
+               th:if="${history.hasNext()}"
+               th:href="@{/booking/history(userId=${userId},page=${history.number+1})}">
+                Next
+            </a>
+
+        </div>
+
     </div>
-    <div class="pagination-wrapper">
-        <a class="btn btn-primary btn-sm"
-           th:if="${history.hasPrevious()}"
-           th:href="@{/booking/history(userId=${userId},page=${history.number -1})}">
-            Previous
-        </a>
-        <span class="btn btn-light btn-sm disabled">Page<span th:text="${history.number +1}"></span>/<span th:text="${history.totalPages}"></span></span>
-        <a class="btn btn-dark btn-sm"
-           th:if="${history.hasNext()}"
-           th:href="@{/booking/history(userId=${userId},page=${history.number +1})}">
-            Next
-        </a>
-    </div>
-<!--    <div class="pagination-wrapper">-->
-<!--        <a class="btn btn-primary btn-sm" th:if="${history.hasPrevious()}" th:href="@{/booking/history(userId=${userId},page=${history.number -1})}">Previous</a>-->
-<!--        <span class="btn btn-light btn-sm disabled">-->
-<!--            Page <span th:text="${history.number +1}"></span> / <span th:text="${history.totalPages}"></span>-->
-<!--        </span>-->
-<!--        <a class="btn btn-dark btn-sm" th:if="${history.hasNext()}" th:href="@{/booking/history(userId=${userId},page=${history.number +1})}">Next</a>-->
-<!--    </div>-->
-</div>
-<script>
-    setTimeout(function () {
-        let alert = document.querySelector('.alert');
-        if (alert) {
-            alert.style.display = 'none';
-        }
-    }, 3000);
-</script>
+
 </body>
 </html>

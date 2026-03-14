@@ -1,70 +1,104 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Booking Detail</title>
     <th:block th:insert="~{layout/layout::library}"/>
+
     <style>
+
         body{
-            background-image: url("https://images.unsplash.com/photo-1599058917765-a780eda07a3e");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-image:url("https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=1920&q=80");
+            background-size:cover;
+            background-position:center;
+            background-attachment:fixed;
         }
+
         .overlay{
-            background-color: rgba(0,0,0,0.55);
-            min-height: 100vh;
-            padding-top: 80px;
+            background:rgba(0,0,0,0.55);
+            min-height:100vh;
+            padding-top:80px;
         }
-        .detail-card{
-            border-radius: 15px;
+
+        .card{
+            border-radius:18px;
+            transition:0.3s;
         }
-        .card-header{
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
+
+        .card:hover{
+            transform:translateY(-5px);
         }
+
+        .btn{
+            border-radius:10px;
+            transition:0.25s;
+        }
+
+        .btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 18px rgba(0,0,0,0.2);
+        }
+
     </style>
+
 </head>
+
 <body>
+
 <div class="overlay">
+
     <div class="container">
+
         <div class="row justify-content-center">
+
             <div class="col-md-6">
-                <div class="card shadow-lg detail-card">
-                    <div class="card-header bg-primary text-white">
+
+                <div class="card shadow-lg">
+
+                    <div class="card-header bg-primary text-white text-center">
                         🏸 Booking Detail
                     </div>
+
                     <div class="card-body">
-                        <p class="fs-5">
-                            <strong>Badminton Field:</strong>
+
+                        <p><strong>Field:</strong>
                             <span th:text="${booking.fieldName}"></span>
                         </p>
-                        <p class="fs-5">
-                            <strong>Booking Date:</strong>
+
+                        <p><strong>Date:</strong>
                             <span th:text="${booking.dateBook}"></span>
                         </p>
-                        <p class="fs-5">
-                            <strong>Shift Time:</strong>
+
+                        <p><strong>Shift:</strong>
                             <span th:text="${booking.shiftTime}"></span>
                         </p>
-                        <p class="fs-5">
-                            <strong>Status:</strong>
+
+                        <p><strong>Status:</strong>
                             <span class="badge bg-success"
                                   th:text="${booking.status}">
-                        </span>
+</span>
                         </p>
-                        <div class="mt-4 text-center">
+
+                        <div class="text-center mt-4">
+
                             <a th:href="@{/booking/history(userId=${booking.userId})}"
                                class="btn btn-secondary">
                                 ⬅ Back
                             </a>
+
                         </div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
+
 </body>
 </html>

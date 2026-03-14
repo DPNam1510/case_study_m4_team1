@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+
     <meta charset="UTF-8">
     <title>Badminton Center</title>
 
@@ -9,53 +10,165 @@
     <style>
 
         body{
-            background:#f8f9fa;
-            font-family: Arial;
+            font-family:'Segoe UI',sans-serif;
+            background:#f4f7fb;
         }
 
+        /* NAVBAR */
+
+        .navbar{
+            background:rgba(0,0,0,0.7);
+            backdrop-filter:blur(10px);
+        }
+
+        .navbar-brand{
+            font-size:22px;
+            letter-spacing:1px;
+        }
+
+        /* HERO */
+
         .hero{
+
             background-image:url('https://images.unsplash.com/photo-1599058917765-a780eda07a3e');
-            height:520px;
+
+            height:540px;
+
             background-size:cover;
             background-position:center;
+
             position:relative;
-            color:white;
+
         }
 
         .hero-overlay{
-            background:rgba(0,0,0,0.55);
+
+            background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7));
+
             height:100%;
+
             display:flex;
-            align-items:center;
-            justify-content:center;
-            text-align:center;
+
             flex-direction:column;
+
+            align-items:center;
+
+            justify-content:center;
+
+            text-align:center;
+
+            color:white;
+
         }
 
         .hero h1{
-            font-size:55px;
-            font-weight:bold;
+
+            font-size:60px;
+
+            font-weight:700;
+
+            margin-bottom:20px;
+
+            animation:fadeDown 1.2s;
+
         }
+
+        .hero p{
+
+            font-size:20px;
+
+            opacity:.9;
+
+            margin-bottom:30px;
+
+        }
+
+        /* BUTTON EFFECT */
+
+        .btn{
+
+            border-radius:30px;
+
+            padding:10px 26px;
+
+            font-weight:600;
+
+            transition:all .3s;
+
+        }
+
+        .btn-warning:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,193,7,.6);
+
+        }
+
+        .btn-light:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,255,255,.5);
+
+        }
+
+        /* SECTION */
 
         .section{
-            padding:70px 0;
+
+            padding:80px 0;
+
         }
 
-        .court-card img{
-            height:200px;
-            object-fit:cover;
+        /* CONTACT */
+
+        #contact{
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:0 8px 25px rgba(0,0,0,.1);
+
+            padding:40px;
+
         }
 
-        .court-card:hover{
-            transform:translateY(-5px);
-            transition:0.3s;
-        }
+        /* FOOTER */
 
         footer{
-            background:#212529;
+
+            background:#1a1a1a;
+
             color:white;
-            padding:40px;
-            margin-top:40px;
+
+            padding:50px;
+
+            margin-top:60px;
+
+        }
+
+        /* ANIMATION */
+
+        @keyframes fadeDown{
+
+            from{
+
+                opacity:0;
+
+                transform:translateY(-40px);
+
+            }
+
+            to{
+
+                opacity:1;
+
+                transform:translateY(0);
+
+            }
+
         }
 
     </style>
@@ -65,17 +178,23 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow">
 
     <div class="container">
 
         <a class="navbar-brand fw-bold">
+
             <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+
             Badminton Center
+
         </a>
 
         <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+
             <span class="navbar-toggler-icon"></span>
+
         </button>
 
         <div class="collapse navbar-collapse" id="menu">
@@ -83,37 +202,49 @@
             <ul class="navbar-nav ms-auto">
 
                 <li class="nav-item">
+
                     <a class="nav-link active" href="/home">Home</a>
+
                 </li>
 
                 <li class="nav-item">
+
                     <a class="nav-link" th:href="@{/booking/create(userId=${userId})}">
+
                         Booking
+
                     </a>
+
                 </li>
 
                 <li class="nav-item">
+
                     <a class="nav-link" th:href="@{/booking/history(userId=${userId})}">
+
                         History
+
                     </a>
+
                 </li>
 
                 <li class="nav-item">
+
                     <a class="nav-link" href="/user/study/classes">
+
                         Study Schedule
+
                     </a>
+
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#training">
-                        Training
-                    </a>
-                </li>
 
-                <li class="nav-item">
                     <a class="nav-link" href="#contact">
+
                         Contact
+
                     </a>
+
                 </li>
 
             </ul>
@@ -124,7 +255,6 @@
 
 </nav>
 
-
 <!-- HERO -->
 
 <div class="hero">
@@ -133,16 +263,24 @@
 
         <h1>Play Badminton Anytime</h1>
 
-        <p class="lead">Book your court online quickly and easily</p>
+        <p>Book your court online quickly and easily</p>
 
         <div class="mt-4">
 
-            <a th:href="@{/booking/create(userId=${userId})}" class="btn btn-warning btn-lg me-3">
+            <a th:href="@{/booking/create(userId=${userId})}"
+
+               class="btn btn-warning btn-lg me-3">
+
                 Book Court
+
             </a>
 
-            <a th:href="@{/booking/history(userId=${userId})}" class="btn btn-light btn-lg">
+            <a th:href="@{/booking/history(userId=${userId})}"
+
+               class="btn btn-light btn-lg">
+
                 View History
+
             </a>
 
         </div>
@@ -155,17 +293,17 @@
 
 <section id="contact" class="section container">
 
-    <div class="row">
+    <div class="row align-items-center">
 
         <div class="col-md-6">
 
-            <h3>Contact Information</h3>
+            <h3 class="mb-4">Contact Information</h3>
 
-            <p>Address: 123 Nguyen Van Linh, Da Nang</p>
+            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyen Van Linh, Da Nang</p>
 
-            <p>Phone: 0905 123 456</p>
+            <p><i class="fa-solid fa-phone"></i> 0905 123 456</p>
 
-            <p>Email: badmintoncenter@gmail.com</p>
+            <p><i class="fa-solid fa-envelope"></i> badmintoncenter@gmail.com</p>
 
             <p><b>Opening hours:</b> 5:00 AM - 23:00 PM</p>
 
@@ -174,10 +312,15 @@
         <div class="col-md-6">
 
             <iframe
+
                     src="https://www.google.com/maps?q=Da%20Nang&output=embed"
+
                     width="100%"
+
                     height="300"
-                    style="border:0">
+
+                    style="border-radius:10px;border:0">
+
             </iframe>
 
         </div>
@@ -185,7 +328,6 @@
     </div>
 
 </section>
-
 
 <footer class="text-center">
 
@@ -196,7 +338,6 @@
     <p>© 2026 All rights reserved</p>
 
 </footer>
-
 
 </body>
 </html>

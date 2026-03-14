@@ -1,224 +1,391 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
     <title>PENDING LIST</title>
+
     <th:block th:insert="layout/layout::library"/>
+
     <style>
-        body {
-            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        body{
+            background:linear-gradient(135deg,#e3f2fd,#f1f8e9);
+            min-height:100vh;
+            font-family:'Segoe UI',sans-serif;
         }
 
-        .container {
-            padding: 40px 20px;
+        .container{
+            padding:40px 20px;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #37474f;
+        h1{
+            text-align:center;
+            margin-bottom:30px;
+            font-weight:700;
+            color:#2c3e50;
         }
 
-        .action-buttons a {
-            margin-right: 10px;
+        .action-buttons{
+            text-align:center;
+            margin-bottom:20px;
         }
 
-        form input {
-            margin-right: 10px;
+        .action-buttons a{
+            margin:5px;
+            border-radius:20px;
+            padding:6px 14px;
         }
 
-        .booking-card {
-            background-color: #ffffffcc;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 15px;
-            transition: transform 0.2s, box-shadow 0.2s;
+        .form-inline-search{
+            background:white;
+            padding:15px;
+            border-radius:10px;
+            box-shadow:0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom:25px;
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
         }
 
-        .booking-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        .form-inline-search input{
+            flex:1 1 180px;
         }
 
-        .booking-card div {
-            flex: 1 1 120px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .booking-card{
+            background:white;
+            border-radius:12px;
+            padding:18px;
+
+            display:grid;
+            grid-template-columns:
+1.3fr
+1.3fr
+1fr
+1fr
+0.8fr
+1.3fr;
+
+            align-items:center;
+            gap:10px;
+
+            margin-bottom:15px;
+
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+
+            transition:all .2s;
         }
 
-        .booking-card i {
-            font-size: 1.2em;
-            color: #00796b;
+        .booking-card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 8px 18px rgba(0,0,0,0.2);
         }
 
-        .badge-status {
-            font-size: 0.9em;
-            padding: 0.4em 0.7em;
+        .booking-card i{
+            color:#2e7d32;
+            margin-right:6px;
         }
 
-        .pagination-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 25px;
-            gap: 10px;
+        .pagination-wrapper{
+            display:flex;
+            justify-content:center;
+            gap:10px;
+            margin-top:25px;
         }
 
-        .form-inline-search {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .form-inline-search input {
-            flex: 1 1 150px;
-        }
-
-        .form-inline-search button,
-        .form-inline-search a {
-            flex: 0 0 120px;
-        }
     </style>
-</head>
-<body>
-<div class="container">
-    <h1>PENDING LIST</h1>
 
-    <div class="action-buttons mb-3">
-        <a class="btn btn-sm btn-success" href="/admin">Dashboard admin</a>
-        <a class="btn btn-sm btn-primary" href="/admin/field_books">APPROVED list</a>
-        <a class="btn btn-sm btn-danger" href="/admin/field_books/canceled">CANCELED list</a>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Pending Booking</h1>
+
+    <!-- NAVIGATION -->
+
+    <div class="action-buttons">
+
+        <a class="btn btn-success btn-sm" href="/admin">
+            Dashboard
+        </a>
+
+        <a class="btn btn-primary btn-sm" href="/admin/field_books">
+            Approved
+        </a>
+
+        <a class="btn btn-danger btn-sm" href="/admin/field_books/canceled">
+            Canceled
+        </a>
+
     </div>
+
+    <!-- SEARCH -->
 
     <form class="form-inline-search" action="/admin/field_books/pending">
-        <input class="form-control" name="searchUser" th:value="${searchUser}" placeholder="Enter user name..."/>
-        <input class="form-control" name="searchField" th:value="${searchField}" placeholder="Enter field name..."/>
-        <input class="form-control" type="date" name="searchDate" th:value="${searchDate}" placeholder="Enter date..."/>
-        <button class="btn btn-primary">Search</button>
-        <a class="btn btn-light" href="/admin/field_books/pending">Back</a>
+
+        <input
+                class="form-control"
+                name="searchUser"
+                th:value="${searchUser}"
+                placeholder="User name">
+
+        <input
+                class="form-control"
+                name="searchField"
+                th:value="${searchField}"
+                placeholder="Field name">
+
+        <input
+                class="form-control"
+                type="date"
+                name="searchDate"
+                th:value="${searchDate}">
+
+        <button class="btn btn-primary">
+            Search
+        </button>
+
+        <a class="btn btn-light" href="/admin/field_books/pending">
+            Reset
+        </a>
+
     </form>
 
+    <!-- EMPTY -->
+
     <div th:if="${fieldBookPage.isEmpty()}" class="alert alert-warning text-center">
-        NO DATA
+        No data
     </div>
 
+    <!-- LIST -->
+
     <div th:each="fb : ${fieldBookPage}" class="booking-card">
-        <div><i class="bi bi-person-circle"></i><span th:text="${fb.user.name}"></span></div>
-        <div><i class="bi bi-geo-alt-fill"></i><span th:text="${fb.field.name}"></span></div>
-        <div><i class="bi bi-clock-fill"></i><span
-                th:text="${fb.shift.getStartTime()} + ' - ' + ${fb.shift.getEndTime()}"></span></div>
-        <div><i class="bi bi-calendar-date"></i><span th:text="${fb.dateBook}"></span></div>
+
         <div>
-            <span class="badge bg-warning text-dark"
-                  th:text="${fb.status}"></span>
+            <i class="bi bi-person-circle"></i>
+            <span th:text="${fb.user.name}"></span>
         </div>
+
         <div>
-            <button type="button"
-                    class="btn btn-sm btn-success"
+            <i class="bi bi-geo-alt-fill"></i>
+            <span th:text="${fb.field.name}"></span>
+        </div>
+
+        <div>
+            <i class="bi bi-clock-fill"></i>
+            <span th:text="${fb.shift.startTime} + ' - ' + ${fb.shift.endTime}"></span>
+        </div>
+
+        <div>
+            <i class="bi bi-calendar-date"></i>
+            <span th:text="${fb.dateBook}"></span>
+        </div>
+
+        <div>
+<span class="badge bg-warning text-dark"
+      th:text="${fb.status}">
+</span>
+        </div>
+
+        <div>
+
+            <button
+                    class="btn btn-success btn-sm"
                     data-bs-toggle="modal"
                     data-bs-target="#approveModal"
                     th:attr="data-id=${fb.id},data-user=${fb.user.name}">
                 Approve
             </button>
-            <button type="button"
+
+            <button
                     class="btn btn-danger btn-sm"
                     data-bs-toggle="modal"
                     data-bs-target="#cancelModal"
                     th:attr="data-id=${fb.id},data-user=${fb.user.name}">
                 Cancel
             </button>
+
         </div>
+
     </div>
+
+    <!-- PAGINATION -->
 
     <div class="pagination-wrapper">
-        <a class="btn btn-primary btn-sm" th:if="${fieldBookPage.hasPrevious()}"
-           th:href="@{/admin/field_books(page=${fieldBookPage.number -1},searchDate=${searchDate})}">Previous</a>
+
+        <a
+                class="btn btn-primary btn-sm"
+                th:if="${fieldBookPage.hasPrevious()}"
+                th:href="@{/admin/field_books/pending(page=${fieldBookPage.number-1})}">
+            Previous
+        </a>
+
         <span class="btn btn-light btn-sm disabled">
-            Page <span th:text="${fieldBookPage.number +1}"></span> / <span
-                th:text="${fieldBookPage.totalPages}"></span>
-        </span>
-        <a class="btn btn-dark btn-sm" th:if="${fieldBookPage.hasNext()}"
-           th:href="@{/admin/field_books(page=${fieldBookPage.number +1},searchDate=${searchDate})}">Next</a>
+Page
+<span th:text="${fieldBookPage.number+1}"></span>
+/
+<span th:text="${fieldBookPage.totalPages}"></span>
+</span>
+
+        <a
+                class="btn btn-dark btn-sm"
+                th:if="${fieldBookPage.hasNext()}"
+                th:href="@{/admin/field_books/pending(page=${fieldBookPage.number+1})}">
+            Next
+        </a>
+
     </div>
 
 </div>
-<div class="modal fade" id="approveModal" tabindex="-1">
+
+<!-- APPROVE MODAL -->
+
+<div class="modal fade" id="approveModal">
+
     <div class="modal-dialog">
+
         <div class="modal-content">
+
             <div class="modal-header">
-                <h5 class="modal-title">Confirm Approval</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                <h5 class="modal-title">
+                    Confirm Approve
+                </h5>
+
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
             </div>
 
             <div class="modal-body">
-                Are you sure you want to approve this booking of <b id="approveUser" class="text-danger"></b> ?
+
+                Approve booking of
+                <b id="approveUser" class="text-success"></b> ?
+
             </div>
+
             <div class="modal-footer">
+
                 <form id="approveForm" method="post">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
                         Cancel
                     </button>
-                    <button type="submit" class="btn btn-success">
+
+                    <button
+                            type="submit"
+                            class="btn btn-success">
                         Confirm
                     </button>
+
                 </form>
+
             </div>
 
         </div>
+
     </div>
+
 </div>
-<div class="modal fade" id="cancelModal" tabindex="-1">
+
+<!-- CANCEL MODAL -->
+
+<div class="modal fade" id="cancelModal">
+
     <div class="modal-dialog">
+
         <div class="modal-content">
+
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Confirm Cancel</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                <h5 class="modal-title">
+                    Confirm Cancel
+                </h5>
+
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
             </div>
+
             <div class="modal-body">
-                Are you sure you want to cancel this booking of <b id="cancelUser" class="text-danger"></b> ?
+
+                Cancel booking of
+                <b id="cancelUser" class="text-danger"></b> ?
+
             </div>
+
             <div class="modal-footer">
+
                 <form id="cancelForm" method="post">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success">Confirm</button>
+
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Back
+                    </button>
+
+                    <button
+                            type="submit"
+                            class="btn btn-danger">
+                        Confirm
+                    </button>
+
                 </form>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 <script>
-    const approveModal = document.getElementById('approveModal');
 
-    approveModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const bookingId = button.getAttribute('data-id');
-        const user = button.getAttribute('data-user');
+    const approveModal=document.getElementById('approveModal');
 
-        const form = document.getElementById('approveForm');
-        form.action = '/admin/field_books/' + bookingId + '/approve';
-        document.getElementById("approveUser").innerHTML = user;
+    approveModal.addEventListener('show.bs.modal',function(event){
+
+        const button=event.relatedTarget;
+
+        const bookingId=button.getAttribute('data-id');
+        const user=button.getAttribute('data-user');
+
+        document.getElementById("approveUser").innerHTML=user;
+
+        document.getElementById("approveForm").action='/admin/field_books/'+bookingId+'/approve';
+
     });
 
-    const cancelModal = document.getElementById('cancelModal');
+    const cancelModal=document.getElementById('cancelModal');
 
-    cancelModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const bookingId = button.getAttribute('data-id');
-        const user = button.getAttribute('data-user');
+    cancelModal.addEventListener('show.bs.modal',function(event){
 
-        const form = document.getElementById('cancelForm');
-        form.action = '/admin/field_books/' + bookingId + '/cancel';
-        document.getElementById("cancelUser").innerHTML = user;
+        const button=event.relatedTarget;
+
+        const bookingId=button.getAttribute('data-id');
+        const user=button.getAttribute('data-user');
+
+        document.getElementById("cancelUser").innerHTML=user;
+
+        document.getElementById("cancelForm").action='/admin/field_books/'+bookingId+'/cancel';
+
     });
+
 </script>
+
 </body>
 </html>

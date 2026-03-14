@@ -2,120 +2,211 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Admin</title>
+    <title>Admin Dashboard</title>
+
     <th:block th:insert="layout/layout::library"/>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        body{
+            margin:0;
+            height:100vh;
+            font-family: 'Segoe UI', sans-serif;
+
+            background:
+                    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.6)),
+                    url('/images/badminton-player-silhouette-jumping-beautiful-sky-sunset-109716231.webp');
+
+            background-size:cover;
+            background-position:center;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
         }
 
-        /* Nền toàn màn hình */
-        body {
-            background-image: url('/images/badminton-player-silhouette-jumping-beautiful-sky-sunset-109716231.webp'); /* đổi đường dẫn ảnh ở đây */
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* MAIN DASHBOARD */
+
+        .dashboard{
+            width:1000px;
+            padding:45px;
+            border-radius:18px;
+
+            background:rgba(255,255,255,0.12);
+            backdrop-filter:blur(12px);
+
+            box-shadow:0 20px 45px rgba(0,0,0,0.35);
         }
 
-        /* Overlay mờ nền phía sau card */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 0;
+        /* TITLE */
+
+        .title{
+            text-align:center;
+            color:white;
+            margin-bottom:45px;
         }
 
-        .container {
-            position: relative;
-            z-index: 1;
-            padding-top: 60px;
+        .title span{
+            color:#ffc107;
         }
 
-        /* Card trong suốt nhưng vẫn nổi bật */
-        .card {
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.15); /* trong suốt, có thể chỉnh opacity */
-            backdrop-filter: blur(15px); /* hiệu ứng mờ nền phía sau */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-            border: 1px solid rgba(255,255,255,0.2); /* viền nhẹ để card rõ ràng */
+        /* MENU CARD */
+
+        .menu-card{
+
+            padding:35px 20px;
+
+            border-radius:15px;
+
+            text-align:center;
+
+            background:rgba(255,255,255,0.18);
+
+            transition:0.3s;
+
         }
 
-        .card-body h2 {
-            font-weight: 700;
-            color: #fff; /* chữ nổi bật trên nền */
-            margin-bottom: 40px;
+        .menu-card:hover{
+
+            transform:translateY(-8px);
+
+            background:rgba(255,255,255,0.28);
+
+            box-shadow:0 10px 25px rgba(0,0,0,0.4);
+
         }
 
-        .btn {
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
+        .menu-icon{
+
+            font-size:38px;
+
+            margin-bottom:15px;
+
         }
 
-        .btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        .menu-text{
+
+            color:white;
+
+            font-weight:600;
+
+            font-size:17px;
+
         }
 
-        /* Màu nút nổi trên nền tối */
-        .btn-outline-primary { color: #0d6efd; border-color: #0d6efd; }
-        .btn-outline-success { color: #198754; border-color: #198754; }
-        .btn-outline-warning { color: #ffc107; border-color: #ffc107; }
-        .btn-outline-dark { color: #fff; border-color: #fff; }
-        .btn-outline-secondary { color: #6c757d; border-color: #6c757d; }
+        a{
+            text-decoration:none;
+        }
 
-        .btn-outline-primary:hover { background-color: #0d6efd; color: #fff; }
-        .btn-outline-success:hover { background-color: #198754; color: #fff; }
-        .btn-outline-warning:hover { background-color: #ffc107; color: #212529; }
-        .btn-outline-dark:hover { background-color: #212529; color: #fff; }
-        .btn-outline-secondary:hover { background-color: #6c757d; color: #fff; }
+        /* HOME BUTTON */
+
+        .home-btn{
+
+            margin-top:40px;
+
+        }
+
+        .home-btn button{
+
+            padding:10px 30px;
+
+            border-radius:8px;
+
+            font-weight:600;
+
+        }
+
     </style>
 </head>
-<body>
-<div class="container py-4">
-    <div class="card shadow-sm border-0 mx-auto" style="max-width: 900px;">
-        <div class="card-body text-center">
-            <h2 class="fw-bold mb-4">HI <span th:text="${admin}"></span> ^^</h2>
 
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <a href="/admin/fields" class="btn btn-outline-primary w-100 py-3">
+<body>
+
+<div class="dashboard">
+
+    <h2 class="title">
+        Welcome Admin <span th:text="${admin}"></span>
+    </h2>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <a href="/admin/fields">
+                <div class="menu-card">
+                    <div class="menu-icon text-primary">
+                        <i class="fa-solid fa-futbol"></i>
+                    </div>
+                    <div class="menu-text">
                         Fields Manager
-                    </a>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <a href="/admin/field_books" class="btn btn-outline-success w-100 py-3">
-                        Field Book Manager
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="/admin/shifts" class="btn btn-outline-warning w-100 py-3">
-                        Shift Manager
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="/admin/study_schedules" class="btn btn-outline-dark w-100 py-3">
-                        Study Schedule
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="/admin/payments" class="btn btn-outline-dark w-100 py-3">
-                        Payment Manager
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="/home" class="btn btn-outline-secondary w-100 py-3">
-                        Back Home
-                    </a>
-                </div>
-            </div>
+            </a>
         </div>
+
+        <div class="col-md-4">
+            <a href="/admin/field_books">
+                <div class="menu-card">
+                    <div class="menu-icon text-success">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div class="menu-text">
+                        Booking Manager
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="/admin/shifts">
+                <div class="menu-card">
+                    <div class="menu-icon text-warning">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div class="menu-text">
+                        Shift Manager
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="/admin/study_schedules">
+                <div class="menu-card">
+                    <div class="menu-icon text-info">
+                        <i class="fa-solid fa-calendar"></i>
+                    </div>
+                    <div class="menu-text">
+                        Study Schedule
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="/admin/payments">
+                <div class="menu-card">
+                    <div class="menu-icon text-danger">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                    <div class="menu-text">
+                        Payment Manager
+                    </div>
+                </div>
+            </a>
+        </div>
+
     </div>
+
+    <div class="text-center home-btn">
+        <a href="/home">
+            <button class="btn btn-light">
+                <i class="fa fa-home"></i> Back Home
+            </button>
+        </a>
+    </div>
+
 </div>
+
 </body>
 </html>
