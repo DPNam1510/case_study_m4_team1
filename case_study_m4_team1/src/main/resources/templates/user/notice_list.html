@@ -1,32 +1,164 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thông báo nghỉ học</title>
-    <th:block th:insert="layout/layout::library"/>
+    <title>Notices | Badminton Center</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .page-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-header h1 {
+            font-size: 42px;
+            font-weight: bold;
+        }
+        .notices-container {
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+        .notice-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+            border-left: 5px solid #2a5298;
+        }
+        .notice-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .notice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .notice-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        .notice-time {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .notice-reason {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .notice-teacher {
+            color: #2a5298;
+            font-weight: 500;
+        }
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            border-radius: 50px;
+            padding: 10px 30px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.3s;
+            display: inline-block;
+        }
+        .btn-back:hover {
+            background: #5a6268;
+            color: white;
+        }
+        .alert-custom {
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+        }
+        footer {
+            background: #212529;
+            color: white;
+            padding: 40px;
+            margin-top: 60px;
+        }
+    </style>
 </head>
 <body>
-<th:block th:insert="layout/layout::my-navbar"/>
 
-<div class="container mt-4">
-    <h2>Thông báo nghỉ học</h2>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+    <div class="container">
+        <a class="navbar-brand fw-bold">
+            <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+            Badminton Center
+        </a>
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="/home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/booking/create(userId=${userId})}">Booking</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/booking/history(userId=${userId})}">History</a></li>
+                <li class="nav-item"><a class="nav-link" href="/user/study/classes">Study Schedule</a></li>
+                <li class="nav-item"><a class="nav-link" href="#training">Training</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-    <div th:if="${#lists.isEmpty(notices)}" class="alert alert-info">
-        Không có thông báo nào.
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-bell me-3"></i>Class Notices</h1>
+        <p class="lead">Announcements from your teachers</p>
+    </div>
+</div>
+
+<!-- Notices List -->
+<div class="container notices-container">
+    <div th:if="${#lists.isEmpty(notices)}" class="alert alert-info alert-custom">
+        <i class="fas fa-inbox fa-3x mb-3"></i>
+        <h4>No notices yet.</h4>
+        <p class="mb-0">You'll see announcements here when teachers post them.</p>
     </div>
 
-    <div th:unless="${#lists.isEmpty(notices)}" class="list-group mt-3">
-        <div th:each="notice : ${notices}" class="list-group-item">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1" th:text="${notice.classRegister.studySchedule.className}">Lớp học</h5>
-                <small th:text="${#temporals.format(notice.classRegister.studySchedule.shift.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(notice.classRegister.studySchedule.shift.endTime, 'HH:mm')}">Ca học</small>
+    <div th:unless="${#lists.isEmpty(notices)}">
+        <div th:each="notice : ${notices}" class="notice-card">
+            <div class="notice-header">
+                <span class="notice-title" th:text="${notice.classRegister.studySchedule.className}">Class Name</span>
+                <span class="notice-time" th:text="${#temporals.format(notice.classRegister.dateRegister, 'dd/MM/yyyy')}">Date</span>
             </div>
-            <p class="mb-1" th:text="${notice.reason}">Lý do nghỉ</p>
-            <small>Giảng viên: <span th:text="${notice.classRegister.studySchedule.teacher.name}"></span></small>
+            <div class="notice-reason" th:text="${notice.reason}">Reason</div>
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="notice-teacher">
+                    <i class="fas fa-chalkboard-teacher me-1"></i>
+                    <span th:text="${notice.classRegister.studySchedule.teacher.name}">Teacher</span>
+                </span>
+                <span class="badge bg-secondary" th:text="${notice.classRegister.studySchedule.shift.startTime} + ' - ' + ${notice.classRegister.studySchedule.shift.endTime}">Shift</span>
+            </div>
         </div>
     </div>
 
-    <a href="/user/study/my-schedule" class="btn btn-secondary mt-3">Quay lại</a>
+    <div class="text-center mt-4">
+        <a href="/user/study/my-schedule" class="btn-back"><i class="fas fa-arrow-left me-2"></i>Back to My Schedule</a>
+    </div>
 </div>
+
+<!-- Footer -->
+<footer class="text-center">
+    <h5>Badminton Center</h5>
+    <p>Online Court Booking System</p>
+    <p>© 2026 All rights reserved</p>
+</footer>
+
 </body>
 </html>
