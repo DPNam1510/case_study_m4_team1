@@ -121,7 +121,13 @@ public class UserStudyService implements IUserStudyService {
 
     @Override
     public Long getUserIdByUsername(String username) {
-        return usersRepository.findByAccountUsername(username).getId();
+        // fix tạo user khi login
+        Users users = usersRepository.findByAccountUsername(username);
+        if (users == null) {
+            throw new RuntimeException("User not found"+username);
+        }
+        return users.getId();
+//        return usersRepository.findByAccountUsername(username).getId();
     }
 
     @Override
