@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+
     <meta charset="UTF-8">
     <title>Fields Manager</title>
 
@@ -12,36 +14,26 @@
     <style>
 
         body{
-            background:#f4f6fb;
+            background:linear-gradient(120deg,#f1f5f9,#e0f2fe);
             min-height:100vh;
         }
 
-        /* title */
+        /* TITLE */
 
         .page-title{
-
             text-align:center;
-
             font-weight:700;
-
-            color:#333;
-
-            margin-bottom:30px;
-
+            color:#0f172a;
+            margin-bottom:25px;
         }
 
-        /* GRID 6 sân */
+        /* GRID */
 
         .fields-grid{
-
             display:grid;
-
-            grid-template-columns:repeat(3,1fr);
-
+            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
             gap:25px;
-
-            margin-top:25px;
-
+            margin-top:30px;
         }
 
         /* CARD */
@@ -49,36 +41,37 @@
         .field-card{
 
             background:white;
-
             border-radius:14px;
-
             padding:25px;
-
             text-align:center;
 
-            box-shadow:0 6px 15px rgba(0,0,0,0.08);
+            box-shadow:0 5px 18px rgba(0,0,0,0.08);
 
-            transition:0.25s;
+            transition:0.3s;
 
         }
 
         .field-card:hover{
 
-            transform:translateY(-5px);
+            transform:translateY(-6px);
 
-            box-shadow:0 12px 25px rgba(0,0,0,0.15);
+            box-shadow:0 12px 30px rgba(0,0,0,0.15);
 
         }
 
+        /* ICON */
+
         .field-icon{
 
-            font-size:38px;
+            font-size:40px;
 
-            color:#0d6efd;
+            color:#0ea5e9;
 
             margin-bottom:10px;
 
         }
+
+        /* NAME */
 
         .field-name{
 
@@ -86,19 +79,21 @@
 
             font-weight:600;
 
-            color:#333;
+            color:#0f172a;
 
-            margin-bottom:10px;
+            margin-bottom:6px;
 
         }
 
+        /* STATUS */
+
         .status span{
 
-            padding:6px 14px;
+            padding:5px 14px;
 
             border-radius:20px;
 
-            font-size:13px;
+            font-size:12px;
 
             font-weight:600;
 
@@ -106,19 +101,21 @@
 
         .available{
 
-            background:#e6f4ea;
+            background:#dcfce7;
 
-            color:#1e7e34;
+            color:#15803d;
 
         }
 
         .notavailable{
 
-            background:#fdecea;
+            background:#fee2e2;
 
-            color:#c82333;
+            color:#b91c1c;
 
         }
+
+        /* BUTTONS */
 
         .field-buttons{
 
@@ -128,7 +125,37 @@
 
             gap:10px;
 
-            margin-top:10px;
+            margin-top:15px;
+
+        }
+
+        .btn-detail{
+
+            background:#e0f2fe;
+
+            color:#0369a1;
+
+            border:none;
+
+        }
+
+        .btn-detail:hover{
+
+            background:#bae6fd;
+
+        }
+
+        .btn-update{
+
+            background:#facc15;
+
+            border:none;
+
+        }
+
+        .btn-update:hover{
+
+            background:#eab308;
 
         }
 
@@ -141,16 +168,22 @@
 <div class="container py-4">
 
     <h2 class="page-title">
-        <i class="fa fa-futbol text-primary"></i>
+
+        <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+
         Fields Manager
+
     </h2>
 
     <div class="text-center mb-4">
 
         <a class="btn btn-outline-primary"
+
            href="/admin">
 
-            <i class="fa fa-home"></i> Dashboard
+            <i class="fa fa-home"></i>
+
+            Dashboard
 
         </a>
 
@@ -159,13 +192,17 @@
     <!-- SEARCH -->
 
     <form class="row g-2 mb-4 justify-content-center"
+
           action="/admin/fields">
 
         <div class="col-md-4">
 
             <input class="form-control"
+
                    name="searchName"
+
                    th:value="${searchName}"
+
                    placeholder="Field name...">
 
         </div>
@@ -173,8 +210,11 @@
         <div class="col-md-3">
 
             <input class="form-control"
+
                    name="searchPrice"
+
                    th:value="${searchPrice}"
+
                    placeholder="Price...">
 
         </div>
@@ -182,7 +222,9 @@
         <div class="col-md-2">
 
             <button class="btn btn-primary w-100">
+
                 <i class="fa fa-search"></i> Search
+
             </button>
 
         </div>
@@ -190,56 +232,79 @@
         <div class="col-md-2">
 
             <a class="btn btn-secondary w-100"
+
                href="/admin/fields">
+
                 Reset
+
             </a>
 
         </div>
 
     </form>
 
-    <!-- HIỂN THỊ 6 SÂN -->
+    <!-- FIELDS -->
 
     <div class="fields-grid">
 
         <div class="field-card"
+
              th:each="f : ${fieldsPage}">
 
             <div class="field-icon">
-                <i class="fa-solid fa-futbol"></i>
+
+                <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+
             </div>
 
             <div class="field-name"
+
                  th:text="${f.name}">
+
                 Field
+
             </div>
 
             <div class="status mb-2">
 
 <span th:if="${f.status.name()=='AVAILABLE'}"
+
       class="available">
+
 AVAILABLE
+
 </span>
 
                 <span th:if="${f.status.name()=='NOT_AVAILABLE'}"
+
                       class="notavailable">
+
 MAINTENANCE
+
 </span>
 
             </div>
 
             <div class="field-buttons">
 
-                <a class="btn btn-sm btn-outline-primary"
+                <a class="btn btn-sm btn-detail"
+
                    th:href="@{/admin/fields/{id}/detail(id=${f.id})}">
+
                     Detail
+
                 </a>
 
-                <button class="btn btn-sm btn-warning"
+                <button class="btn btn-sm btn-update"
+
                         data-bs-toggle="modal"
+
                         data-bs-target="#updateModal"
+
                         th:attr="data-id=${f.id},data-status=${f.status}">
+
                     Update
+
                 </button>
 
             </div>
@@ -253,28 +318,151 @@ MAINTENANCE
     <div class="d-flex justify-content-center mt-4 gap-3">
 
         <a class="btn btn-sm btn-primary"
+
            th:if="${fieldsPage.hasPrevious()}"
+
            th:href="@{/admin/fields(page=${fieldsPage.number-1},searchName=${searchName})}">
+
             Previous
+
         </a>
 
         <span class="fw-bold">
 
-Page <span th:text="${fieldsPage.number+1}"></span> /
+Page
+
+<span th:text="${fieldsPage.number+1}"></span>
+
+/
 
 <span th:text="${fieldsPage.totalPages}"></span>
 
 </span>
 
         <a class="btn btn-sm btn-primary"
+
            th:if="${fieldsPage.hasNext()}"
+
            th:href="@{/admin/fields(page=${fieldsPage.number+1},searchName=${searchName})}">
+
             Next
+
         </a>
 
     </div>
 
 </div>
 
+<!-- UPDATE MODAL -->
+
+<div class="modal fade" id="updateModal" tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form th:action="@{/admin/fields/update}" method="post">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        Update Field Status
+
+                    </h5>
+
+                    <button type="button"
+
+                            class="btn-close"
+
+                            data-bs-dismiss="modal">
+
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden"
+
+                           name="id"
+
+                           id="fieldId">
+
+                    <select class="form-select"
+
+                            name="status"
+
+                            id="fieldStatus"
+
+                            required>
+
+                        <option value="AVAILABLE">
+
+                            AVAILABLE
+
+                        </option>
+
+                        <option value="NOT_AVAILABLE">
+
+                            NOT_AVAILABLE
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+
+                            class="btn btn-secondary"
+
+                            data-bs-dismiss="modal">
+
+                        Cancel
+
+                    </button>
+
+                    <button type="submit"
+
+                            class="btn btn-success">
+
+                        Update
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    const updateModal=document.getElementById('updateModal')
+
+    updateModal.addEventListener('show.bs.modal',function(event){
+
+        const button=event.relatedTarget
+
+        const id=button.getAttribute('data-id')
+
+        const status=button.getAttribute('data-status')
+
+        document.getElementById('fieldId').value=id
+
+        document.getElementById('fieldStatus').value=status
+
+    })
+
+</script>
+
 </body>
+
 </html>
