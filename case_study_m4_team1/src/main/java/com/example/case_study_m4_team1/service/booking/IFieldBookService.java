@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IFieldBookService {
-    BookingResponseDto createBooking(Long userId, BookingRequestDto request);
+    void createBooking(Long userId, BookingRequestDto request);
 
-    BookingResponseDto updateBooking(Long id, Long userId, BookingRequestDto request);
+    void updateBooking(Long id, Long userId, BookingRequestDto request);
 
     void deleteBooking(Long id, Long userId);
 

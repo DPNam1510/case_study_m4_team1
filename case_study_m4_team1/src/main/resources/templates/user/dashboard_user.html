@@ -1,9 +1,237 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Trang chủ</title>
+    <title>Badminton Center</title>
+    <th:block th:insert="layout/layout::library"/>
+    <style>
+        body{
+            background:#f5f5f5;
+        }
+        .hero{
+            background-image:url('https://images.unsplash.com/photo-1599058917765-a780eda07a3e');
+            background-size:cover;
+            background-position:center;
+            height:500px;
+            color:white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+        }
+        .hero-overlay{
+            background:rgba(0,0,0,0.55);
+            width:100%;
+            height:100%;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+        }
+        .section{
+            padding:60px 0;
+        }
+        .court-card img{
+            height:200px;
+            object-fit:cover;
+        }
+        footer{
+            background:#212529;
+            color:white;
+            padding:30px;
+        }
+    </style>
 </head>
 <body>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="fa-solid fa-table-tennis-paddle-ball"></i> Badminton Center
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/booking/create(userId=${userId})}">Book Court</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/booking/history(userId=${userId})}">History</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#training">Training</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- HERO SECTION -->
+<div class="hero">
+    <div class="hero-overlay">
+        <h1 class="display-4">Welcome to Badminton Center</h1>
+        <p>Book your badminton court easily and play anytime!</p>
+
+        <div class="mt-3">
+            <a th:href="@{/booking/create(userId=${userId})}" class="btn btn-warning btn-lg me-2">
+                Book Now
+            </a>
+
+            <a th:href="@{/booking/history(userId=${userId})}" class="btn btn-light btn-lg">
+                View History
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<!-- COURTS SECTION -->
+<section class="section container">
+
+    <div class="text-center mb-5">
+        <h2>Our Courts</h2>
+        <p>High quality badminton courts available for booking</p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card court-card shadow">
+                <img src="https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827" class="card-img-top">
+                <div class="card-body text-center">
+                    <h5>Court A</h5>
+                    <p>Professional badminton flooring</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card court-card shadow">
+                <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea" class="card-img-top">
+                <div class="card-body text-center">
+                    <h5>Court B</h5>
+                    <p>International standard lighting</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card court-card shadow">
+                <img src="https://images.unsplash.com/photo-1622279457486-62dcc9f58e9f" class="card-img-top">
+                <div class="card-body text-center">
+                    <h5>Court C</h5>
+                    <p>Perfect for training and matches</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- TRAINING SECTION -->
+<section id="training" class="section bg-light">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2>Training Courses</h2>
+            <p>Improve your badminton skills with professional coaches</p>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <h5>Beginner Course</h5>
+                        <p>Learn basic badminton techniques</p>
+                        <button class="btn btn-success">Register</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <h5>Intermediate Course</h5>
+                        <p>Improve your gameplay and strategy</p>
+                        <button class="btn btn-success">Register</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <h5>Advanced Course</h5>
+                        <p>Professional training with coach</p>
+                        <button class="btn btn-success">Register</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CONTACT + MAP -->
+<section id="contact" class="section container">
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <h3>Contact Us</h3>
+
+            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyen Van Linh, Da Nang</p>
+
+            <p><i class="fa-solid fa-phone"></i> 0905 123 456</p>
+
+            <p><i class="fa-solid fa-envelope"></i> badmintoncenter@gmail.com</p>
+
+            <p><b>Opening Hours:</b> 5:00 AM - 23:00 PM</p>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+            <iframe
+                    src="https://www.google.com/maps?q=Da%20Nang&output=embed"
+                    width="100%"
+                    height="300"
+                    style="border:0">
+            </iframe>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+<footer class="text-center">
+
+    <p>© 2026 Badminton Center</p>
+
+</footer>
+
+
 </body>
 </html>
+```

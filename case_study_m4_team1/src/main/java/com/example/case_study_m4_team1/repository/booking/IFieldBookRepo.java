@@ -5,11 +5,14 @@ import com.example.case_study_m4_team1.enums.BookingStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,4 +71,17 @@ public interface IFieldBookRepo extends JpaRepository<FieldBook,Long> {
     // xem lịch sử đạt sân, phân trang
     Page<FieldBook> findAllByUser_IdOrderByDateBookDesc(
             Long userId, Pageable pageable);
+
+    // auto cancelled if admin not update
+    @Transactional
+    @Modifying
+    @Query("""
+            UPDATE FieldBook fb
+            SET fb.status = 'CANCELED'
+            WHERE fb.status = 'PENDING'
+            AND (fb.dateBook < :today
+                 OR (fb.dateBook = :today AND fb.shift.endTime < :nowTime))
+            """)
+    void autoCancelExpired(@Param("today") LocalDate today,
+                           @Param("nowTime") LocalTime nowTime);
 }

@@ -3,6 +3,7 @@ package com.example.case_study_m4_team1.controller.booking;
 
 import com.example.case_study_m4_team1.dto.BookingRequestDto;
 import com.example.case_study_m4_team1.dto.BookingResponseDto;
+import com.example.case_study_m4_team1.exception.BookingException;
 import com.example.case_study_m4_team1.service.booking.IFieldBookService;
 import com.example.case_study_m4_team1.service.booking.IFieldsService;
 import com.example.case_study_m4_team1.service.booking.IShiftService;
@@ -41,12 +42,8 @@ public class FieldBookController {
     public String createBooking(@RequestParam Long userId,
                                 @ModelAttribute BookingRequestDto request,
                                 RedirectAttributes redirectAttributes) {
-        try {
             fieldBookService.createBooking(userId, request);
-            redirectAttributes.addFlashAttribute("Success", "Booking has been created!");
-        }catch (IllegalArgumentException e){
-            redirectAttributes.addFlashAttribute("Error",e.getMessage());
-        }
+            redirectAttributes.addFlashAttribute("message", "Booking has been created!");
         return "redirect:/booking/history?userId=" + userId;
     }
 
@@ -76,15 +73,19 @@ public class FieldBookController {
     @PostMapping("/update/{id}")
     public String updateBooking(@PathVariable Long id,
                                 @RequestParam Long userId,
-                                @ModelAttribute BookingRequestDto request) {
-        fieldBookService.updateBooking(id, userId, request);
+                                @ModelAttribute BookingRequestDto request,
+                                RedirectAttributes redirectAttributes) {
+            fieldBookService.updateBooking(id, userId, request);
+            redirectAttributes.addFlashAttribute("message", "Booking has been updated!");
         return "redirect:/booking/history?userId=" + userId;
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public  String deleteBooking(@PathVariable Long id,
-                                 @RequestParam Long userId) {
+                                 @RequestParam Long userId,
+                                 RedirectAttributes redirectAttributes) {
         fieldBookService.deleteBooking(id, userId);
+        redirectAttributes.addFlashAttribute("message", "Booking has been deleted!");
         return "redirect:/booking/history?userId=" + userId;
     }
 
