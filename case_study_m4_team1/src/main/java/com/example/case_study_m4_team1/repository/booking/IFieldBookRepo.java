@@ -84,4 +84,12 @@ public interface IFieldBookRepo extends JpaRepository<FieldBook,Long> {
             """)
     void autoCancelExpired(@Param("today") LocalDate today,
                            @Param("nowTime") LocalTime nowTime);
+
+    @Query("SELECT fb FROM FieldBook fb " +
+            "WHERE fb.user.id = :userId " +
+            "AND fb.status = :status " +
+            "AND NOT EXISTS (SELECT 1 FROM PaymentFieldBook pfb WHERE pfb.fieldBook.id = fb.id)")
+    Page<FieldBook> findApprovedAndNotPaidByUserId(@Param("userId") Long userId,
+                                                   @Param("status") BookingStatus status,
+                                                   Pageable pageable);
 }

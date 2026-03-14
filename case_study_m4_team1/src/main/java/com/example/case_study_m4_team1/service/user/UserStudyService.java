@@ -65,55 +65,30 @@ public class UserStudyService implements IUserStudyService {
 
     @Override
     public Long registerClass(String username, int scheduleId) throws Exception {
-        // Tìm user
         Account account = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
         Users user = usersRepository.findByAccountId(account.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Tìm lớp
         StudySchedule schedule = studyScheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new RuntimeException("Class not found"));
 
-        // Kiểm tra đã đăng ký chưa
-        boolean alreadyRegistered = classRegisterRepository
-                .existsByUserIdAndStudyScheduleId(user.getId(), scheduleId);
-        if (alreadyRegistered) {
+        // Đã đăng ký chưa?
+        if (classRegisterRepository.existsByUserIdAndStudyScheduleId(user.getId(), scheduleId)) {
             throw new Exception("Bạn đã đăng ký lớp này rồi!");
         }
 
-        // Kiểm tra số lượng hiện tại
-        int currentRegisters = classRegisterRepository
-                .countByStudyScheduleIdAndStatusRegister(scheduleId, RegisterStatus.APPROVED);
-
-        if (currentRegisters >= schedule.getMaxStudents()) {
+        // Số học viên đã APPROVED hiện tại
+        int approvedCount = classRegisterRepository.countByStudyScheduleIdAndStatusRegister(scheduleId, RegisterStatus.APPROVED);
+        if (approvedCount >= schedule.getMaxStudents()) {
             throw new Exception("Lớp đã đủ 10 học viên!");
         }
 
-        // Tạo đăng ký mới
         ClassRegister classRegister = new ClassRegister();
         classRegister.setUser(user);
         classRegister.setStudySchedule(schedule);
         classRegister.setDateRegister(LocalDateTime.now());
-
-        // Nếu chưa đủ 5 người thì status PENDING, nếu đủ 5 thì tự động APPROVED
-        if (currentRegisters + 1 >= schedule.getMinStudents()) {
-            classRegister.setStatusRegister(RegisterStatus.APPROVED);
-
-            // Cập nhật status_class thành OPEN nếu đang NOT_OPEN
-            if (schedule.getStatusClass() == ClassStatus.NOT_OPEN) {
-                schedule.setStatusClass(ClassStatus.OPEN);
-                studyScheduleRepository.save(schedule);
-            }
-
-            // Nếu đủ 10 người thì đóng lớp
-            if (currentRegisters + 1 >= schedule.getMaxStudents()) {
-                schedule.setStatusClass(ClassStatus.FULL);
-                studyScheduleRepository.save(schedule);
-            }
-        } else {
-            classRegister.setStatusRegister(RegisterStatus.PENDING);
-        }
+        classRegister.setStatusRegister(RegisterStatus.PENDING);   // luôn PENDING
 
         ClassRegister saved = classRegisterRepository.save(classRegister);
         return saved.getId();
@@ -182,15 +157,16 @@ public class UserStudyService implements IUserStudyService {
     }
 
     @Override
+    @Transactional
     public void processPayment(PaymentRequestDTO paymentRequest, String username) throws Exception {
-        // Kiểm tra quyền
+        // Kiểm tra quyền sở hữu
         if (!isOwner(username, paymentRequest.getRegisterId())) {
             throw new Exception("Bạn không có quyền thanh toán cho đăng ký này!");
         }
 
         ClassRegister register = findClassRegisterById(paymentRequest.getRegisterId());
 
-        // Kiểm tra đã thanh toán chưa
+        // Đã thanh toán chưa?
         if (paymentRegisterRepository.existsByClassRegister_Id(register.getId())) {
             PaymentRegister existing = paymentRegisterRepository.findByClassRegister_Id(register.getId()).get();
             if (existing.getStatus() == PaymentStatus.PAID) {
@@ -198,11 +174,10 @@ public class UserStudyService implements IUserStudyService {
             }
         }
 
-        // Tìm hình thức thanh toán
         Pay pay = payRepository.findById(paymentRequest.getPayTypeId())
                 .orElseThrow(() -> new Exception("Hình thức thanh toán không hợp lệ"));
 
-        // Tạo payment mới hoặc cập nhật payment cũ
+        // Tạo hoặc cập nhật payment
         PaymentRegister payment;
         if (paymentRegisterRepository.existsByClassRegister_Id(register.getId())) {
             payment = paymentRegisterRepository.findByClassRegister_Id(register.getId()).get();
@@ -210,10 +185,27 @@ public class UserStudyService implements IUserStudyService {
             payment = new PaymentRegister();
             payment.setClassRegister(register);
         }
-
         payment.setPay(pay);
-        payment.setStatus(PaymentStatus.PAID); // Giả lập thanh toán thành công
-
+        payment.setStatus(PaymentStatus.PAID);
         paymentRegisterRepository.save(payment);
+
+        // Cập nhật trạng thái đăng ký thành APPROVED nếu chưa
+        if (register.getStatusRegister() != RegisterStatus.APPROVED) {
+            register.setStatusRegister(RegisterStatus.APPROVED);
+            classRegisterRepository.save(register);
+
+            // Cập nhật trạng thái lớp học
+            StudySchedule schedule = register.getStudySchedule();
+            int approvedCount = classRegisterRepository.countByStudyScheduleIdAndStatusRegister(schedule.getId(), RegisterStatus.APPROVED);
+
+            if (approvedCount >= schedule.getMinStudents() && schedule.getStatusClass() == ClassStatus.NOT_OPEN) {
+                schedule.setStatusClass(ClassStatus.OPEN);
+                studyScheduleRepository.save(schedule);
+            }
+            if (approvedCount >= schedule.getMaxStudents()) {
+                schedule.setStatusClass(ClassStatus.FULL);
+                studyScheduleRepository.save(schedule);
+            }
+        }
     }
 }

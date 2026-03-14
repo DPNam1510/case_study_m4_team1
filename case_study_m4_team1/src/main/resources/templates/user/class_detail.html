@@ -1,72 +1,328 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Class Detail</title>
-    <th:block th:insert="layout/layout::library"/>
+    <title>Class Detail | Badminton Center</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+
+    <style>
+
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background:#f4f7fb;
+        }
+
+        /* NAVBAR */
+
+        .navbar{
+            background:rgba(0,0,0,0.7);
+            backdrop-filter:blur(10px);
+        }
+
+        .navbar-brand{
+            font-size:22px;
+            letter-spacing:1px;
+        }
+
+        /* HERO */
+
+        .hero{
+
+            background-image:url('https://images.unsplash.com/photo-1599058917765-a780eda07a3e');
+
+            height:540px;
+
+            background-size:cover;
+            background-position:center;
+
+            position:relative;
+
+        }
+
+        .hero-overlay{
+
+            background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7));
+
+            height:100%;
+
+            display:flex;
+
+            flex-direction:column;
+
+            align-items:center;
+
+            justify-content:center;
+
+            text-align:center;
+
+            color:white;
+
+        }
+
+        .hero h1{
+
+            font-size:60px;
+
+            font-weight:700;
+
+            margin-bottom:20px;
+
+            animation:fadeDown 1.2s;
+
+        }
+
+        .hero p{
+
+            font-size:20px;
+
+            opacity:.9;
+
+            margin-bottom:30px;
+
+        }
+
+        /* BUTTON EFFECT */
+
+        .btn{
+
+            border-radius:30px;
+
+            padding:10px 26px;
+
+            font-weight:600;
+
+            transition:all .3s;
+
+        }
+
+        .btn-warning:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,193,7,.6);
+
+        }
+
+        .btn-light:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,255,255,.5);
+
+        }
+
+        /* SECTION */
+
+        .section{
+
+            padding:80px 0;
+
+        }
+
+        /* CONTACT */
+
+        #contact{
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:0 8px 25px rgba(0,0,0,.1);
+
+            padding:40px;
+
+        }
+
+        /* FOOTER */
+
+        footer{
+
+            background:#1a1a1a;
+
+            color:white;
+
+            padding:50px;
+
+            margin-top:60px;
+
+        }
+
+        /* ANIMATION */
+
+        @keyframes fadeDown{
+
+            from{
+
+                opacity:0;
+
+                transform:translateY(-40px);
+
+            }
+
+            to{
+
+                opacity:1;
+
+                transform:translateY(0);
+
+            }
+
+        }
+
+    </style>
+
 </head>
+
 <body>
-<th:block th:insert="layout/layout::my-navbar"/>
 
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <h3 th:text="${schedule.className}">Class</h3>
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold">
+
+            <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+
+            Badminton Center
+
+        </a>
+
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+
+                    <a class="nav-link active" href="/home">Home</a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/create(userId=${userId})}">
+
+                        Booking
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/history(userId=${userId})}">
+
+                        History
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="/user/study/classes">
+
+                        Study Schedule
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#contact">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+            </ul>
+
         </div>
-        <div class="card-body">
-            <table class="table">
-                <tr>
-                    <th style="width: 200px;">Coach:</th>
-                    <td th:text="${schedule.teacher.name}"></td>
-                </tr>
-                <tr>
-                    <th>Field:</th>
-                    <td th:text="${schedule.field.name}"></td>
-                </tr>
-                <tr>
-                    <th>Shift:</th>
-                    <td th:text="${schedule.shift.startTime} + ' - ' + ${schedule.shift.endTime}"></td>
-                </tr>
-                <tr>
-                    <th>Schedule:</th>
-                    <td th:text="${schedule.className}"></td>
-                </tr>
-                <tr>
-                    <th>Fee:</th>
-                    <td th:text="${#numbers.formatDecimal(schedule.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
-                </tr>
-                <tr>
-                    <th>Registered quantity:</th>
-                    <td>
-                        <span th:text="${registeredCount}"></span>/<span th:text="${schedule.maxStudents}"></span>
-                        <span th:if="${registeredCount >= schedule.minStudents}" class="badge bg-success">OPEN</span>
-                        <span th:if="${registeredCount < schedule.minStudents}" class="badge bg-warning">NOT OPEN <span th:text="${schedule.minStudents - registeredCount}"></span> students</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>There's room:</th>
-                    <td>
-                        <span th:text="${availableSlots}"></span> place
-                    </td>
-                </tr>
-            </table>
 
-            <div class="mt-3">
-                <form th:action="@{/user/study/register}" method="post"
-                      th:if="${availableSlots > 0 and schedule.statusClass != 'FULL'}">
-                    <input type="hidden" name="scheduleId" th:value="${schedule.id}">
-                    <button type="submit" class="btn btn-success btn-lg">Register class</button>
-                </form>
+    </div>
 
-                <div th:if="${availableSlots <= 0 or schedule.statusClass == 'FULL'}"
-                     class="alert alert-warning">
-                    Class was full, cannot register.
-                </div>
+</nav>
 
-                <a href="/user/study/classes" class="btn btn-secondary mt-2">Back list</a>
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-book-open me-3"></i>Class Detail</h1>
+        <p class="lead" th:text="${schedule.className}">Class Name</p>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="detail-card">
+        <table class="table info-table">
+            <tr>
+                <th>Coach:</th>
+                <td th:text="${schedule.teacher.name}"></td>
+            </tr>
+            <tr>
+                <th>Field:</th>
+                <td th:text="${schedule.field.name}"></td>
+            </tr>
+            <tr>
+                <th>Shift:</th>
+                <td th:text="${schedule.shift.startTime} + ' - ' + ${schedule.shift.endTime}"></td>
+            </tr>
+            <tr>
+                <th>Schedule:</th>
+                <td th:text="${schedule.className}"></td>
+            </tr>
+            <tr>
+                <th>Fee:</th>
+                <td th:text="${#numbers.formatDecimal(schedule.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+            </tr>
+            <tr>
+                <th>Registered quantity:</th>
+                <td>
+                    <span th:text="${registeredCount}"></span>/<span th:text="${schedule.maxStudents}"></span>
+                    <span th:if="${registeredCount >= schedule.minStudents}" class="badge-custom bg-success text-white ms-2">OPEN</span>
+                    <span th:if="${registeredCount < schedule.minStudents}" class="badge-custom bg-warning text-dark ms-2">
+                        NOT OPEN (<span th:text="${schedule.minStudents - registeredCount}"></span> more needed)
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>Available slots:</th>
+                <td>
+                    <span th:text="${availableSlots}"></span> place(s)
+                </td>
+            </tr>
+        </table>
+
+        <div class="text-center mt-4">
+            <form th:action="@{/user/study/register}" method="post"
+                  th:if="${availableSlots > 0 and schedule.statusClass != 'FULL'}">
+                <input type="hidden" name="scheduleId" th:value="${schedule.id}">
+                <button type="submit" class="btn-register"><i class="fas fa-check-circle me-2"></i>Register Class</button>
+            </form>
+            <div th:if="${availableSlots <= 0 or schedule.statusClass == 'FULL'}" class="alert alert-warning py-3">
+                <i class="fas fa-exclamation-triangle me-2"></i> Class is full, registration closed.
             </div>
+            <a href="/user/study/classes" class="btn-back mt-3 d-inline-block"><i class="fas fa-arrow-left me-2"></i>Back to List</a>
         </div>
     </div>
 </div>
+
+<!-- Footer -->
+<footer class="text-center">
+    <h5>Badminton Center</h5>
+    <p>Online Court Booking System</p>
+    <p>© 2026 All rights reserved</p>
+</footer>
+
 </body>
 </html>

@@ -81,4 +81,9 @@ public class PaymentFieldBookServiceAdmin implements IPaymentFieldBookServiceAdm
     public List<PaymentFieldBookDto> findByUserId(long userId) {
         return paymentFieldBookRepository.findByUserId(userId);
     }
+
+    @Override
+    public boolean existsByBookingId(long bookingId) {
+        return paymentFieldBookRepository.existsPayment(bookingId) > 0;
+    }
 }

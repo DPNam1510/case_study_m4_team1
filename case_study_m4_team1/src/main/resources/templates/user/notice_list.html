@@ -1,32 +1,302 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thông báo nghỉ học</title>
-    <th:block th:insert="layout/layout::library"/>
+    <title>Notices | Badminton Center</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+
+    <style>
+
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background:#f4f7fb;
+        }
+
+        /* NAVBAR */
+
+        .navbar{
+            background:rgba(0,0,0,0.7);
+            backdrop-filter:blur(10px);
+        }
+
+        .navbar-brand{
+            font-size:22px;
+            letter-spacing:1px;
+        }
+
+        /* HERO */
+
+        .hero{
+
+            background-image:url('https://images.unsplash.com/photo-1599058917765-a780eda07a3e');
+
+            height:540px;
+
+            background-size:cover;
+            background-position:center;
+
+            position:relative;
+
+        }
+
+        .hero-overlay{
+
+            background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7));
+
+            height:100%;
+
+            display:flex;
+
+            flex-direction:column;
+
+            align-items:center;
+
+            justify-content:center;
+
+            text-align:center;
+
+            color:white;
+
+        }
+
+        .hero h1{
+
+            font-size:60px;
+
+            font-weight:700;
+
+            margin-bottom:20px;
+
+            animation:fadeDown 1.2s;
+
+        }
+
+        .hero p{
+
+            font-size:20px;
+
+            opacity:.9;
+
+            margin-bottom:30px;
+
+        }
+
+        /* BUTTON EFFECT */
+
+        .btn{
+
+            border-radius:30px;
+
+            padding:10px 26px;
+
+            font-weight:600;
+
+            transition:all .3s;
+
+        }
+
+        .btn-warning:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,193,7,.6);
+
+        }
+
+        .btn-light:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,255,255,.5);
+
+        }
+
+        /* SECTION */
+
+        .section{
+
+            padding:80px 0;
+
+        }
+
+        /* CONTACT */
+
+        #contact{
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:0 8px 25px rgba(0,0,0,.1);
+
+            padding:40px;
+
+        }
+
+        /* FOOTER */
+
+        footer{
+
+            background:#1a1a1a;
+
+            color:white;
+
+            padding:50px;
+
+            margin-top:60px;
+
+        }
+
+        /* ANIMATION */
+
+        @keyframes fadeDown{
+
+            from{
+
+                opacity:0;
+
+                transform:translateY(-40px);
+
+            }
+
+            to{
+
+                opacity:1;
+
+                transform:translateY(0);
+
+            }
+
+        }
+
+    </style>
+
 </head>
+
 <body>
-<th:block th:insert="layout/layout::my-navbar"/>
 
-<div class="container mt-4">
-    <h2>Thông báo nghỉ học</h2>
+<!-- NAVBAR -->
 
-    <div th:if="${#lists.isEmpty(notices)}" class="alert alert-info">
-        Không có thông báo nào.
+<nav class="navbar navbar-expand-lg navbar-dark shadow">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold">
+
+            <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+
+            Badminton Center
+
+        </a>
+
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+
+                    <a class="nav-link active" href="/home">Home</a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/create(userId=${userId})}">
+
+                        Booking
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/history(userId=${userId})}">
+
+                        History
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="/user/study/classes">
+
+                        Study Schedule
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#contact">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
     </div>
 
-    <div th:unless="${#lists.isEmpty(notices)}" class="list-group mt-3">
-        <div th:each="notice : ${notices}" class="list-group-item">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1" th:text="${notice.classRegister.studySchedule.className}">Lớp học</h5>
-                <small th:text="${#temporals.format(notice.classRegister.studySchedule.shift.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(notice.classRegister.studySchedule.shift.endTime, 'HH:mm')}">Ca học</small>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-bell me-3"></i>Class Notices</h1>
+        <p class="lead">Announcements from your teachers</p>
+    </div>
+</div>
+
+<!-- Notices List -->
+<div class="container notices-container">
+    <div th:if="${#lists.isEmpty(notices)}" class="alert alert-info alert-custom">
+        <i class="fas fa-inbox fa-3x mb-3"></i>
+        <h4>No notices yet.</h4>
+        <p class="mb-0">You'll see announcements here when teachers post them.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(notices)}">
+        <div th:each="notice : ${notices}" class="notice-card">
+            <div class="notice-header">
+                <span class="notice-title" th:text="${notice.classRegister.studySchedule.className}">Class Name</span>
+                <span class="notice-time" th:text="${#temporals.format(notice.classRegister.dateRegister, 'dd/MM/yyyy')}">Date</span>
             </div>
-            <p class="mb-1" th:text="${notice.reason}">Lý do nghỉ</p>
-            <small>Giảng viên: <span th:text="${notice.classRegister.studySchedule.teacher.name}"></span></small>
+            <div class="notice-reason" th:text="${notice.reason}">Reason</div>
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="notice-teacher">
+                    <i class="fas fa-chalkboard-teacher me-1"></i>
+                    <span th:text="${notice.classRegister.studySchedule.teacher.name}">Teacher</span>
+                </span>
+                <span class="badge bg-secondary" th:text="${notice.classRegister.studySchedule.shift.startTime} + ' - ' + ${notice.classRegister.studySchedule.shift.endTime}">Shift</span>
+            </div>
         </div>
     </div>
 
-    <a href="/user/study/my-schedule" class="btn btn-secondary mt-3">Quay lại</a>
+    <div class="text-center mt-4">
+        <a href="/user/study/my-schedule" class="btn-back"><i class="fas fa-arrow-left me-2"></i>Back to My Schedule</a>
+    </div>
 </div>
+
+<!-- Footer -->
+<footer class="text-center">
+    <h5>Badminton Center</h5>
+    <p>Online Court Booking System</p>
+    <p>© 2026 All rights reserved</p>
+</footer>
+
 </body>
 </html>

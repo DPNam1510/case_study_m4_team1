@@ -1,44 +1,314 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Class List</title>
-    <th:block th:insert="layout/layout::library"/>
+    <title>Class List | Badminton Center</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+
+    <style>
+
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background:#f4f7fb;
+        }
+
+        /* NAVBAR */
+
+        .navbar{
+            background:rgba(0,0,0,0.7);
+            backdrop-filter:blur(10px);
+        }
+
+        .navbar-brand{
+            font-size:22px;
+            letter-spacing:1px;
+        }
+
+        /* HERO */
+
+        .hero{
+
+            background-image:url('https://images.unsplash.com/photo-1599058917765-a780eda07a3e');
+
+            height:540px;
+
+            background-size:cover;
+            background-position:center;
+
+            position:relative;
+
+        }
+
+        .hero-overlay{
+
+            background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7));
+
+            height:100%;
+
+            display:flex;
+
+            flex-direction:column;
+
+            align-items:center;
+
+            justify-content:center;
+
+            text-align:center;
+
+            color:white;
+
+        }
+
+        .hero h1{
+
+            font-size:60px;
+
+            font-weight:700;
+
+            margin-bottom:20px;
+
+            animation:fadeDown 1.2s;
+
+        }
+
+        .hero p{
+
+            font-size:20px;
+
+            opacity:.9;
+
+            margin-bottom:30px;
+
+        }
+
+        /* BUTTON EFFECT */
+
+        .btn{
+
+            border-radius:30px;
+
+            padding:10px 26px;
+
+            font-weight:600;
+
+            transition:all .3s;
+
+        }
+
+        .btn-warning:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,193,7,.6);
+
+        }
+
+        .btn-light:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,255,255,.5);
+
+        }
+
+        /* SECTION */
+
+        .section{
+
+            padding:80px 0;
+
+        }
+
+        /* CONTACT */
+
+        #contact{
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:0 8px 25px rgba(0,0,0,.1);
+
+            padding:40px;
+
+        }
+
+        /* FOOTER */
+
+        footer{
+
+            background:#1a1a1a;
+
+            color:white;
+
+            padding:50px;
+
+            margin-top:60px;
+
+        }
+
+        /* ANIMATION */
+
+        @keyframes fadeDown{
+
+            from{
+
+                opacity:0;
+
+                transform:translateY(-40px);
+
+            }
+
+            to{
+
+                opacity:1;
+
+                transform:translateY(0);
+
+            }
+
+        }
+
+    </style>
+
 </head>
+
 <body>
-<th:block th:insert="layout/layout::my-navbar"/>
 
-<div th:if="${param.success}" class="alert alert-success alert-dismissible fade show m-3" role="alert">
-    <span th:text="${param.success}"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold">
+
+            <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+
+            Badminton Center
+
+        </a>
+
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+
+                    <a class="nav-link active" href="/home">Home</a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/create(userId=${userId})}">
+
+                        Booking
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/history(userId=${userId})}">
+
+                        History
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="/user/study/classes">
+
+                        Study Schedule
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#contact">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-calendar-alt me-3"></i>Badminton Class List</h1>
+        <p class="lead">Choose a class that suits you</p>
+    </div>
 </div>
 
-<div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-    <span th:text="${param.error}"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<!-- Flash Messages -->
+<div th:if="${param.success}" class="container mt-3">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${param.success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+<div th:if="${param.error}" class="container mt-3">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${param.error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 </div>
 
-<div class="container mt-4">
-    <h2>Badminton class list</h2>
+<!-- Class Grid -->
+<div class="container mb-5">
+    <div th:if="${#lists.isEmpty(classes)}" class="alert alert-info alert-custom">
+        <i class="fas fa-info-circle fa-2x mb-3"></i>
+        <h4>No classes available at the moment.</h4>
+    </div>
 
-    <div class="row mt-4">
-        <div th:each="class : ${classes}" class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-header" th:text="${class.className}">Class</div>
-                <div class="card-body">
-                    <p><strong>Coach:</strong> <span th:text="${class.teacher.name}"></span></p>
-                    <p><strong>Field:</strong> <span th:text="${class.field.name}"></span></p>
-                    <p><strong>Shift:</strong>
-                        <span th:text="${class.shift.startTime} + ' - ' + ${class.shift.endTime}"></span>
-                    </p>
-                    <p><strong>Fee:</strong> <span th:text="${#numbers.formatDecimal(class.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
-                    <p><strong>Number of students:</strong> <span th:text="${class.minStudents} + '/' + ${class.maxStudents}"></span></p>
-                    <a th:href="@{/user/study/class/{id}/detail(id=${class.id})}"
-                       class="btn btn-primary">View</a>
+    <div th:unless="${#lists.isEmpty(classes)}" class="row g-4">
+        <div th:each="class : ${classes}" class="col-md-6 col-lg-4">
+            <div class="class-card">
+                <div class="card-header-custom" th:text="${class.className}">Class Name</div>
+                <div class="card-body-custom">
+                    <p><i class="fas fa-user-tie"></i> <strong>Coach:</strong> <span th:text="${class.teacher.name}"></span></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Field:</strong> <span th:text="${class.field.name}"></span></p>
+                    <p><i class="fas fa-clock"></i> <strong>Shift:</strong> <span th:text="${class.shift.startTime} + ' - ' + ${class.shift.endTime}"></span></p>
+                    <p><i class="fas fa-tag"></i> <strong>Fee:</strong> <span th:text="${#numbers.formatDecimal(class.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
+                    <p><i class="fas fa-users"></i> <strong>Slots:</strong> <span th:text="${class.minStudents} + '/' + ${class.maxStudents}"></span></p>
+                </div>
+                <div class="text-center pb-4">
+                    <a th:href="@{/user/study/class/{id}/detail(id=${class.id})}" class="btn-view">
+                        <i class="fas fa-eye me-2"></i>View Details
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Footer -->
+<footer class="text-center">
+    <h5>Badminton Center</h5>
+    <p>Online Court Booking System</p>
+    <p>© 2026 All rights reserved</p>
+</footer>
+
 </body>
 </html>

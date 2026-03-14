@@ -1,72 +1,333 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Lịch học của tôi</title>
-    <th:block th:insert="layout/layout::library"/>
+    <title>My Schedule | Badminton Center</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+
+    <style>
+
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background:#f4f7fb;
+        }
+
+        /* NAVBAR */
+
+        .navbar{
+            background:rgba(0,0,0,0.7);
+            backdrop-filter:blur(10px);
+        }
+
+        .navbar-brand{
+            font-size:22px;
+            letter-spacing:1px;
+        }
+
+        /* HERO */
+
+        .hero{
+
+            background-image:url('https://images.unsplash.com/photo-1599058917765-a780eda07a3e');
+
+            height:540px;
+
+            background-size:cover;
+            background-position:center;
+
+            position:relative;
+
+        }
+
+        .hero-overlay{
+
+            background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7));
+
+            height:100%;
+
+            display:flex;
+
+            flex-direction:column;
+
+            align-items:center;
+
+            justify-content:center;
+
+            text-align:center;
+
+            color:white;
+
+        }
+
+        .hero h1{
+
+            font-size:60px;
+
+            font-weight:700;
+
+            margin-bottom:20px;
+
+            animation:fadeDown 1.2s;
+
+        }
+
+        .hero p{
+
+            font-size:20px;
+
+            opacity:.9;
+
+            margin-bottom:30px;
+
+        }
+
+        /* BUTTON EFFECT */
+
+        .btn{
+
+            border-radius:30px;
+
+            padding:10px 26px;
+
+            font-weight:600;
+
+            transition:all .3s;
+
+        }
+
+        .btn-warning:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,193,7,.6);
+
+        }
+
+        .btn-light:hover{
+
+            transform:translateY(-3px) scale(1.05);
+
+            box-shadow:0 10px 25px rgba(255,255,255,.5);
+
+        }
+
+        /* SECTION */
+
+        .section{
+
+            padding:80px 0;
+
+        }
+
+        /* CONTACT */
+
+        #contact{
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:0 8px 25px rgba(0,0,0,.1);
+
+            padding:40px;
+
+        }
+
+        /* FOOTER */
+
+        footer{
+
+            background:#1a1a1a;
+
+            color:white;
+
+            padding:50px;
+
+            margin-top:60px;
+
+        }
+
+        /* ANIMATION */
+
+        @keyframes fadeDown{
+
+            from{
+
+                opacity:0;
+
+                transform:translateY(-40px);
+
+            }
+
+            to{
+
+                opacity:1;
+
+                transform:translateY(0);
+
+            }
+
+        }
+
+    </style>
+
 </head>
+
 <body>
-<th:block th:insert="layout/layout::my-navbar"/>
 
-<div th:if="${param.success}" class="alert alert-success alert-dismissible fade show m-3" role="alert">
-    <span th:text="${param.success}"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+<!-- NAVBAR -->
 
-<div class="container mt-4">
-    <h2>Lịch học của tôi</h2>
+<nav class="navbar navbar-expand-lg navbar-dark shadow">
 
-    <div th:if="${#lists.isEmpty(myClasses)}" class="alert alert-info">
-        Bạn chưa đăng ký lớp học nào.
-        <a href="/user/study/classes" class="alert-link">Đăng ký ngay</a>
+    <div class="container">
+
+        <a class="navbar-brand fw-bold">
+
+            <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+
+            Badminton Center
+
+        </a>
+
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+
+                    <a class="nav-link active" href="/home">Home</a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/create(userId=${userId})}">
+
+                        Booking
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" th:href="@{/booking/history(userId=${userId})}">
+
+                        History
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="/user/study/classes">
+
+                        Study Schedule
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#contact">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
     </div>
 
-    <div th:unless="${#lists.isEmpty(myClasses)}">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>STT</th>
-                <th>Lớp học</th>
-                <th>Giảng viên</th>
-                <th>Lịch học</th>
-                <th>Ca học</th>
-                <th>Trạng thái</th>
-                <th>Thanh toán</th>
-                <th>Đánh giá</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item, iterStat : ${myClasses}">
-                <td th:text="${iterStat.count}"></td>
-                <td th:text="${item.studySchedule.className}"></td>
-                <td th:text="${item.studySchedule.teacher.name}"></td>
-                <td th:text="${item.studySchedule.className}"></td>
-                <td th:text="${item.studySchedule.shift.startTime} + ' - ' + ${item.studySchedule.shift.endTime}"></td>
-                <td>
-                    <span th:if="${item.statusRegister == 'APPROVED'}" class="badge bg-success">Đã duyệt</span>
-                    <span th:if="${item.statusRegister == 'PENDING'}" class="badge bg-warning">Chờ duyệt</span>
-                    <span th:if="${item.statusRegister == 'CANCELED'}" class="badge bg-danger">Đã hủy</span>
-                </td>
-                <td>
-                            <span th:if="${item.paymentRegister != null and item.paymentRegister.status == 'PAID'}"
-                                  class="badge bg-success">Đã thanh toán</span>
-                    <span th:if="${item.paymentRegister == null or item.paymentRegister.status == 'UNPAID'}"
-                          class="badge bg-warning">Chưa thanh toán</span>
-                    <a th:if="${item.paymentRegister == null or item.paymentRegister.status == 'UNPAID'}"
-                       th:href="@{/user/study/payment/{id}(id=${item.id})}"
-                       class="btn btn-sm btn-primary mt-1">Thanh toán</a>
-                </td>
-                <td>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-calendar-check me-3"></i>My Schedule</h1>
+        <p class="lead">Your registered classes</p>
+    </div>
+</div>
+
+<!-- Flash Messages -->
+<div th:if="${param.success}" class="container mt-3">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${param.success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="table-container">
+        <div th:if="${#lists.isEmpty(myClasses)}" class="alert alert-info alert-custom">
+            <i class="fas fa-calendar-times fa-3x mb-3"></i>
+            <h4>You haven't registered for any class yet.</h4>
+            <a href="/user/study/classes" class="btn btn-primary mt-3">Browse Classes</a>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(myClasses)}">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Class</th>
+                    <th>Teacher</th>
+                    <th>Shift</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Review</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item, iterStat : ${myClasses}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="${item.studySchedule.className}"></td>
+                    <td th:text="${item.studySchedule.teacher.name}"></td>
+                    <td th:text="${item.studySchedule.shift.startTime} + ' - ' + ${item.studySchedule.shift.endTime}"></td>
+                    <td>
+                        <span th:if="${item.statusRegister == 'APPROVED'}" class="badge-custom bg-success text-white">Approved</span>
+                        <span th:if="${item.statusRegister == 'PENDING'}" class="badge-custom bg-warning text-dark">Pending</span>
+                        <span th:if="${item.statusRegister == 'CANCELED'}" class="badge-custom bg-danger text-white">Canceled</span>
+                    </td>
+                    <td>
+                        <span th:if="${item.paymentRegister != null and item.paymentRegister.status == 'PAID'}" class="badge-custom bg-success text-white">Paid</span>
+                        <span th:if="${item.paymentRegister == null or item.paymentRegister.status == 'UNPAID'}" class="badge-custom bg-warning text-dark">Unpaid</span>
+                        <a th:if="${item.paymentRegister == null or item.paymentRegister.status == 'UNPAID'}"
+                           th:href="@{/user/study/payment/{id}(id=${item.id})}"
+                           class="btn-payment ms-2"><i class="fas fa-credit-card me-1"></i>Pay</a>
+                    </td>
+                    <td>
                             <span th:if="${item.teacherReview != null}">
-                                <span th:text="${item.teacherReview.scores}"></span> -
-                                <span th:text="${item.teacherReview.review}"></span>
+                                <span th:text="${item.teacherReview.scores}"></span> - <span th:text="${item.teacherReview.review}"></span>
                             </span>
-                    <span th:unless="${item.teacherReview != null}" class="text-muted">Chưa có</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        <span th:unless="${item.teacherReview != null}" class="text-muted">Not yet</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<!-- Footer -->
+<footer class="text-center">
+    <h5>Badminton Center</h5>
+    <p>Online Court Booking System</p>
+    <p>© 2026 All rights reserved</p>
+</footer>
+
 </body>
 </html>

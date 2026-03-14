@@ -2,53 +2,177 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Students List</title>
-    <th:block th:insert="layout/layout::library"/>
+    <title>Students List | Badminton Center</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .page-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 60px;
+        }
+        .table {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .table thead {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+        }
+        .table th {
+            font-weight: 600;
+            border: none;
+            padding: 15px;
+        }
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+        .badge-assessment {
+            padding: 8px 12px;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+        .btn-assessment {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 6px 16px;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-assessment:hover {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            color: white;
+            transform: scale(1.05);
+        }
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            border-radius: 50px;
+            padding: 10px 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-back:hover {
+            background: #5a6268;
+            color: white;
+        }
+        footer {
+            background: #212529;
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
-<th:block th:insert="layout/layout::my-navbar"/>
-
-<div class="container mt-4">
-    <h2>Students List</h2>
-
-    <div th:if="${#lists.isEmpty(students)}" class="alert alert-info">
-        Class don't have any students yet.
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/teacher">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            Teacher Panel
+        </a>
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/teacher">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/teacher/classes">My Classes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
     </div>
+</nav>
 
-    <table th:unless="${#lists.isEmpty(students)}" class="table table-striped">
-        <thead>
-        <tr>
-            <th>STT</th>
-            <th>Student</th>
-            <th>Register date</th>
-            <th>assessment</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="student, iterStat : ${students}">
-            <td th:text="${iterStat.count}"></td>
-            <td th:text="${student.user.name}"></td>
-            <td th:text="${#temporals.format(student.dateRegister, 'dd/MM/yyyy')}"></td>
-            <td>
-                        <span th:if="${student.teacherReview != null}" class="badge bg-success">
-                            Assessment done: <span th:text="${student.teacherReview.scores}"></span>
-                        </span>
-                <span th:unless="${student.teacherReview != null}" class="badge bg-warning">
-                            Not assessment yet
-                        </span>
-            </td>
-            <td>
-                <a th:if="${student.teacherReview == null}"
-                   th:href="@{/teacher/class/{scheduleId}/student/{id}/review(scheduleId=${scheduleId}, id=${student.id})}"
-                   class="btn btn-sm btn-primary">Assessment</a>
-                <span th:if="${student.teacherReview != null}" class="text-muted">Assessment done</span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <a href="/teacher/classes" class="btn btn-secondary">Back</a>
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-users me-3"></i>Students List</h1>
+        <p class="lead">Manage and assess your students</p>
+    </div>
 </div>
+
+<div class="container">
+    <div class="table-container">
+        <div th:if="${#lists.isEmpty(students)}" class="alert alert-info text-center py-4">
+            <i class="fas fa-info-circle fa-2x mb-3"></i>
+            <h4>This class doesn't have any students yet.</h4>
+        </div>
+
+        <table th:unless="${#lists.isEmpty(students)}" class="table table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Student</th>
+                <th>Register Date</th>
+                <th>Assessment</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="student, iterStat : ${students}">
+                <td th:text="${iterStat.count}"></td>
+                <td><i class="fas fa-user-circle me-2"></i><span th:text="${student.user.name}"></span></td>
+                <td th:text="${#temporals.format(student.dateRegister, 'dd/MM/yyyy')}"></td>
+                <td>
+                            <span th:if="${student.teacherReview != null}" class="badge-assessment bg-success text-white">
+                                <i class="fas fa-check-circle me-1"></i>Done: <span th:text="${student.teacherReview.scores}"></span>
+                            </span>
+                    <span th:unless="${student.teacherReview != null}" class="badge-assessment bg-warning text-dark">
+                                <i class="fas fa-hourglass-half me-1"></i>Pending
+                            </span>
+                </td>
+                <td>
+                    <a th:if="${student.teacherReview == null}"
+                       th:href="@{/teacher/class/{scheduleId}/student/{id}/review(scheduleId=${scheduleId}, id=${student.id})}"
+                       class="btn-assessment">
+                        <i class="fas fa-star me-1"></i>Assess
+                    </a>
+                    <span th:if="${student.teacherReview != null}" class="text-muted">
+                                <i class="fas fa-check"></i> Assessed
+                            </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center mt-4">
+            <a href="/teacher/classes" class="btn-back"><i class="fas fa-arrow-left me-2"></i>Back to Classes</a>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center">
+    <h5>Badminton Center</h5>
+    <p>Online Court Booking System</p>
+    <p>© 2026 All rights reserved</p>
+</footer>
 </body>
 </html>

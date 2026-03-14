@@ -5,6 +5,7 @@ import com.example.case_study_m4_team1.entity.ClassRegister;
 import com.example.case_study_m4_team1.entity.StudySchedule;
 import com.example.case_study_m4_team1.entity.TeacherNotice;
 import com.example.case_study_m4_team1.entity.TeacherReview;
+import com.example.case_study_m4_team1.enums.PaymentStatus;
 import com.example.case_study_m4_team1.service.user.IUserStudyService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,18 +49,15 @@ public class UserStudyController {
     public String registerClass(@RequestParam int scheduleId,
                                 Principal principal,
                                 RedirectAttributes redirectAttributes) {
-
         String username = principal.getName();
-
-        Long registerId = null;
         try {
-            registerId = userStudyService.registerClass(username, scheduleId);
+            Long registerId = userStudyService.registerClass(username, scheduleId);
+            redirectAttributes.addFlashAttribute("success", "Class registration successful! Please make the payment.");
+            return "redirect:/user/study/payment/" + registerId;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            redirectAttributes.addFlashAttribute("error", "Registration failed: " + e.getMessage());
+            return "redirect:/user/study/classes";
         }
-
-        redirectAttributes.addFlashAttribute("success", "Register class success!");
-        return "redirect:/user/study/payment/" + registerId;
     }
 
     @GetMapping("/my-schedule")
@@ -100,6 +98,12 @@ public class UserStudyController {
         // Kiểm tra quyền sở hữu
         if (!userStudyService.isOwner(username, registerId)) {
             redirectAttributes.addFlashAttribute("error", "You do not have access !!");
+            return "redirect:/user/study/my-schedule";
+        }
+
+        // Kiểm tra đã thanh toán chưa
+        if (register.getPaymentRegister() != null && register.getPaymentRegister().getStatus() == PaymentStatus.PAID) {
+            redirectAttributes.addFlashAttribute("error", "This class has already been paid for!");
             return "redirect:/user/study/my-schedule";
         }
 

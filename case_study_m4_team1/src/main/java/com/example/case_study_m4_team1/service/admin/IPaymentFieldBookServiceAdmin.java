@@ -22,5 +22,7 @@ public interface IPaymentFieldBookServiceAdmin {
 
     void adminSetPaid(long id);
 
+    boolean existsByBookingId(long bookingId);
+
     List<PaymentFieldBookDto> findByUserId(@Param("userId") long userId);
 }

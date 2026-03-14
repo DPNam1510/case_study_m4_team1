@@ -13,89 +13,70 @@ import java.time.LocalDate;
 
 public interface IFieldBookRepositoryAdmin extends JpaRepository<FieldBook,Long> {
 
-    @Query(value = """
-        select fb.* 
-        from field_book fb
-        join users u on fb.user_id = u.id
-        join fields f on fb.field_id = f.id
-        where fb.status like 'APPROVED'
-        and (:searchUser is null or u.name like :searchUser)
-        and (:searchField is null or f.name like :searchField)
-        and (:searchDate is null or fb.date_book = :searchDate)
-        """,
-            countQuery = """
-        select count(*) 
-        from field_book fb
-        join users u on fb.user_id = u.id
-        join fields f on fb.field_id = f.id
-        where fb.status like 'APPROVED'
-        and (:searchUser is null or u.name like :searchUser)
-        and (:searchField is null or f.name like :searchField)
-        and (:searchDate is null or fb.date_book = :searchDate)
-        """,
+    @Query(value = "SELECT fb.* FROM field_book fb " +
+            "JOIN users u ON fb.user_id = u.id " +
+            "JOIN fields f ON fb.field_id = f.id " +
+            "WHERE fb.status = :status " +
+            "AND (:searchUser IS NULL OR u.name LIKE :searchUser) " +
+            "AND (:searchField IS NULL OR f.name LIKE :searchField) " +
+            "AND (:searchDate IS NULL OR fb.date_book = :searchDate)",
+            countQuery = "SELECT COUNT(*) FROM field_book fb " +
+                    "JOIN users u ON fb.user_id = u.id " +
+                    "JOIN fields f ON fb.field_id = f.id " +
+                    "WHERE fb.status = :status " +
+                    "AND (:searchUser IS NULL OR u.name LIKE :searchUser) " +
+                    "AND (:searchField IS NULL OR f.name LIKE :searchField) " +
+                    "AND (:searchDate IS NULL OR fb.date_book = :searchDate)",
             nativeQuery = true)
-    Page<FieldBook> searchApprove(
-            @Param("searchUser") String user,
-            @Param("searchField") String field,
-            @Param("searchDate") LocalDate date,
-            BookingStatus status,
-            Pageable pageable);
+    Page<FieldBook> searchApprove(@Param("searchUser") String user,
+                                  @Param("searchField") String field,
+                                  @Param("searchDate") LocalDate date,
+                                  @Param("status") String status,
+                                  Pageable pageable);
 
 
-    @Query(value = """
-        select fb.* 
-        from field_book fb
-        join users u on fb.user_id = u.id
-        join fields f on fb.field_id = f.id
-        where fb.status like 'PENDING'
-        and (:searchUser is null or u.name like :searchUser)
-        and (:searchField is null or f.name like :searchField)
-        and (:searchDate is null or fb.date_book = :searchDate)
-        """,
-            countQuery = """
-        select count(*) 
-        from field_book fb
-        join users u on fb.user_id = u.id
-        join fields f on fb.field_id = f.id
-        where fb.status like 'PENDING'
-        and (:searchUser is null or u.name like :searchUser)
-        and (:searchField is null or f.name like :searchField)
-        and (:searchDate is null or fb.date_book = :searchDate)
-        """,
+    @Query(value = "SELECT fb.* FROM field_book fb " +
+            "JOIN users u ON fb.user_id = u.id " +
+            "JOIN fields f ON fb.field_id = f.id " +
+            "WHERE fb.status = :status " +
+            "AND (:searchUser IS NULL OR u.name LIKE :searchUser) " +
+            "AND (:searchField IS NULL OR f.name LIKE :searchField) " +
+            "AND (:searchDate IS NULL OR fb.date_book = :searchDate)",
+            countQuery = "SELECT COUNT(*) FROM field_book fb " +
+                    "JOIN users u ON fb.user_id = u.id " +
+                    "JOIN fields f ON fb.field_id = f.id " +
+                    "WHERE fb.status = :status " +
+                    "AND (:searchUser IS NULL OR u.name LIKE :searchUser) " +
+                    "AND (:searchField IS NULL OR f.name LIKE :searchField) " +
+                    "AND (:searchDate IS NULL OR fb.date_book = :searchDate)",
             nativeQuery = true)
     Page<FieldBook> searchPending(
             @Param("searchUser") String user,
             @Param("searchField") String field,
             @Param("searchDate") LocalDate date,
-            BookingStatus status,
+            @Param("status") String status,      // nhận String, ví dụ 'PENDING'
             Pageable pageable);
 
-    @Query(value = """
-        select fb.* 
-        from field_book fb
-        join users u on fb.user_id = u.id
-        join fields f on fb.field_id = f.id
-        where fb.status like 'CANCELED'
-        and (:searchUser is null or u.name like :searchUser)
-        and (:searchField is null or f.name like :searchField)
-        and (:searchDate is null or fb.date_book = :searchDate)
-        """,
-            countQuery = """
-        select count(*) 
-        from field_book fb
-        join users u on fb.user_id = u.id
-        join fields f on fb.field_id = f.id
-        where fb.status like 'CANCELED'
-        and (:searchUser is null or u.name like :searchUser)
-        and (:searchField is null or f.name like :searchField)
-        and (:searchDate is null or fb.date_book = :searchDate)
-        """,
+    @Query(value = "SELECT fb.* FROM field_book fb " +
+            "JOIN users u ON fb.user_id = u.id " +
+            "JOIN fields f ON fb.field_id = f.id " +
+            "WHERE fb.status = :status " +
+            "AND (:searchUser IS NULL OR u.name LIKE :searchUser) " +
+            "AND (:searchField IS NULL OR f.name LIKE :searchField) " +
+            "AND (:searchDate IS NULL OR fb.date_book = :searchDate)",
+            countQuery = "SELECT COUNT(*) FROM field_book fb " +
+                    "JOIN users u ON fb.user_id = u.id " +
+                    "JOIN fields f ON fb.field_id = f.id " +
+                    "WHERE fb.status = :status " +
+                    "AND (:searchUser IS NULL OR u.name LIKE :searchUser) " +
+                    "AND (:searchField IS NULL OR f.name LIKE :searchField) " +
+                    "AND (:searchDate IS NULL OR fb.date_book = :searchDate)",
             nativeQuery = true)
     Page<FieldBook> searchCanceled(
             @Param("searchUser") String user,
             @Param("searchField") String field,
             @Param("searchDate") LocalDate date,
-            BookingStatus status,
+            @Param("status") String status,      // nhận String, ví dụ 'CANCELED'
             Pageable pageable);
 
     boolean existsByFieldIdAndDateBookAndShiftIdAndStatusAndIdNot(
