@@ -12,6 +12,11 @@ public class MainController {
     @GetMapping
     public String home(Authentication authentication) {
 
+        // chưa login → hiển thị trang home public
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "home";
+        }
+
         if (authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             return "redirect:/admin";
@@ -27,6 +32,6 @@ public class MainController {
             return "redirect:/user";
         }
 
-        return "redirect:/login?error";
+        return "home";
     }
 }
